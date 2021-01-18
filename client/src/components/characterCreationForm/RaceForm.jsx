@@ -13,7 +13,8 @@ const RaceForm = () => {
 
 
     const pickRace = (chosenRaceInfo) => {
-        dndApi.getMoreInfo(chosenRaceInfo.url).then((response) => {
+        dndApi.getMoreInfo(chosenRaceInfo.url)
+        .then((response) => {
             /*
                 TODO: this is a good spot to format the data and send what ever we need to the global state
             */
