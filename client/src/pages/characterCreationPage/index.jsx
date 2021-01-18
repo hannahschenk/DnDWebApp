@@ -3,7 +3,7 @@ import FormContainer from "./FormContainer";
 import CreationTimeline from "./CreationTimeline";
 import constants from "./../../utils/constants";
 
-const characterCreationPage = () => {
+const CharacterCreationPage = () => {
 
     /*NOTE: local state; might push to global state later:*/
     const [currentSectionIdx, setCurrentSectionIdx] = useState(-1);
@@ -60,4 +60,4 @@ const characterCreationPage = () => {
     );
 };
 
-export default characterCreationPage;
+export default CharacterCreationPage;
