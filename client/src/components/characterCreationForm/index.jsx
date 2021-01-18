@@ -1,19 +1,15 @@
 import React from 'react';
 import RaceForm from "./RaceForm";
-import ClassForm from "./ClassForm";
-import AbilityScoresForm from "./AbilityScoresForm";
 
-const characterCreationForm = ({sectionIndex, formDetailsState}) => {
+const characterCreationForm = ({currentSectionIdx}) => {
+
     const formGenerator = () => {
-        switch(sectionIndex){
+        switch(currentSectionIdx){
             case 0: 
-                return <RaceForm formDetailsState={formDetailsState}/>
-            case 1: 
-                return <ClassForm formDetailsState={formDetailsState}/>
-            case 2: 
-                return <AbilityScoresForm formDetailsState={formDetailsState}/>
+                return <RaceForm/>
         }
     }
+
     return (
         <>
             {formGenerator()}
