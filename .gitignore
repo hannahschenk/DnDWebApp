@@ -1,0 +1,6 @@
+.env
+.cache
+.DS_store
+dist
+server/mode_modules
+client/mode_modules
