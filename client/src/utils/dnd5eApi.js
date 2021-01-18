@@ -5,6 +5,9 @@ module.exports = {
     getRaces: () => {
         return axios.get(constants.RACES_URL);
     },
+    getClasses: () => {
+        return axios.get(constants.CLASSES_URL);
+    },
     getMoreInfo:(endPoint) => {
         return axios.get(constants.API_BASE_URL + endPoint);
     }
