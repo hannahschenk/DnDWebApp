@@ -1,10 +1,11 @@
 import React from 'react';
+import CharacterCreationPage from "./pages/characterCreationPage"
 
 const App = () => {
 
   return(
     <>
-        THIS IS TEST CONTENT: I should show up when you run the front end code
+        <CharacterCreationPage/>
     </>
   );
 };
