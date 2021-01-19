@@ -4,6 +4,7 @@ import INITIAL_CHARACTER_STATE from './state/character';
 import { CharacterContext, characterReducer } from './state/logic';
 
 import Demo from './components/demo';
+import CharacterCreationPage from './pages/characterCreationPage';
 
 const App = () => {
     // Grab initial character state and assign the CharacterReducer to the setCharacter function
@@ -22,7 +23,8 @@ const App = () => {
     return (
         <>
             <CharacterContext.Provider value={{ character, setCharacter }}>
-                <Demo />
+                {/* <Demo /> */}
+                <CharacterCreationPage />
             </CharacterContext.Provider>
         </>
     );
