@@ -8,7 +8,13 @@ module.exports = {
     getClasses: () => {
         return axios.get(constants.CLASSES_URL);
     },
-    getMoreInfo:(endPoint) => {
+    getBackgrounds: () => {
+        return axios.get(constants.BACKGROUNDS_URL);
+    },
+    getLanguages: () => {
+        return axios.get(constants.LANGUAGES_URL);
+    },
+    getMoreInfo: (endPoint) => {
         return axios.get(constants.API_BASE_URL + endPoint);
-    }
+    },
 }
