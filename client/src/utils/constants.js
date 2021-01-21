@@ -28,5 +28,6 @@ module.exports = {
                 title: "6. Equipment",
                 subSections: ["Armor", "Weapons", "Tools", "Misc."]
             },
-        ]
+        ],
+    STANDARD_ARRAY: [15, 14, 13, 12, 10, 8]
 }
