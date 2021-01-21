@@ -5,5 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     CharacterSheet.belongsTo(User);
   };
 
+  CharacterSheet.associate = ({ Race }) => {
+    CharacterSheet.hasOne(Race, {onDelete: "CASCADE"});
+  };
+
   return CharacterSheet;
 };
