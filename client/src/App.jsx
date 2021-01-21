@@ -1,10 +1,12 @@
 import React, { useEffect, useReducer } from 'react';
+import {BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import INITIAL_CHARACTER_STATE from './state/character';
 import { CharacterContext, characterReducer } from './state/logic';
 
 import Demo from './components/demo';
 import CharacterCreationPage from './pages/characterCreationPage';
+import HomePage from './pages/homePage';
 
 const App = () => {
     // Grab initial character state and assign the CharacterReducer to the setCharacter function
@@ -21,12 +23,21 @@ const App = () => {
     }, [character]);
 
     return (
-        <>
-            <CharacterContext.Provider value={{ character, setCharacter }}>
-                {/* <Demo /> */}
-                <CharacterCreationPage />
-            </CharacterContext.Provider>
-        </>
+        <Router>
+            <Switch>
+                <Route path="/CharacterCreationPage">
+                    <CharacterContext.Provider value={{ character, setCharacter }}>
+                        <CharacterCreationPage />
+                    </CharacterContext.Provider>
+                </Route>
+                <Route path="/">
+                    <HomePage />
+                </Route>
+                <Route path="/Demo">
+                    <Demo />
+                </Route>
+            </Switch>
+        </Router>
     );
 };
 
