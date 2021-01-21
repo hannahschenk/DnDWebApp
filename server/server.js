@@ -27,6 +27,7 @@ const auth0Config = {
       login: "authenticate/login",
       login: false,
       logout: "authenticate/logout",
+      postLogoutRedirect: "/api"
   }
 };
 

@@ -10,7 +10,9 @@ router.get("/userCheck", requiresAuth(), (req, res) => {
     
     /*
     const userInfo = req.oidc.user
+    //userInfo.sub => I think we can use this for the userId
     res.send(JSON.stringify(userInfo));
+    //my google id: "sub":"google-oauth2|107049746498959360476"    
     */
 
     //redirect user once we are done
