@@ -1,9 +1,9 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
+const {sequelize} = require("./models")
 const app = require("https-localhost")() // to get https; change to https on production
 const {requiresAuth, auth} = require('express-openid-connect');
-const sequelize = require("./models");
 const routeManager = require("./routes/");
 const PORT = process.env.PORT || 8080;
 

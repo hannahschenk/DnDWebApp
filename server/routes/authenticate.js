@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const {requiresAuth, auth} = require('express-openid-connect');
+const userController = require("./../controllers/userController");
 
 router.get("/login", (req, res) => {
     res.oidc.login({ returnTo: '/authenticate/userCheck' })
