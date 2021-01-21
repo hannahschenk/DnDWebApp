@@ -1,20 +1,19 @@
 module.exports = (sequelize, DataTypes) => {
-  const Race = sequelize.define(
-    'Race',
+  const Race = sequelize.define('Race',
     {
       parentRace:{
         type: DataTypes.STRING,
         allowNull: false
       },
       subRace:{
-          type: DataTypes.STRING,
+        type: DataTypes.STRING,
       },
       raceUrl:{
-          type: DataTypes.STRING,
-          allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       subRaceUrl:{
-          type: DataTypes.STRING,
+        type: DataTypes.STRING,
       }
     }
   );
