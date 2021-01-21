@@ -16,5 +16,9 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
   
+    User.associate = ({ CharacterSheet }) => {
+        User.hasOne(CharacterSheet, {onDelete: "CASCADE"});
+    };
+
     return User;
   };
