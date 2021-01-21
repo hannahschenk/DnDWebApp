@@ -3,7 +3,7 @@ const logger = require('morgan');
 const cors = require('cors');
 const app = require("https-localhost")() // to get https; change to https on production
 const {requiresAuth, auth} = require('express-openid-connect');
-
+const sequelize = require("./models");
 const routeManager = require("./routes/");
 const PORT = process.env.PORT || 8080;
 
@@ -46,6 +46,8 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use("/", routeManager);
 
-app.listen(PORT, () => {
-  console.log(`API server listening on http://localhost:${PORT}!`);
+sequelize.sync({ force: true }).then(() => {
+  app.listen(PORT, () => {
+    console.log(`API server listening on http://localhost:${PORT}!`);
+  });
 });
