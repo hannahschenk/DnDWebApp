@@ -6,6 +6,7 @@ const INITIAL_CHARACTER_STATE = {
     // Update these fields from API call
     size: 'Medium',
     speed: 30,
+    languages: [],
   },
   // User can change 'name' and 'features'
   class: {
@@ -14,6 +15,7 @@ const INITIAL_CHARACTER_STATE = {
     hitDie: 0,
     // Total HP is based on class choice (hit die) and Constitution
     totalHP: 0,
+    languages: []
   },
   // Ability score values, modifiers and bonuses can be calculated in-app
   abilities: {
@@ -38,6 +40,7 @@ const INITIAL_CHARACTER_STATE = {
     name: '',
     appearance: '',
     personality: '',
+    languages: [],
     // age, height, and weight are dependent on their race
     age: 0,
     height: '',
@@ -47,12 +50,12 @@ const INITIAL_CHARACTER_STATE = {
   alignment: {
     name: '',
   },
-  // An array of the user's chosen languages
-  languages: {
-    raceLanguages: [],
-    classLanguages: [],
-    backgroundLanguages: [],
-  },
+  // // An array of the user's chosen languages
+  // languages: {
+  //   raceLanguages: [],
+  //   classLanguages: [],
+  //   backgroundLanguages: [],
+  // },
   // Arrays containing the player's selected spells
   spells: {
     cantrips: [],
