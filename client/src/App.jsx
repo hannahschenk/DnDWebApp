@@ -6,6 +6,10 @@ import { CharacterContext, characterReducer } from './state/logic';
 import Demo from './components/demo';
 import CharacterCreationPage from './pages/characterCreationPage';
 
+/*ticket 4:*/
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import DashboardPage from "./pages/dashboardPage";
+
 const App = () => {
     // Grab initial character state and assign the CharacterReducer to the setCharacter function
     const [character, setCharacter] = useReducer(characterReducer, INITIAL_CHARACTER_STATE, () => {
@@ -24,7 +28,16 @@ const App = () => {
         <>
             <CharacterContext.Provider value={{ character, setCharacter }}>
                 {/* <Demo /> */}
-                <CharacterCreationPage />
+                <Router>
+                    <Switch>
+                        {/* will change character creation page path later*/}
+
+                        <Route exact path="/" render={() => <CharacterCreationPage/>}/>
+
+                        <Route exact path="/dashboard" render={() => <DashboardPage/>}/>
+
+                    </Switch>
+                </Router>
             </CharacterContext.Provider>
         </>
     );
