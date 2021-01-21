@@ -1,7 +1,9 @@
 module.exports = {
     API_BASE_URL: "https://www.dnd5eapi.co",
-    RACES_URL:  `https://www.dnd5eapi.co/api/races`,
+    RACES_URL: `https://www.dnd5eapi.co/api/races`,
     CLASSES_URL: `https://www.dnd5eapi.co/api/classes`,
+    BACKGROUNDS_URL: `https://dnd-backgrounds-default-rtdb.firebaseio.com/backgrounds.json`,
+    LANGUAGES_URL: `http://www.dnd5eapi.co/api/languages/`,
     CREATION_SECTIONS:
         [
             {
