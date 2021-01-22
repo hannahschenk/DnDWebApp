@@ -11,14 +11,19 @@ const CharacterDetailsForm = () => {
     const [numLanguageChoices, setNumLanguageChoices] = useState(0);
 
     useEffect(() => {
-        dndApi
-            .getBackgrounds()
-            .then((response) => setBackgroundChoices(response.data))
-            .catch((err) => console.log(err));
-        dndApi
-            .getLanguages()
-            .then((response) => setLanguageChoices(response.data.results.map((language) => language.name)))
-            .catch((err) => console.log(err));
+        let mounted = true;
+
+        if (mounted) {
+            try {
+                dndApi.getBackgrounds().then((response) => setBackgroundChoices(response.data));
+                dndApi.getLanguages().then((response) => setLanguageChoices(response.data.results.map((language) => language.name)));
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return () => {
+            mounted = false;
+        };
     }, []);
 
     const pickBackground = (chosenBackgroundInfo) => {
@@ -172,76 +177,3 @@ const CharacterDetailsForm = () => {
 };
 
 export default CharacterDetailsForm;
-
-const SelectLanguages = ({ languageChoices, chooseTwo }) => {
-    const { character, setCharacter } = useCharacter();
-
-    const pickLanguage = (chosenLanguage) => {
-        if (chooseTwo) {
-        } else {
-            setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
-            setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [chosenLanguage] } });
-        }
-    };
-
-    if (chooseTwo) {
-        return (
-            <>
-                <select name="languages" onChange={(e) => pickLanguage(e.target.value)} required>
-                    {languageChoices.map((language, idx) => (
-                        <option
-                            key={idx}
-                            value={language}
-                            disabled={
-                                !(
-                                    language !== character.race.languages[0] &&
-                                    language !== character.race.languages[1] &&
-                                    language !== character.background.languages[0]
-                                )
-                            }
-                        >
-                            {language}
-                        </option>
-                    ))}
-                </select>
-                <select name="languages" onChange={(e) => pickLanguage(e.target.value)} required>
-                    {languageChoices.map((language, idx) => (
-                        <option
-                            key={idx}
-                            value={language}
-                            disabled={
-                                !(
-                                    language !== character.race.languages[0] &&
-                                    language !== character.race.languages[1] &&
-                                    language !== character.background.languages[0]
-                                )
-                            }
-                        >
-                            {language}
-                        </option>
-                    ))}
-                </select>
-            </>
-        );
-    } else {
-        return (
-            <select name="languages" onChange={(e) => pickLanguage(e.target.value)} required>
-                {languageChoices.map((language, idx) => (
-                    <option
-                        key={idx}
-                        value={language}
-                        disabled={
-                            !(
-                                language !== character.race.languages[0] &&
-                                language !== character.race.languages[1] &&
-                                language !== character.background.languages[0]
-                            )
-                        }
-                    >
-                        {language}
-                    </option>
-                ))}
-            </select>
-        );
-    }
-};

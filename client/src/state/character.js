@@ -12,8 +12,8 @@ const INITIAL_CHARACTER_STATE = {
   class: {
     name: '',
     features: [],
-    hitDie: 0,
     // Total HP is based on class choice (hit die) and Constitution
+    hitDie: 0,
     totalHP: 0,
     languages: []
   },
@@ -40,27 +40,15 @@ const INITIAL_CHARACTER_STATE = {
     name: '',
     appearance: '',
     personality: '',
+    alignment: '',
     languages: [],
     // age, height, and weight are dependent on their race
     age: 0,
     height: '',
     weight: '',
   },
-  // A single field for the character's alignment
-  alignment: {
-    name: '',
-  },
-  // // An array of the user's chosen languages
-  // languages: {
-  //   raceLanguages: [],
-  //   classLanguages: [],
-  //   backgroundLanguages: [],
-  // },
   // Arrays containing the player's selected spells
-  spells: {
-    cantrips: [],
-    level1: [],
-  },
+  spells: []
 };
 
 export default INITIAL_CHARACTER_STATE;
