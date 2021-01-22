@@ -6,7 +6,7 @@ import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
 const ProficienciesForm = () => {
-    const { character, setCharacter } = useCharacter();
+    const { character, setCharacter, setDetails } = useCharacter();
 
     const [skillProficiencies, setSkillProficiencies] = useState([]);
     const [spellCasting, setSpellCasting] = useState(undefined);

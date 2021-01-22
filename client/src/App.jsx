@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 
 import INITIAL_CHARACTER_STATE from './state/character';
 import { CharacterContext, characterReducer } from './state/logic';
@@ -14,6 +14,8 @@ const App = () => {
         return localCharacter ? JSON.parse(localCharacter) : INITIAL_CHARACTER_STATE;
     });
 
+    const [details, setDetails] = useState({});
+
     // Updates the local storage with changes in state (also prints to console)
     useEffect(() => {
         console.log(character);
@@ -22,7 +24,7 @@ const App = () => {
 
     return (
         <>
-            <CharacterContext.Provider value={{ character, setCharacter }}>
+            <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
                 {/* <Demo /> */}
                 <CharacterCreationPage />
             </CharacterContext.Provider>

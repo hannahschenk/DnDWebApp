@@ -7,7 +7,7 @@ import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
 const CharacterDetailsForm = () => {
-    const { character, setCharacter } = useCharacter();
+    const { character, setCharacter, setDetails } = useCharacter();
 
     const [backgroundChoices, setBackgroundChoices] = useState([]);
     const [languageChoices, setLanguageChoices] = useState([]);
