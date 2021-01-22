@@ -33,9 +33,6 @@ const App = () => {
                 <Route path="/">
                     <HomePage />
                 </Route>
-                <Route path="/Demo">
-                    <Demo />
-                </Route>
             </Switch>
         </Router>
     );
