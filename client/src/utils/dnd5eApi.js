@@ -18,6 +18,6 @@ module.exports = {
         return axios.get(constants.API_BASE_URL + endPoint);
     },
     getStartingEquipment:(chosenClass) => {
-        return axios.get(constants.API_BASE_URL + '/starting-equipment/'+ chosenClass);
+        return axios.get(constants.API_BASE_URL + '/api/starting-equipment/'+ chosenClass);
     },
 }

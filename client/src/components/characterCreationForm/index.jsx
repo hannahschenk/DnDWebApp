@@ -4,6 +4,7 @@ import RaceForm from './RaceForm';
 import ClassForm from './ClassForm';
 import AbilityScoresForm from "./AbilityScoresForm";
 import CharacterDetailsForm from './CharacterDetailsForm';
+import EquipmentForm from './EquipmentForm';
 
 const characterCreationForm = ({ currentSectionIdx }) => {
     const formGenerator = () => {
@@ -16,6 +17,8 @@ const characterCreationForm = ({ currentSectionIdx }) => {
                 return <AbilityScoresForm/>;
             case 3:
                 return <CharacterDetailsForm />;
+            case 5:
+                return <EquipmentForm/>;
         }
     };
 
