@@ -1,0 +1,23 @@
+import React from 'react';
+
+
+const Details = () => {
+    // Access state and set state function from the context with this custom hook
+    
+
+    return (
+        <>
+            <h2>Acolyte</h2>
+            <p>You have spent your life in the service of a temple to a specific god or pantheon of gods. 
+                You act as an intermediary between the realm of the holy and the mortal world, performing 
+                sacred rites and offering sacrifices in order to conduct worshipers into the presence of the divine. 
+                You are not necessarily a cleric-performing sacred rites is not the same thing as channeling divine power.</p>
+            <h3>Skill Proficiencies:</h3> <p>Insight, Religion</p>
+            <h3>Languages:</h3> <p>Two of your choice</p>
+            <h3>Equipment:</h3> <p>A holy symbol (a gift to you when you entered the priesthood), a prayer book or prayer wheel, 5 sticks of incense, vestments, a set of common clothes, and a puch containing 15 gp.</p>
+            
+        </>
+    );
+};
+
+export default Details;

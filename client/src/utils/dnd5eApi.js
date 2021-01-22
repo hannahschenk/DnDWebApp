@@ -8,6 +8,9 @@ module.exports = {
     getClasses: () => {
         return axios.get(constants.CLASSES_URL);
     },
+    getClass: (characterClass) => {
+        return axios.get(constants.CLASSES_URL + "/" + characterClass);
+    },
     getBackgrounds: () => {
         return axios.get(constants.BACKGROUNDS_URL);
     },
