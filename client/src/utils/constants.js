@@ -31,5 +31,15 @@ module.exports = {
                 subSections: ["Armor", "Weapons", "Tools", "Misc."]
             },
         ],
-    STANDARD_ARRAY: [15, 14, 13, 12, 10, 8]
+    STANDARD_ARRAY: [15, 14, 13, 12, 10, 8],
+    ALIGNMENTS: [
+        'Lawful Good',
+        'Lawful Neutral',
+        'Lawful Evil',
+        'Neutral Good',
+        'Neutral',
+        'Neutral Evil',
+        'Chaotic Good',
+        'Chaotic Neutral',
+        'Chaotic Evil']
 }

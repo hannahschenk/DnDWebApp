@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+
 import dndApi from '../../utils/dnd5eApi';
+import CONSTANTS from '../../utils/constants';
+
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
@@ -30,10 +33,14 @@ const CharacterDetailsForm = () => {
         setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { name: chosenBackgroundInfo.name } });
         setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
 
+        // setDetailComponentData(chosenBackgroundInfo)
+
         setNumLanguageChoices(chosenBackgroundInfo['language-choices']);
 
         // TODO The code to pull the background description can be easily pulled from the backgroundChoices object
         // TODO I was unable to pull the data from the link by id, this does not work!
+
+        // TODO This is something that should be passed to the DETAILS component
         // https://dnd-backgrounds-default-rtdb.firebaseio.com/backgrounds.json/1
         // dndApi
         //     .getMoreBackgroundInfo(chosenBackgroundInfo.name)
@@ -47,23 +54,38 @@ const CharacterDetailsForm = () => {
     };
 
     const pickLanguage = (chosenLanguage, chooseTwo) => {
+        console.log(chosenLanguage);
         if (chooseTwo) {
-            let languagesToUpdate = character.background.languages;
-            character.background.languages.length === 2 && languagesToUpdate.shift();
-            languagesToUpdate.push(chosenLanguage);
-
-            setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
-            setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: languagesToUpdate } });
+            // TODO Logic that puts languages in state, not yet working
+            // let languagesToUpdate = character.background.languages;
+            // character.background.languages.length === 2 && languagesToUpdate.shift();
+            // languagesToUpdate.push(chosenLanguage);
+            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
+            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: languagesToUpdate } });
         } else {
-            setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
-            setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [chosenLanguage] } });
+            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
+            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [chosenLanguage] } });
         }
     };
 
-    //note: having a form here is kind of useless but for the sake of being semantic
+    const setAlignment = (e) => {
+        e.preventDefault();
+        console.log(e.target.name);
+        // Maybe include a setTimeout to limit the number of hits to update state?
+        // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { alignment: e.target.name } });
+    };
+
+    const setStat = (e, stat) => {
+        e.preventDefault();
+        console.log(stat, e.target.value);
+        // Maybe include a setTimeout to limit the number of hits to update state?
+        // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { [stat]: e.target.value } });
+    };
+
     return (
         <>
             <form>
+                {/* BACKGROUND */}
                 <section>
                     <h3>Pick a Background: </h3>
                     {backgroundChoices.map((backgroundContent, idx) => (
@@ -88,30 +110,36 @@ const CharacterDetailsForm = () => {
                         placeholder="Enter a description for your character's personality and appearance."
                     ></textarea>
                 </section>
-
+                {/* LANGUAGES */}
                 <section>
                     <h3>Select your Languages:</h3>
                     <p>Your current proficient languages determined by your race:</p>
                     {character.race.languages.map((raceLanguage, idx) => (
                         <p key={idx}>{raceLanguage}</p>
                     ))}
-                    {numLanguageChoices ? (
-                        numLanguageChoices === 1 ? (
-                            <>
-                                <p>
-                                    Pick one bonus language granted by your <strong>{character.background.name}</strong> background.
-                                </p>
-                                {/* <SelectLanguages languageChoices={languageChoices} setLanguageChoices={setLanguageChoices} /> */}
+
+                    {/* I was getting strange bugs here, I had to separate these two lines of code that check the same condition */}
+                    {numLanguageChoices !== 0 && (
+                        <p>
+                            Pick {numLanguageChoices === 1 ? 'one bonus language' : numLanguageChoices === 2 ? 'two bonus languages' : ''} granted by your
+                            <strong> {character.background.name} </strong>background.
+                        </p>
+                    )}
+                    {numLanguageChoices !== 0 &&
+                        // Creates an array that is either: [1] or [1, 2]. Enables one or two <select> objects to render
+                        [...Array(numLanguageChoices)].map((e, idx) => (
+                            <React.Fragment key={idx}>
                                 <select name="languages" onChange={(e) => pickLanguage(e.target.value, false)} required>
-                                    {languageChoices.map((language, idx) => (
+                                    {languageChoices.map((language, idxx) => (
                                         <option
-                                            key={idx}
+                                            key={idxx}
                                             value={language}
                                             disabled={
                                                 !(
                                                     language !== character.race.languages[0] &&
                                                     language !== character.race.languages[1] &&
-                                                    language !== character.background.languages[0]
+                                                    language !== character.background.languages[0] &&
+                                                    language !== character.background.languages[1]
                                                 )
                                             }
                                         >
@@ -119,57 +147,36 @@ const CharacterDetailsForm = () => {
                                         </option>
                                     ))}
                                 </select>
-                            </>
-                        ) : numLanguageChoices === 2 ? (
-                            <>
-                                <p>
-                                    Pick two bonus languages granted by your <strong>{character.background.name}</strong> background.
-                                </p>
-
-                                {/* DOES NOT CURRENTLY ADD BOTH LANGUAGES TO STATE */}
-                                {/* <SelectLanguages languageChoices={languageChoices} setLanguageChoices={setLanguageChoices} chooseTwo /> */}
-                                <>
-                                    <select name="languages" onChange={(e) => pickLanguage(e.target.value, true)} required>
-                                        {languageChoices.map((language, idx) => (
-                                            <option
-                                                key={idx}
-                                                value={language}
-                                                disabled={
-                                                    !(
-                                                        language !== character.race.languages[0] &&
-                                                        language !== character.race.languages[1] &&
-                                                        language !== character.background.languages[0] &&
-                                                        language !== character.background.languages[1]
-                                                    )
-                                                }
-                                            >
-                                                {language}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <select name="languages" onChange={(e) => pickLanguage(e.target.value, true)} required>
-                                        {languageChoices.map((language, idx) => (
-                                            <option
-                                                key={idx}
-                                                value={language}
-                                                disabled={
-                                                    !(
-                                                        language !== character.race.languages[0] &&
-                                                        language !== character.race.languages[1] &&
-                                                        language !== character.background.languages[0] &&
-                                                        language !== character.background.languages[1]
-                                                    )
-                                                }
-                                            >
-                                                {language}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </>
                                 <br />
-                            </>
-                        ) : null
-                    ) : null}
+                            </React.Fragment>
+                        ))}
+                </section>
+                {/* AGE, HEIGHT, WEIGHT */}
+                <section>
+                    {/* TODO - Implement logic / checks based on race */}
+                    <h3>Determine your Age, Height, and Weight.</h3>
+                    <label htmlFor="age">Age: </label>
+                    <input type="number" placeholder="18" id="age" name="age" onChange={(e) => setStat(e, 'age')} />
+                    <br />
+                    <label htmlFor="height">Height: </label>
+                    <input type="text" id="height" name="height" onChange={(e) => setStat(e, 'height')} />
+                    <br />
+                    <label htmlFor="weight">Weight: </label>
+                    <input type="text" id="weight" name="weight" onChange={(e) => setStat(e, 'weight')} />
+                    <br />
+                </section>
+                {/* ALIGNMENT */}
+                <section>
+                    <h3>Choose your Alignment</h3>
+                    {/* Render details of each alignment in DETAILS component. */}
+                    {CONSTANTS.ALIGNMENTS.map((alignment, idx) => (
+                        <React.Fragment key={idx}>
+                            <button key={idx} name={alignment} onClick={(e) => setAlignment(e)} style={{ width: 200 }}>
+                                {alignment}
+                            </button>
+                            <br />
+                        </React.Fragment>
+                    ))}
                 </section>
             </form>
         </>
