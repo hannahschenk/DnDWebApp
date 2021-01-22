@@ -29,7 +29,7 @@ const ProficienciesForm = () => {
                 if (ifSpellcaster.data.spellcasting) {
                     // Assigns these two constants to a string array containing the spells for the class and all level 1 spells
                     const classSpells = (await dndApi.getClass('cleric/spells')).data.results.map((spell) => spell.name);
-                    const levelOneSpells = (await dndApi.getMoreInfo('/spells?level=1')).data.results.map((spell) => spell.name);
+                    const levelOneSpells = (await dndApi.getMoreInfo('/api/spells?level=1')).data.results.map((spell) => spell.name);
                     // const classSpells = (await dndApi.getClass(character.class.name + '/spells')).data.results.map((spell) => spell.name);
                     // const levelOneSpells =  (await dndApi.getMoreInfo('/spells?level=1')).data.results.map((spell) => spell.name);
 
