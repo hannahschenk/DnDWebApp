@@ -5,16 +5,21 @@ const RaceForm = () => {
     // DUMMY; info that will come from the global state
     const [initialEquipment, setInitialEquipment] = useState([]);
     const [totalChoices, setChoices] = useState({wrap:[]});
+    const [backgroundEquipment, setBackgroundEquipment] = useState([]);
 
     useEffect(() => {
-        //will be changed to user choice
-        dndApi.getStartingEquipment("barbarian")
+        //will be changed to id of user selected background
+        dndApi.getBackground(0)
         .then((response) => {
-            console.log(response.data.starting_equipment);
+            setBackgroundEquipment(response.data["misc-equipments"])
+        })
+        //will be changed to user choice
+        dndApi.getStartingEquipment("fighter")
+        .then((response) => {
             setInitialEquipment(response.data.starting_equipment);
         })
         .catch(err => console.log(err))
-        dndApi.getStartingEquipment("barbarian")
+        dndApi.getStartingEquipment("fighter")
             .then(response => {
                 let data = response.data;
                 let allChoiceGroups = data.starting_equipment_options
@@ -27,9 +32,14 @@ const RaceForm = () => {
                     //a is the inner index
                         if (optionsInGroup[a].hasOwnProperty('equipment')){
                             totalChoices.wrap[i].push(optionsInGroup[a].equipment)
+                            totalChoices.wrap[i][a]["quantity"] = optionsInGroup[a].quantity;
                             setChoices({wrap: totalChoices.wrap})
                         }
-                        // if (optionsInGroup[a].hasOwnProperty('equipment_option')){
+                        //some classes allow multiple items with one choice, ie crossbow and bolts
+                        //TODO: does not display 
+                        else if(optionsInGroup[a].hasOwnProperty('0') || optionsInGroup[a].hasOwnProperty('1') || optionsInGroup[a].hasOwnProperty('2')) {
+                            totalChoices.wrap[i].push(optionsInGroup[a]);
+                        }
                         else {
                             let urlEndpoint = (optionsInGroup[a].hasOwnProperty('equipment_option')) ? 
                                 optionsInGroup[a].equipment_option.from.equipment_category.url : 
@@ -37,7 +47,11 @@ const RaceForm = () => {
                             fetch("https://www.dnd5eapi.co" + urlEndpoint)
                             .then(response => response.json())
                             .then(data => {
+                                
                                 totalChoices.wrap[i] = totalChoices.wrap[i].concat(data.equipment)
+                                for (let ii = 0; ii < data.equipment.length; ii++) {
+                                    totalChoices.wrap[i][ii +1]["quantity"] = allChoiceGroups[i].choose;
+                                }
                                 setChoices({wrap: totalChoices.wrap})
                             })
                         }
@@ -46,53 +60,47 @@ const RaceForm = () => {
             });
     }, []);
 
-    useEffect(() => {
-        console.log(totalChoices);
-    })
-
-
     const pickEquipment = (chosenEquipmentInfo) => {
-        dndApi.getMoreInfo(chosenRaceInfo.url)
+        dndApi.getMoreInfo(chosenEquipmentInfo.url)
         .then((response) => {
             /*
                 TODO: this is a good spot to format the data and send what ever we need to the global state
             */
-            setSubRaceChoices(response.data.subraces)
         })
         .catch(err => console.log(err))
     };
     
-    //needs to be outside of function, equipment array does not update fast enough to get length
+    //index needs to be outside of function, equipment array does not update fast enough to get length
     let index = 0;
     const createOptions = () => {
         let options = [];
-        console.log(totalChoices.wrap.length);
-            console.log(totalChoices.wrap.length);
-            for (let ii = 0; ii < totalChoices.wrap[index].length; ii++) {
-                options.push(<option key = {index} value = {ii}>{totalChoices.wrap[index][ii].name}</option>);
+            for (let i = 0; i < totalChoices.wrap[index].length; i++) {
+                //TODO: display multiple items for one option
+                if (totalChoices.wrap[index][i].quantity > 1) {
+                    options.push(<option key = {i} value = {i}>{totalChoices.wrap[index][i].name + " x" + totalChoices.wrap[index][i].quantity}</option>);
+                }
+                else {
+                    options.push(<option key = {i} value = {i}>{totalChoices.wrap[index][i].name}</option>);
+                }
+                
             }
-            console.log(totalChoices.wrap[index].length);
         index++;
         return options;
     }
-    // const createOptions = () => {
-    //     let index = totalChoices.wrap.length;
-    //     console.log(index);
-    //     let options = [];
-    //     for (let i = 0; i < index; i++) {
-    //         options.push(<option key = {i} value = {i}>{totalChoices.wrap[index-1][i].name}</option>);
-    //     }
-    //     console.log(totalChoices.wrap[i].length);
-        
-    //     return options;
-    // }
 
     //note: having a form here is kind of useless but for the sake of being semantic
     return (
             <form>
+                <h3>Class Equipment</h3>
                 {
                     initialEquipment.map( (initialEquipmentContent) => 
-                        <p> {initialEquipmentContent.equipment.name} </p>
+                        <p> {initialEquipmentContent.equipment.name + " x" + initialEquipmentContent.quantity} </p>
+                    )
+                }
+                <h3>Background Equipment</h3>
+                {
+                    backgroundEquipment.map((backgroundEquipmentContent) =>
+                        <p>{backgroundEquipmentContent}</p>
                     )
                 }
                 <p>Pick your starting equipment: </p>
