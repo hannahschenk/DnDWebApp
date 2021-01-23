@@ -10,26 +10,33 @@ const ClassForm = () => {
 
     const [classChoices, setClassChoices] = useState([]);
 
-    useEffect(() => {
-        dndApi
-            .getClasses()
-            .then((response) => setClassChoices(response.data.results))
-            .catch((err) => console.log(err));
+    useEffect(async () => {
+        try {
+            setClassChoices((await dndApi.getClasses()).data.results);
+
+            if (character.class.name !== '') {
+                // Sets details component to render data based on currently selected class, if available
+                setDetails((await dndApi.getMoreInfo(character.class.url)).data);
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }, []);
 
-    const pickClass = (chosenClassInfo) => {
-        dndApi
-            .getMoreInfo(chosenClassInfo.url)
-            .then((data) => {
-                console.log(data.response);
-                /*
-                TODO: this is a good spot to format the data and send what ever we need to the global state
-            */
-            })
-            .catch((err) => console.log(err));
+    const pickClass = async (chosenClassInfo) => {
+        try {
+            // Grabs class specific data from api based on selected class
+            const classSpecificInfo = (await dndApi.getMoreInfo(chosenClassInfo.url)).data;
+
+            setCharacter({ type: ACTION.CLEAR_CLASS });
+            setCharacter({ type: ACTION.UPDATE_CLASS, payload: { name: chosenClassInfo.index, url: chosenClassInfo.url, hitDie: classSpecificInfo.hit_die } });
+
+            setDetails(classSpecificInfo);
+        } catch (err) {
+            console.log(err);
+        }
     };
 
-    //note: having a form here is kind of useless but for the sake of being semantic
     return (
         <>
             <form>
@@ -37,7 +44,14 @@ const ClassForm = () => {
                 {classChoices.map((classContent) => (
                     <React.Fragment key={`${classContent.index}`}>
                         <label htmlFor="class">{classContent.name}</label>
-                        <input type="radio" name="class" id="class" value={classContent.index} onClick={() => pickClass(classContent)} />
+                        <input
+                            type="radio"
+                            name="class"
+                            id={classContent.name}
+                            defaultChecked={character.class.name === classContent.index}
+                            value={classContent.index}
+                            onClick={() => pickClass(classContent)}
+                        />
                         <br />
                     </React.Fragment>
                 ))}
