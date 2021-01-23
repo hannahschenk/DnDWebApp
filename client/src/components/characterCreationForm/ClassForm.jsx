@@ -6,7 +6,7 @@ import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
 const ClassForm = () => {
-    const { character, setCharacter } = useCharacter();
+    const { character, setCharacter, setDetails } = useCharacter();
 
     const [classChoices, setClassChoices] = useState([]);
 

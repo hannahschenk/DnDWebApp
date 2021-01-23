@@ -18,9 +18,13 @@ const App = () => {
 
     // Updates the local storage with changes in state (also prints to console)
     useEffect(() => {
-        console.log(character);
+        // console.log(character);
         localStorage.setItem('character', JSON.stringify(character));
     }, [character]);
+
+    useEffect(() => {
+        console.log(details);
+    }, [details]);
 
     return (
         <>
