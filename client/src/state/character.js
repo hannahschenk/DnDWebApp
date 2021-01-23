@@ -3,7 +3,9 @@ const INITIAL_CHARACTER_STATE = {
     name: "",
     subrace: "",
     // First index is race url, second is subrace index
-    url: []
+    url: [],
+    speed: "",
+    size: ""
   },
   class: {
     name: "",
@@ -29,14 +31,12 @@ const INITIAL_CHARACTER_STATE = {
       {
         name: "",
         origin: "", // Either race or background
-        endPointUrl: ""
+        url: ""
       }
     ],
     age: "",
     height: "",
     weight: "",
-    speed: "",
-    size: ""
   },
   proficiencies: {
     skills: [
@@ -44,13 +44,13 @@ const INITIAL_CHARACTER_STATE = {
         name: "",
         origin: "", // Either class or background
         ability: "", // One of the six ability scores
-        endPointUrl: ""
+        url: ""
       }
     ],
     spells: [
       {
         name: "",
-        endPointUrl: ""
+        url: ""
       }
     ],
     savingThrows: [
@@ -61,25 +61,25 @@ const INITIAL_CHARACTER_STATE = {
     armor: [
       {
         name: "",
-        endPointUrl: ""
+        url: ""
       }
     ],
     weapons: [
       {
         name: "",
-        endPointUrl: ""
+        url: ""
       }
     ],
     tools: [
       {
         name: "",
-        endPointUrl: ""
+        url: ""
       }
     ],
     misc: [
       {
         name: "",
-        endPointUrl: ""
+        url: ""
       }
     ]
   }

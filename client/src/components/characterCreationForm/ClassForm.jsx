@@ -11,16 +11,23 @@ const ClassForm = () => {
     const [classChoices, setClassChoices] = useState([]);
 
     useEffect(async () => {
-        try {
-            setClassChoices((await dndApi.getClasses()).data.results);
+        let mounted = true;
 
-            if (character.class.name !== '') {
-                // Sets details component to render data based on currently selected class, if available
-                setDetails((await dndApi.getMoreInfo(character.class.url)).data);
+        if (mounted) {
+            try {
+                setClassChoices((await dndApi.getClasses()).data.results);
+
+                if (character.class.name !== '') {
+                    // Sets details component to render data based on currently selected class, if available
+                    setDetails((await dndApi.getMoreInfo(character.class.url)).data);
+                }
+            } catch (err) {
+                console.log(err);
             }
-        } catch (err) {
-            console.log(err);
         }
+        return () => {
+            mounted = false;
+        };
     }, []);
 
     const pickClass = async (chosenClassInfo) => {

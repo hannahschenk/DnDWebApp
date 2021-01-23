@@ -12,14 +12,16 @@ const CharacterDetailsForm = () => {
     const [backgroundChoices, setBackgroundChoices] = useState([]);
     const [languageChoices, setLanguageChoices] = useState([]);
     const [numLanguageChoices, setNumLanguageChoices] = useState(0);
+    const [raceLanguages, setRaceLanguages] = useState();
 
-    useEffect(() => {
+    useEffect(async () => {
         let mounted = true;
 
         if (mounted) {
             try {
-                dndApi.getBackgrounds().then((response) => setBackgroundChoices(response.data));
-                dndApi.getLanguages().then((response) => setLanguageChoices(response.data.results.map((language) => language.name)));
+                setBackgroundChoices((await dndApi.getBackgrounds()).data);
+                setLanguageChoices((await dndApi.getLanguages()).data.results);
+                setRaceLanguages(character.background.languages);
             } catch (err) {
                 console.log(err);
             }
@@ -30,10 +32,13 @@ const CharacterDetailsForm = () => {
     }, []);
 
     const pickBackground = (chosenBackgroundInfo) => {
+        // Backgrounds do not have a separate url, bc we aren't using dnd5e API
         setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { name: chosenBackgroundInfo.name } });
-        setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
 
-        // setDetailComponentData(chosenBackgroundInfo)
+        // Erase background languages, NOT race languages
+        setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: raceLanguages } });
+
+        setDetails(chosenBackgroundInfo);
 
         setNumLanguageChoices(chosenBackgroundInfo['language-choices']);
 
@@ -53,33 +58,34 @@ const CharacterDetailsForm = () => {
         //     .catch((err) => console.log(err));
     };
 
-    const pickLanguage = (chosenLanguage, chooseTwo) => {
+    const pickLanguage = async (chosenLanguage) => {
         console.log(chosenLanguage);
-        if (chooseTwo) {
-            // TODO Logic that puts languages in state, not yet working
-            // let languagesToUpdate = character.background.languages;
-            // character.background.languages.length === 2 && languagesToUpdate.shift();
-            // languagesToUpdate.push(chosenLanguage);
-            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
-            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: languagesToUpdate } });
-        } else {
-            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
-            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [chosenLanguage] } });
+
+        const formatUrl = `/api/languages/${chosenLanguage.replace(/\s/g, '-').toLowerCase()}`;
+
+        setCharacter({
+            type: ACTION.UPDATE_BACKGROUND,
+            payload: {
+                languages: [...character.background.languages, { name: chosenLanguage, origin: 'background', url: formatUrl }],
+            },
+        });
+        try {
+            setDetails((await dndApi.getMoreInfo(formatUrl)).data);
+        } catch (err) {
+            console.log(err);
         }
     };
 
     const setAlignment = (e) => {
         e.preventDefault();
-        console.log(e.target.name);
         // Maybe include a setTimeout to limit the number of hits to update state?
-        // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { alignment: e.target.name } });
+        setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { alignment: e.target.name } });
     };
 
     const setStat = (e, stat) => {
         e.preventDefault();
-        console.log(stat, e.target.value);
         // Maybe include a setTimeout to limit the number of hits to update state?
-        // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { [stat]: e.target.value } });
+        setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { [stat]: e.target.value } });
     };
 
     return (
@@ -114,9 +120,7 @@ const CharacterDetailsForm = () => {
                 <section>
                     <h3>Select your Languages:</h3>
                     <p>Your current proficient languages determined by your race:</p>
-                    {character.race.languages.map((raceLanguage, idx) => (
-                        <p key={idx}>{raceLanguage}</p>
-                    ))}
+                    {raceLanguages && raceLanguages.map((language, idx) => <p key={idx}>{language.name}</p>)}
 
                     {/* I was getting strange bugs here, I had to separate these two lines of code that check the same condition */}
                     {numLanguageChoices !== 0 && (
@@ -129,21 +133,19 @@ const CharacterDetailsForm = () => {
                         // Creates an array that is either: [1] or [1, 2]. Enables one or two <select> objects to render
                         [...Array(numLanguageChoices)].map((e, idx) => (
                             <React.Fragment key={idx}>
-                                <select name="languages" onChange={(e) => pickLanguage(e.target.value, false)} required>
+                                <select name="languages" onChange={(e) => pickLanguage(e.target.value)} required>
                                     {languageChoices.map((language, idxx) => (
                                         <option
                                             key={idxx}
-                                            value={language}
+                                            value={language.name}
                                             disabled={
-                                                !(
-                                                    language !== character.race.languages[0] &&
-                                                    language !== character.race.languages[1] &&
-                                                    language !== character.background.languages[0] &&
-                                                    language !== character.background.languages[1]
-                                                )
+                                                (character.background.languages[0] && character.background.languages[0].name === language.name) ||
+                                                (character.background.languages[1] && character.background.languages[1].name === language.name) ||
+                                                (character.background.languages[2] && character.background.languages[2].name === language.name) ||
+                                                (character.background.languages[3] && character.background.languages[3].name === language.name)
                                             }
                                         >
-                                            {language}
+                                            {language.name}
                                         </option>
                                     ))}
                                 </select>
