@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FormContainer from './FormContainer';
 import CreationTimeline from './CreationTimeline';
 import constants from './../../utils/constants';
+
+ //TESTING STATE UPDATERS:
+ import { useCharacter } from './../../state/logic';
+ //end state tester
 
 const CharacterCreationPage = () => {
     /*NOTE: local state; might push to global state later:*/
@@ -24,6 +28,14 @@ const CharacterCreationPage = () => {
         }
     };
     /* END NOTE*/
+
+    //TESTING STATE UPDATERS:
+    const { character, setCharacter } = useCharacter();
+    useEffect(() => {
+        console.log(character)
+
+    }, [character])
+    //end state tester
 
     return (
         <>

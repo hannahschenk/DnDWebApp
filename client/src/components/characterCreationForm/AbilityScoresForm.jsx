@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
 import constants from './../../utils/constants';
-
+import dndApi from './../../utils/dnd5eApi';
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
+import axios from 'axios';
 
 const AbilityScoresForm = ({ formDetailsState }) => {
     const { character, setCharacter, setDetails } = useCharacter();
 
     const [abilityScoreChoices, setAbilityScoreChoices] = useState([]);
+
+    const ApiToAppAbilityScoreMap = {
+        "str": "strength",
+        "dex": "dexterity",
+        "con": "constitution",
+        "int": "intelligence",
+        "wis": "wisdom",
+        "cha": "charisma"
+    }
 
     //these shouldn't really be hard coded, it should be mapped from the global state ability score names:
     const [abilityScoreIdxMatch, setAbilityScoreIdxMatch] = useState({
@@ -19,6 +29,28 @@ const AbilityScoresForm = ({ formDetailsState }) => {
         wisdom: -1,
         charisma: -1,
     });
+
+    useEffect(async() => {
+        //there are 
+        try{
+            let apiRaceEndpoints = character.race.url
+            let abilityCopy = character.abilities;
+            for(let i = 0; i < apiRaceEndpoints.length; i++){
+                let raceObj = (await dndApi.getMoreInfo(apiRaceEndpoints[i])).data
+                let abilityBonusArr = raceObj.ability_bonuses
+                
+                for(let a = 0; a < abilityBonusArr.length; a++){
+                    let abilityScoreName = ApiToAppAbilityScoreMap[abilityBonusArr[a].ability_score.index]
+                    console.log(character.abilities)
+                    abilityCopy[abilityScoreName] = abilityBonusArr[a].bonus
+                }
+                setCharacter({ type: ACTION.UPDATE_ABILITIES, payload: {...abilityCopy} });
+            }
+        }
+        catch (e){
+            console.log(e) 
+        }
+    }, [])
 
     const abilityScoreChoicesReducer = (actionType) => {
         switch (actionType) {
@@ -48,6 +80,7 @@ const AbilityScoresForm = ({ formDetailsState }) => {
         let scoreIdx = e.target.value;
 
         const score = abilityScoreChoices[scoreIdx] ? abilityScoreChoices[scoreIdx].score : 0;
+        let newScore = character.abilities[abilityScoreName] + score
 
         if (scoreIdx != -1) {
             abilityScoreChoices[scoreIdx].used = true;
@@ -56,16 +89,15 @@ const AbilityScoresForm = ({ formDetailsState }) => {
         if (abilityScoreIdxMatch[abilityScoreName] != -1) {
             let idxNotUsed = abilityScoreIdxMatch[abilityScoreName];
             abilityScoreChoices[idxNotUsed].used = false;
+            newScore = newScore - abilityScoreChoices[idxNotUsed].score
         }
 
         setAbilityScoreChoices([...abilityScoreChoices]);
         setAbilityScoreIdxMatch({ ...abilityScoreIdxMatch, [abilityScoreName]: parseInt(scoreIdx) });
 
-        setCharacter({ type: ACTION.UPDATE_ABILITIES, payload: { ...character.abilities, [abilityScoreName]: score } });
+        setCharacter({ type: ACTION.UPDATE_ABILITIES, payload: { ...character.abilities, [abilityScoreName]: newScore } });
     };
 
-    // useEffect(() => console.log(abilityScoreChoices));
-    // useEffect(() => console.log(abilityScoreIdxMatch), [abilityScoreIdxMatch]);
 
     return (
         <>
@@ -74,12 +106,11 @@ const AbilityScoresForm = ({ formDetailsState }) => {
 
             {abilityScoreChoices.length == 0 ? (
                 <>
-                    <button onClick={abilityScoreChoicesReducer('STANDARD_ARRAY')}>Use Standard Array</button>
-                    <button onClick={abilityScoreChoicesReducer('RANDOM_ARRAY')}>Generate Random Scores</button>
+                    <button onClick={() => abilityScoreChoicesReducer('STANDARD_ARRAY')}>Use Standard Array</button>
+                    <button onClick={() => abilityScoreChoicesReducer('RANDOM_ARRAY')}>Generate Random Scores</button>
                 </>
             ) : (
                 Object.entries(character.abilities).map(([ability, score]) => {
-                    console.log(character.abilities[ability]);
                     return (
                         <React.Fragment key={ability}>
                             <label htmlFor={ability}>{ability}</label>
@@ -87,11 +118,12 @@ const AbilityScoresForm = ({ formDetailsState }) => {
                                 <option value={-1}> no assignment </option>
                                 {abilityScoreChoices.map((scoreObj, scoreIdx) => (
                                     <option key={scoreIdx} value={scoreIdx} disabled={scoreObj.used}>
-                                        {character.abilities[ability] && scoreObj.score}
-                                        {/* NOTE THIS DOES NOT WORK TO DISPLAY THE DEFAULT VALUES */}
+                                        {scoreObj.score}
                                     </option>
                                 ))}
                             </select>
+                            <p>current score: {character.abilities[ability]}</p>
+
                             <br />
                         </React.Fragment>
                     );
@@ -103,32 +135,3 @@ const AbilityScoresForm = ({ formDetailsState }) => {
 
 export default AbilityScoresForm;
 
-/*TODO: this is dummy data; state should have initial scores filled out from race*/
-// const abilityScoresState = [
-//     {
-//         name: 'strength',
-//         score: 0,
-//     },
-//     {
-//         name: 'dexterity',
-//         score: 0,
-//     },
-//     {
-//         name: 'constitution',
-//         score: 2,
-//     },
-//     {
-//         name: 'intelligence',
-//         score: 0,
-//     },
-//     {
-//         name: 'wisdom',
-//         score: 1,
-//     },
-//     {
-//         name: 'charisma',
-//         score: 0,
-//     },
-// ];
-
-/* end dummy data*/
