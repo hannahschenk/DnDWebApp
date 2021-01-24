@@ -54,6 +54,7 @@ const ProficienciesForm = () => {
                     const filteredSpells = classSpells.filter((spell) => levelOneSpells.includes(spell));
                     setAvailableSpells(filteredSpells);
                 }
+
             } catch (err) {
                 console.error(err);
             }

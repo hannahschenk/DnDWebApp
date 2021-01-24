@@ -4,7 +4,8 @@ import dndApi from "./../../utils/dnd5eApi";
 
 import * as ACTION from '../../state/actions';
 import { useCharacter } from '../../state/logic';
-const RaceForm = () => {
+import axios from 'axios';
+const EquipmentForm = () => {
     // DUMMY; info that will come from the global state
     const [initialEquipment, setInitialEquipment] = useState([]);
     const [totalChoices, setChoices] = useState({wrap:[]});
@@ -63,7 +64,8 @@ const RaceForm = () => {
 
         //BACKGROUND EQUIPMENT INTIIAL----------------------------------------------------
         //will be changed to id of user selected background
-        dndApi.getBackground(0)
+        //dndApi.getBackground(0)
+        axios(character.background.url)
         .then((response) => {
             let backgroundEquipments = response.data["misc-equipments"].map((content) => {
                 return { name: content, url: null, type: "misc"}
@@ -80,9 +82,12 @@ const RaceForm = () => {
 
         //CLASS EQUIPMENT INTIIAL----------------------------------------------------
         //will be changed to user choice
-        let classEquipment = (await dndApi.getStartingEquipment("barbarian")).data
-        setInitialEquipment(classEquipment.starting_equipment);
-        let initialEquipments = classEquipment.starting_equipment
+        let equipmentEndPoint = (await dndApi.getMoreInfo(character.class.url)).data.starting_equipment
+        //let classEquipment = (await dndApi.getStartingEquipment("barbarian")).data
+        //let classEquipment = (await dndApi.getMoreInfo(equipmentEndPoint)).data
+        const equipmentObj = (await dndApi.getMoreInfo(equipmentEndPoint)).data
+        setInitialEquipment(equipmentObj.starting_equipment);
+        let initialEquipments = equipmentObj.starting_equipment
         for(let i = 0; i < initialEquipments.length; i++){
             let equipmentCat = (await dndApi.getMoreInfo(initialEquipments[i].equipment.url)).data.equipment_category.index;
             character.equipment.total.push({ name: `${initialEquipments[i].quantity} ${initialEquipments[i].equipment.name}`, 
@@ -91,9 +96,8 @@ const RaceForm = () => {
         }
             
 
-        const equipmentObj = (await dndApi.getStartingEquipment("fighter")).data;
+        //const equipmentObj = (await dndApi.getStartingEquipment("fighter")).data;
         let allChoiceGroups = equipmentObj.starting_equipment_options
-
         for(let i = 0; i < allChoiceGroups.length; i++){
             (totalChoices.wrap).push([])
             setChoices({wrap: totalChoices.wrap})
@@ -134,14 +138,14 @@ const RaceForm = () => {
             <form>
                 <h3>Class Equipment</h3>
                 {
-                    initialEquipment.map( (initialEquipmentContent) => 
-                        <p> {initialEquipmentContent.equipment.name + " x" + initialEquipmentContent.quantity} </p>
+                    initialEquipment.map( (initialEquipmentContent, idx) => 
+                        <p key={idx}> {initialEquipmentContent.equipment.name + " x" + initialEquipmentContent.quantity} </p>
                     )
                 }
                 <h3>Background Equipment</h3>
                 {
-                    backgroundEquipment.map((backgroundEquipmentContent) =>
-                        <p>{backgroundEquipmentContent}</p>
+                    backgroundEquipment.map((backgroundEquipmentContent, idx) =>
+                        <p key={idx}>{backgroundEquipmentContent}</p>
                     )
                 }
                 <p>Pick your starting equipment: </p>
@@ -166,4 +170,4 @@ const RaceForm = () => {
     );
 };
 
-export default RaceForm;
+export default EquipmentForm;

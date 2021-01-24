@@ -15,6 +15,15 @@ const CharacterDetailsForm = () => {
     const [numLanguageChoices, setNumLanguageChoices] = useState(0);
     const [raceLanguages, setRaceLanguages] = useState();
 
+    const ApiToAppAbilityScoreMap = {
+        "str": "strength",
+        "dex": "dexterity",
+        "con": "constitution",
+        "int": "intelligence",
+        "wis": "wisdom",
+        "cha": "charisma"
+    }
+
     useEffect(async () => {
         let mounted = true;
 
@@ -31,6 +40,10 @@ const CharacterDetailsForm = () => {
 
                 setLanguageChoices((await dndApi.getLanguages()).data.results);
                 //we need to have a completely different array
+                const raceLanguages = (await dndApi.getMoreInfo(character.race.url[0])).data.languages;
+                character.background.languages = raceLanguages.map((content) => {
+                    return {name: content.name, url: content.url, origin: "race"}
+                })
                 setRaceLanguages([...character.background.languages]);
 
             } catch (err) {

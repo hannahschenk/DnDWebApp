@@ -51,11 +51,11 @@ const RaceForm = () => {
             //       url: ""
             //     }
             //   ],
-            const getRaceLanguages =
+            /*const getRaceLanguages =
                 getRaceInfo &&
                 getRaceInfo.data.languages.map((language) => {
                     return { name: language.name, origin: 'race', url: language.url };
-                });
+                });*/
 
             setCharacter({ type: ACTION.CLEAR_RACE }); // Clear race and subrace before selecting a new race
             setCharacter({
@@ -63,9 +63,9 @@ const RaceForm = () => {
                 payload: { name: chosenRaceInfo.index, url: [chosenRaceInfo.url], size: getRaceInfo.data.size, speed: getRaceInfo.data.speed },
             });
 
-            setCharacter({ type: ACTION.CLEAR_BACKGROUND }); // Clear all background state before adding languages?
+            //setCharacter({ type: ACTION.CLEAR_BACKGROUND }); // Clear all background state before adding languages?
 
-            getRaceInfo && setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [...getRaceLanguages] } });
+            //getRaceInfo && setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [...getRaceLanguages] } });
 
             setDetails(chosenRaceInfo);
         } catch (err) {
@@ -84,8 +84,8 @@ const RaceForm = () => {
         <>
             <form>
                 <p>Pick a Race: </p>
-                {raceChoices.map((raceContent) => (
-                    <React.Fragment key={`${raceContent.index}`}>
+                {raceChoices.map((raceContent, idx) => (
+                    <React.Fragment key={idx}>
                         <label htmlFor="race">{raceContent.name}</label>
                         <input
                             type="radio"
@@ -103,8 +103,8 @@ const RaceForm = () => {
             <form>
                 <p>Pick a SubRace: </p>
                 {subRaceChoices.length > 0 ? (
-                    subRaceChoices.map((subRaceContent) => (
-                        <React.Fragment key={`${subRaceContent.index}`}>
+                    subRaceChoices.map((subRaceContent, idx) => (
+                        <React.Fragment key={idx}>
                             <label htmlFor="subrace">{subRaceContent.name}</label>
                             <input
                                 type="radio"
