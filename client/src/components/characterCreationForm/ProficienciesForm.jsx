@@ -6,27 +6,44 @@ import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
 const ProficienciesForm = () => {
-    const { character } = useCharacter();
+    const { character, setCharacter } = useCharacter();
 
     const [skillProficiencies, setSkillProficiencies] = useState([]);
     const [skillList, setSkillList] = useState([]);
+
 
     const [spellCasting, setSpellCasting] = useState(undefined);
     const [availableSpells, setAvailableSpells] = useState([]);
     const [spellList, setSpellList] = useState([]);
 
+    const ApiToAppAbilityScoreMap = {
+        "str": "strength",
+        "dex": "dexterity",
+        "con": "constitution",
+        "int": "intelligence",
+        "wis": "wisdom",
+        "cha": "charisma"
+    }
     useEffect(async () => {
         let mounted = true;
 
         if (mounted) {
             try {
+                const classObj = (await dndApi.getClass(character.class.name)).data;
+
                 // Grab the class's skills
-                const skillProficiencies = (await dndApi.getClass(character.class.name)).data.proficiency_choices;
+                const skillProficiencies = classObj.proficiency_choices;
                 setSkillProficiencies(skillProficiencies);
 
                 // Set ifSpellcaster to the spellcasting object if a spellcasting class, or undefined if not (controls rendering of <SpellsForm /> component)
-                const ifSpellcaster = (await dndApi.getClass(character.class.name)).data.spellcasting;
+                const ifSpellcaster = classObj.spellcasting;
                 setSpellCasting(ifSpellcaster);
+
+                //adding on the saving throws:
+                let savingThrowsStringArr =  classObj.saving_throws.map((obj) => ApiToAppAbilityScoreMap[obj.index])
+                setCharacter({ type: ACTION.UPDATE_PROFICIENCIES, payload: { savingThrows: savingThrowsStringArr } });
+
+
 
                 if (ifSpellcaster) {
                     // Assigns these two constants to a string array containing the spells for the class and all level 1 spells
@@ -64,6 +81,7 @@ const SkillsForm = ({ skillProficiencies }) => {
     const handleSkillChoice = (e) => {
         e.preventDefault();
 
+
         const skill = e.target.name;
         const skillUrl = '/api/skills/' + skill.replace(/\s/g, '-').toLowerCase();
         const updatedSkills = Object.values(character.proficiencies.skills).filter((skill) => skill.name !== e.target.name);
@@ -77,6 +95,8 @@ const SkillsForm = ({ skillProficiencies }) => {
         }
         // Otherwise add spell
         else {
+
+            if(character.proficiencies.skills.length == skillProficiencies[0].choose) return;
             // console.log([...character.proficiencies.skills, { name: skill, url: skillUrl }]);
             console.log('added ' + skill);
             setCharacter({ type: ACTION.UPDATE_PROFICIENCIES, payload: { skills: [...character.proficiencies.skills, { name: skill, url: skillUrl }] } });
