@@ -23,7 +23,7 @@ const App = () => {
     }, [character]);
 
     useEffect(() => {
-        console.log(details);
+        console.log('Data sent to details component: ', details);
     }, [details]);
 
     return (

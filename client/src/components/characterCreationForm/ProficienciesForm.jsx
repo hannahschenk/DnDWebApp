@@ -6,12 +6,14 @@ import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
 const ProficienciesForm = () => {
-    const { character, setCharacter, setDetails } = useCharacter();
+    const { character } = useCharacter();
 
     const [skillProficiencies, setSkillProficiencies] = useState([]);
     const [skillList, setSkillList] = useState([]);
+
     const [spellCasting, setSpellCasting] = useState(undefined);
     const [availableSpells, setAvailableSpells] = useState([]);
+    const [spellList, setSpellList] = useState([]);
 
     useEffect(async () => {
         let mounted = true;
@@ -51,9 +53,9 @@ const ProficienciesForm = () => {
         };
     }, []);
 
-    useEffect(() => {
-        console.log(skillList);
-    }, [skillList]);
+    // useEffect(() => {
+    //     console.log(skillList);
+    // }, [skillList]);
 
     return (
         <>

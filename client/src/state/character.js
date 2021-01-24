@@ -28,11 +28,11 @@ const INITIAL_CHARACTER_STATE = {
     personality: "",
     alignment: "",
     languages: [
-      {
-        name: "",
-        origin: "", // Either race or background
-        url: ""
-      }
+      // {
+      //   name: "",
+      //   origin: "", // Either race or background
+      //   url: ""
+      // }
     ],
     age: "",
     height: "",

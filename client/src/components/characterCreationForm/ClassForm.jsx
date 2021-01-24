@@ -37,6 +37,7 @@ const ClassForm = () => {
 
             setCharacter({ type: ACTION.CLEAR_CLASS });
             setCharacter({ type: ACTION.UPDATE_CLASS, payload: { name: chosenClassInfo.index, url: chosenClassInfo.url, hitDie: classSpecificInfo.hit_die } });
+            setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { savingThrows: [...classSpecificInfo.saving_throws] } });
 
             setDetails(classSpecificInfo);
         } catch (err) {
