@@ -39,23 +39,23 @@ const INITIAL_CHARACTER_STATE = {
     weight: "",
   },
   proficiencies: {
-    skills: [
-      {
-        name: "",
-        origin: "", // Either class or background
-        ability: "", // One of the six ability scores
-        url: ""
-      }
-    ],
-    spells: [
-      {
-        name: "",
-        url: ""
-      }
-    ],
-    savingThrows: [
-      // name of the abilities key (not an object, an array of strings)
-    ]
+    skills: [],
+    //   {
+    //     name: "",
+    //     origin: "", // Either class or background
+    //     ability: "", // One of the six ability scores
+    //     url: ""
+    //   }
+    // ],
+    spells: [],
+    //   {
+    //     name: "",
+    //     url: ""
+    //   }
+    // ],
+    savingThrows: [],
+    // name of the abilities key (not an object, an array of strings)
+
   },
   equipment: {
     armor: [
