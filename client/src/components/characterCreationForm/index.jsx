@@ -18,10 +18,10 @@ const characterCreationForm = ({ currentSectionIdx }) => {
                 return <AbilityScoresForm />;
             case 3:
                 return <CharacterDetailsForm />;
-            case 5:
-                return <EquipmentForm/>;
             case 4:
                 return <ProficienciesForm />;
+            case 5:
+                return <EquipmentForm/>;
         }
     };
 

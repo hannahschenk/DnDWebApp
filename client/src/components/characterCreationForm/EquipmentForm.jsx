@@ -1,91 +1,132 @@
 import React, {useState, useEffect} from 'react';
+import { characterReducer } from '../../state/logic';
 import dndApi from "./../../utils/dnd5eApi";
 
+import * as ACTION from '../../state/actions';
+import { useCharacter } from '../../state/logic';
 const RaceForm = () => {
     // DUMMY; info that will come from the global state
     const [initialEquipment, setInitialEquipment] = useState([]);
     const [totalChoices, setChoices] = useState({wrap:[]});
     const [backgroundEquipment, setBackgroundEquipment] = useState([]);
 
-    useEffect(() => {
+
+    const { character, setCharacter, setDetails } = useCharacter();
+
+
+    //helper function
+    const determineEquipmentType = (equipmentCat) => {
+        if(equipmentCat.includes("weapon"))
+            return "weapons"
+        if(equipmentCat.includes("armor"))
+            return "armor"
+        if(equipmentCat.includes("tools"))
+            return "tools"
+        return "misc"
+    }
+    const addEquipmentChoice = async (index, option) => {
+        if(option.hasOwnProperty('equipment')){
+
+            let equipmentCat = (await dndApi.getMoreInfo(option.equipment.url)).data.equipment_category.index;
+            
+            totalChoices.wrap[index].push(
+                {name: `${option.quantity} ${option.equipment.name}`, url: option.equipment.url, type: determineEquipmentType(equipmentCat)}
+            )
+
+            /*let equipmentKey = determineEquipmentType(equipmentCat);
+            characterReducer.equipment[equipmentKey].push(equipmentToAdd)
+            setCharacter({ type: ACTION.UPDATE_EQUIPMENT, payload: { [equipmentKey]: [...characterReducer.equipment[equipmentKey]] } });
+            */
+            setChoices({wrap: totalChoices.wrap})
+        }
+        else{
+            let equipmentCat = (option.hasOwnProperty('equipment_option')) ? 
+                                option.equipment_option.from.equipment_category.index : 
+                                option.equipment_category.index
+
+            let urlEndpoint = (option.hasOwnProperty('equipment_option')) ? 
+                                option.equipment_option.from.equipment_category.url : 
+                                option.equipment_category.url
+            
+            const equipmentCategory = (await dndApi.getMoreInfo(urlEndpoint)).data;
+            totalChoices.wrap[index] = totalChoices.wrap[index].concat(
+                (equipmentCategory.equipment).map((equipmentInfo) => {
+                    return {name: `1 ${equipmentInfo.name}`, url: equipmentInfo.url, type: determineEquipmentType(equipmentCat)}
+                })
+            )
+
+            setChoices({wrap: totalChoices.wrap})
+        }
+    }
+
+    useEffect( async () => {
+
+        //BACKGROUND EQUIPMENT INTIIAL----------------------------------------------------
         //will be changed to id of user selected background
         dndApi.getBackground(0)
         .then((response) => {
+            let backgroundEquipments = response.data["misc-equipments"].map((content) => {
+                return { name: content, url: null, type: "misc"}
+            })
+            if(character.equipment.total.length > 0){
+                character.equipment.total = (character.equipment.total).concat(backgroundEquipments)
+            }
+            else{
+                character.equipment.total = backgroundEquipments
+            }
+            setCharacter({ type: ACTION.UPDATE_EQUIPMENT, payload: { total: [...character.equipment.total] } })
             setBackgroundEquipment(response.data["misc-equipments"])
         })
+
+        //CLASS EQUIPMENT INTIIAL----------------------------------------------------
         //will be changed to user choice
-        dndApi.getStartingEquipment("fighter")
-        .then((response) => {
-            setInitialEquipment(response.data.starting_equipment);
-        })
-        .catch(err => console.log(err))
-        dndApi.getStartingEquipment("fighter")
-            .then(response => {
-                let data = response.data;
-                let allChoiceGroups = data.starting_equipment_options
-                for(let i = 0; i < allChoiceGroups.length; i++){
-                    (totalChoices.wrap).push([])
-                    setChoices({wrap: totalChoices.wrap})
-                    //i is the outer index 
-                    let optionsInGroup = allChoiceGroups[i].from
-                    for(let a = 0; a < optionsInGroup.length; a++){
-                    //a is the inner index
-                        if (optionsInGroup[a].hasOwnProperty('equipment')){
-                            totalChoices.wrap[i].push(optionsInGroup[a].equipment)
-                            totalChoices.wrap[i][a]["quantity"] = optionsInGroup[a].quantity;
-                            setChoices({wrap: totalChoices.wrap})
-                        }
-                        //some classes allow multiple items with one choice, ie crossbow and bolts
-                        //TODO: does not display 
-                        else if(optionsInGroup[a].hasOwnProperty('0') || optionsInGroup[a].hasOwnProperty('1') || optionsInGroup[a].hasOwnProperty('2')) {
-                            totalChoices.wrap[i].push(optionsInGroup[a]);
-                        }
-                        else {
-                            let urlEndpoint = (optionsInGroup[a].hasOwnProperty('equipment_option')) ? 
-                                optionsInGroup[a].equipment_option.from.equipment_category.url : 
-                                optionsInGroup[a].equipment_category.url
-                            fetch("https://www.dnd5eapi.co" + urlEndpoint)
-                            .then(response => response.json())
-                            .then(data => {
-                                
-                                totalChoices.wrap[i] = totalChoices.wrap[i].concat(data.equipment)
-                                for (let ii = 0; ii < data.equipment.length; ii++) {
-                                    totalChoices.wrap[i][ii +1]["quantity"] = allChoiceGroups[i].choose;
-                                }
-                                setChoices({wrap: totalChoices.wrap})
-                            })
-                        }
+        let classEquipment = (await dndApi.getStartingEquipment("barbarian")).data
+        setInitialEquipment(classEquipment.starting_equipment);
+        let initialEquipments = classEquipment.starting_equipment
+        for(let i = 0; i < initialEquipments.length; i++){
+            let equipmentCat = (await dndApi.getMoreInfo(initialEquipments[i].equipment.url)).data.equipment_category.index;
+            character.equipment.total.push({ name: `${initialEquipments[i].quantity} ${initialEquipments[i].equipment.name}`, 
+                                            url: initialEquipments[i].equipment.url, type: determineEquipmentType(equipmentCat)}) 
+            setCharacter({ type: ACTION.UPDATE_EQUIPMENT, payload: { total: [...character.equipment.total] } })
+        }
+            
+
+        const equipmentObj = (await dndApi.getStartingEquipment("fighter")).data;
+        let allChoiceGroups = equipmentObj.starting_equipment_options
+
+        for(let i = 0; i < allChoiceGroups.length; i++){
+            (totalChoices.wrap).push([])
+            setChoices({wrap: totalChoices.wrap})
+
+            let optionsInGroup = allChoiceGroups[i].from
+            for(let a = 0; a < optionsInGroup.length; a++){
+                if(optionsInGroup[a].hasOwnProperty('0')){
+                    for (const key in optionsInGroup[a]){
+                        addEquipmentChoice(i, optionsInGroup[a][key])
                     }
                 }
-            });
+                else {
+                    addEquipmentChoice(i, optionsInGroup[a])
+                }
+            }
+            
+        }
+        
     }, []);
 
-    const pickEquipment = (chosenEquipmentInfo) => {
-        dndApi.getMoreInfo(chosenEquipmentInfo.url)
-        .then((response) => {
-            /*
-                TODO: this is a good spot to format the data and send what ever we need to the global state
-            */
-        })
-        .catch(err => console.log(err))
-    };
+    useEffect(() => {console.log(totalChoices)}, [totalChoices])
     
-    //index needs to be outside of function, equipment array does not update fast enough to get length
-    let index = 0;
-    const createOptions = () => {
-        let options = [];
-            for (let i = 0; i < totalChoices.wrap[index].length; i++) {
-                //TODO: display multiple items for one option
-                if (totalChoices.wrap[index][i].quantity > 1) {
-                    options.push(<option key = {i} value = {i}>{totalChoices.wrap[index][i].name + " x" + totalChoices.wrap[index][i].quantity}</option>);
-                }
-                else {
-                    options.push(<option key = {i} value = {i}>{totalChoices.wrap[index][i].name}</option>);
-                }
-                
-            }
-        index++;
-        return options;
+    const pickEquipment = (e) => {
+        let indexOffset = parseInt(e.target.id);
+        let indexToEdit = (initialEquipment.length + backgroundEquipment.length) + indexOffset
+        let equipmentToAdd = JSON.parse(e.target.value);
+        if(character.equipment.total.length == indexToEdit){
+            character.equipment.total.push(equipmentToAdd) 
+        }
+        else{
+            character.equipment.total[indexToEdit] = equipmentToAdd
+        }
+        setCharacter({ type: ACTION.UPDATE_EQUIPMENT, payload: { total: [...character.equipment.total] } })
     }
 
     //note: having a form here is kind of useless but for the sake of being semantic
@@ -105,11 +146,18 @@ const RaceForm = () => {
                 }
                 <p>Pick your starting equipment: </p>
                 {
-                    totalChoices.wrap.map((equipmentContent) => 
-                        <React.Fragment key={`${equipmentContent.index}`}>
+                    totalChoices.wrap.map((equipmentContent, idx) => 
+                        <React.Fragment key={idx}>
                             <label htmlFor="equipmentChoices">Pick one</label>
-                            <select name = "equipmentChoices">
-                                {createOptions()}
+                            <select name={`equipmentChoices-${idx}`} key={idx} id={idx} onChange={(e) => pickEquipment(e)} defaultValue={-1}>
+                                {/*createOptions()*/}
+                                <option value={-1} disabled>no assignment</option>
+                                {
+                                    equipmentContent.map((groupChoice, index) => 
+                                        <option key={index} value={JSON.stringify(groupChoice)}>{groupChoice.name}</option>
+                                    )
+                                
+                                }
                             </select>
                         </React.Fragment>
                     )

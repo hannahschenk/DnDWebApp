@@ -190,7 +190,7 @@ const CharacterDetailsForm = () => {
                         numLanguageArray().map((e, idx) => (
                             <React.Fragment key={idx}>
                                 <select defaultValue={-1} name="languages" id={idx} onChange={(e) => pickLanguage(JSON.parse(e.target.value), e.target.id, e)} required>
-                                    <option value={-1}> no assignment </option>
+                                    <option value={-1} disabled> no assignment </option>
                                     {
                                         languageChoices.map((language, idxx) => (
                                             <option key={idxx} 

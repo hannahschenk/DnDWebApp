@@ -57,8 +57,17 @@ const INITIAL_CHARACTER_STATE = {
     // name of the abilities key (not an object, an array of strings)
 
   },
+
+  //   {
+    //     name: "",
+    //     type: "", type of equipment
+    //     url: ""
+    //   }
+    // ],
+
   equipment: {
-    armor: [
+    total:[]
+    /*armor: [
       {
         name: "",
         url: ""
@@ -81,7 +90,9 @@ const INITIAL_CHARACTER_STATE = {
         name: "",
         url: ""
       }
-    ]
+    ]*/
+
+  
   }
 };
 
