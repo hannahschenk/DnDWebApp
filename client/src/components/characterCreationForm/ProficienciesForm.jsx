@@ -24,12 +24,6 @@ const ProficienciesForm = () => {
                 const skillProficiencies = (await dndApi.getClass(character.class.name)).data.proficiency_choices;
                 setSkillProficiencies(skillProficiencies);
 
-                // setSkillList(
-                // const skillListing = skillProficiencies[0].from.map((skill) => skill.name).forEach((skill) => skill.name.match(/\b(?!Skill:\s\b)\w+/));
-
-                // console.log(skillListing);
-                // );
-
                 // Set ifSpellcaster to the spellcasting object if a spellcasting class, or undefined if not (controls rendering of <SpellsForm /> component)
                 const ifSpellcaster = (await dndApi.getClass(character.class.name)).data.spellcasting;
                 setSpellCasting(ifSpellcaster);
@@ -52,10 +46,6 @@ const ProficienciesForm = () => {
             mounted = false;
         };
     }, []);
-
-    // useEffect(() => {
-    //     console.log(skillList);
-    // }, [skillList]);
 
     return (
         <>
@@ -151,21 +141,6 @@ const SpellsForm = ({ availableSpells }) => {
         <>
             <h3>Select Spells</h3>
             {/* PLACE IN CHARACTER DETAILS FORM - HUNTER! */}
-
-            {/* <section>
-                {spellCasting.info.map((sectionTitle, idx) => {
-                    return (
-                        <React.Fragment key={idx}>
-                            <h4>{sectionTitle.name}</h4>
-                            <article>
-                                {spellCasting.info[idx].desc.map((paragraph, idx) => {
-                                    return <p key={idx}>{paragraph}</p>;
-                                })}
-                            </article>
-                        </React.Fragment>
-                    );
-                })}
-            </section> */}
 
             {/* RENDER SPELLS HERE */}
             {availableSpells.map((spell, idx) => {
