@@ -20,4 +20,10 @@ module.exports = {
     getMoreInfo: (endPoint) => {
         return axios.get(constants.API_BASE_URL + endPoint);
     },
+    getStartingEquipment:(chosenClass) => {
+        return axios.get(constants.API_BASE_URL + '/api/starting-equipment/'+ chosenClass);
+    },
+    getBackground:(id) => {
+        return axios.get('https://dnd-backgrounds-default-rtdb.firebaseio.com/backgrounds/' + id + '.json');
+    }
 }
