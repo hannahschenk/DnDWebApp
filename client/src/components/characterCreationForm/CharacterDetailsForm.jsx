@@ -12,17 +12,17 @@ const CharacterDetailsForm = () => {
 
     const [backgroundChoices, setBackgroundChoices] = useState([]);
     const [languageChoices, setLanguageChoices] = useState([]);
-    // length of array = # choices based on background; value is index offset to add/remove 
-    const [languageChoicesOffset, setLanguageChoicesOffset] = useState([]); 
+    // length of array = # choices based on background; value is index offset to add/remove
+    const [languageChoicesOffset, setLanguageChoicesOffset] = useState([]);
     const [raceLanguages, setRaceLanguages] = useState();
 
     /*
-    * Signature: useEffect(func, [])
-    * Description: populates the background choices that users can
-    *               pick from; populates the raceLanguage state and the 
-    *               global state languages for languages that the user
-    *               already has; populates languageChoices
-    */
+     * Signature: useEffect(func, [])
+     * Description: populates the background choices that users can
+     *               pick from; populates the raceLanguage state and the
+     *               global state languages for languages that the user
+     *               already has; populates languageChoices
+     */
     useEffect(async () => {
         let mounted = true;
         if (mounted) {
@@ -40,11 +40,11 @@ const CharacterDetailsForm = () => {
                 const raceLanguages = (await dndApi.getMoreInfo(character.race.url[0])).data.languages;
                 character.background.languages = raceLanguages.map((content) => {
                     return {
-                        name: content.name, 
-                        url: content.url, 
-                        origin: "race"
-                    }
-                })
+                        name: content.name,
+                        url: content.url,
+                        origin: 'race',
+                    };
+                });
                 setRaceLanguages([...character.background.languages]);
             } catch (err) {
                 console.error(err);
@@ -57,57 +57,56 @@ const CharacterDetailsForm = () => {
 
     // ====================================================================================================================
     /*
-    * Signature: pickBackground(chosenBackground)
-    * input: chosenBackground - the background object that the user picked
-    * Description: set character State background
-    */
+     * Signature: pickBackground(chosenBackground)
+     * input: chosenBackground - the background object that the user picked
+     * Description: set character State background
+     */
     const pickBackground = (chosenBackground) => {
-        setCharacter({ 
-            type: ACTION.UPDATE_BACKGROUND, 
-            payload: { 
-                name: chosenBackground.name, 
-                url: `/${chosenBackground.id}.json`
-            } 
+        setCharacter({
+            type: ACTION.UPDATE_BACKGROUND,
+            payload: {
+                name: chosenBackground.name,
+                url: `/${chosenBackground.id}.json`,
+            },
         });
         //setDetails(chosenBackgroundInfo);
 
         // Erase background languages, NOT race languages
         //setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: raceLanguages } });
-        let arrOffset = []
-        for(let i = 0; i < chosenBackground['language-choices']; i++){
-            arrOffset.push(i)
+        let arrOffset = [];
+        for (let i = 0; i < chosenBackground['language-choices']; i++) {
+            arrOffset.push(i);
         }
-        setLanguageChoicesOffset(arrOffset)
+        setLanguageChoicesOffset(arrOffset);
     };
 
     // ===========================================================================================================================
     /*
-    * Signature: pickLanguage(chosenLanguage, index)
-    * input: chosenLanguage - the language object that is chosen by the user
-    *        index - the index where we have to add/ change it in the character state
-    * Description: format the language object and add it in state; if a chocie was 
-    *              previously made, change the object at the index given
-    */
+     * Signature: pickLanguage(chosenLanguage, index)
+     * input: chosenLanguage - the language object that is chosen by the user
+     *        index - the index where we have to add/ change it in the character state
+     * Description: format the language object and add it in state; if a chocie was
+     *              previously made, change the object at the index given
+     */
     const pickLanguage = async (chosenLanguage, index) => {
-        let indexToEdit = raceLanguages.length + parseInt(index)
-        if(character.background.languages.length == indexToEdit){
-            (character.background.languages).push({ 
-                name: chosenLanguage.name, 
-                origin: 'background', 
-                url: chosenLanguage.url 
-            })
-        }
-        else{
-            character.background.languages[indexToEdit] = { 
-                name: chosenLanguage.name, 
-                origin: 'background', 
-                url: chosenLanguage.url 
-            }
+        let indexToEdit = raceLanguages.length + parseInt(index);
+        if (character.background.languages.length == indexToEdit) {
+            character.background.languages.push({
+                name: chosenLanguage.name,
+                origin: 'background',
+                url: chosenLanguage.url,
+            });
+        } else {
+            character.background.languages[indexToEdit] = {
+                name: chosenLanguage.name,
+                origin: 'background',
+                url: chosenLanguage.url,
+            };
         }
         setCharacter({
             type: ACTION.UPDATE_BACKGROUND,
             payload: {
-                languages: [...character.background.languages]
+                languages: [...character.background.languages],
             },
         });
         //setDetails();
@@ -120,36 +119,19 @@ const CharacterDetailsForm = () => {
 
     // ===========================================================================================================================
     /*
-    * Signature: setAlignment(e)
-    * input: e - the click event
-    * Description: set the character state based off of the value
-    *               of the event target
-    */
-    const setAlignment = (e) => {
-        e.preventDefault();
-        setCharacter({ 
-            type: ACTION.UPDATE_BACKGROUND, 
-            payload: { 
-                alignment: e.target.value
-            } 
-        });
-    };
-
-    // ===========================================================================================================================
-    /*
-    * Signature: setStat(e, stat)
-    * input: e - the event causing input change
-    *        stat - the property from the background object that we want to update
-    * Description: set the character state based off of the value
-    *               of the event target
-    */
+     * Signature: setStat(e, stat)
+     * input: e - the event causing input change
+     *        stat - the property from the background object that we want to update
+     * Description: set the character state based off of the value
+     *               of the event target
+     */
     const setStat = (e, stat) => {
         e.preventDefault();
-        setCharacter({ 
-            type: ACTION.UPDATE_BACKGROUND, 
-            payload: { 
-                [stat]: e.target.value 
-            } 
+        setCharacter({
+            type: ACTION.UPDATE_BACKGROUND,
+            payload: {
+                [stat]: e.target.value,
+            },
         });
     };
 
@@ -160,22 +142,23 @@ const CharacterDetailsForm = () => {
             <form>
                 {/* BACKGROUND====================================================================== */}
                 <section>
+                    <h3>Character Name</h3>
+                    <input name="characterName" type="text" defaultValue={character.background.characterName} onChange={(e) => setStat(e, 'characterName')} />
+
                     <h3>Pick a Background: </h3>
-                    {
-                        backgroundChoices.map((backgroundContent, idx) => (
-                            <React.Fragment key={idx}>
-                                <input
-                                    type="radio"
-                                    name="background"
-                                    id={backgroundContent.name}
-                                    value={backgroundContent.name}
-                                    onClick={() => pickBackground(backgroundContent)}
-                                />
-                                <label htmlFor={backgroundContent.name}>{backgroundContent.name}</label>
-                                <br />
-                            </React.Fragment>
-                        ))
-                    }
+                    {backgroundChoices.map((backgroundContent, idx) => (
+                        <React.Fragment key={idx}>
+                            <input
+                                type="radio"
+                                name="background"
+                                id={backgroundContent.name}
+                                value={backgroundContent.name}
+                                onClick={() => pickBackground(backgroundContent)}
+                            />
+                            <label htmlFor={backgroundContent.name}>{backgroundContent.name}</label>
+                            <br />
+                        </React.Fragment>
+                    ))}
                     <br />
 
                     {/* appearance */}
@@ -205,36 +188,42 @@ const CharacterDetailsForm = () => {
                 <section>
                     <h3>Select your Languages:</h3>
                     <p>Your current proficient languages determined by your race:</p>
-                    { // render languages users already have based on their race
-                        raceLanguages &&
-                        raceLanguages.map((language, idx) => 
-                            <p key={idx}>{language.name}</p>
-                        )
+                    {
+                        // render languages users already have based on their race
+                        raceLanguages && raceLanguages.map((language, idx) => <p key={idx}>{language.name}</p>)
                     }
 
-                    { 
-                        languageChoicesOffset.length !== 0 &&
-                        <p>        
-                            Pick {languageChoicesOffset.length === 1 ? 'one bonus language' : languageChoicesOffset.length === 2 ? 'two bonus languages' : ''} 
+                    {languageChoicesOffset.length !== 0 && (
+                        <p>
+                            Pick {languageChoicesOffset.length === 1 ? 'one bonus language' : languageChoicesOffset.length === 2 ? 'two bonus languages' : ''}
                             granted by your <strong> {character.background.name} </strong>background.
                         </p>
-                    }
+                    )}
 
-                    { //render total options for each language choice; disable languages that are already picked
+                    {
+                        //render total options for each language choice; disable languages that are already picked
                         languageChoicesOffset.map((e, idx) => (
                             <React.Fragment key={idx}>
-                                <select defaultValue={-1} name="languages" id={idx} onChange={(e) => pickLanguage(JSON.parse(e.target.value), e.target.id)} required>
-                                    <option value={-1} disabled> no assignment </option>
-                                    {
-                                        languageChoices.map((language, idxx) => (
-                                            <option key={idxx} 
+                                <select
+                                    defaultValue={-1}
+                                    name="languages"
+                                    id={idx}
+                                    onChange={(e) => pickLanguage(JSON.parse(e.target.value), e.target.id)}
+                                    required
+                                >
+                                    <option value={-1} disabled>
+                                        {' '}
+                                        no assignment{' '}
+                                    </option>
+                                    {languageChoices.map((language, idxx) => (
+                                        <option
+                                            key={idxx}
                                             value={JSON.stringify(language)}
-                                            disabled={(character.background.languages).map((lang) => lang.url).includes(language.url)}
-                                            >
-                                                {language.name}
-                                            </option>
-                                        ))
-                                    }
+                                            disabled={character.background.languages.map((lang) => lang.url).includes(language.url)}
+                                        >
+                                            {language.name}
+                                        </option>
+                                    ))}
                                 </select>
                                 <br />
                             </React.Fragment>
@@ -257,21 +246,21 @@ const CharacterDetailsForm = () => {
                 {/* ALIGNMENT ==========================================================================================================*/}
                 <section>
                     <h3>Choose your Alignment</h3>
-                    { // render buttons for each alignment
-                        CONSTANTS.ALIGNMENTS.map((alignmentStr, idx) => 
+                    {
+                        // render buttons for each alignment
+                        CONSTANTS.ALIGNMENTS.map((alignmentStr, idx) => (
                             <React.Fragment key={idx}>
                                 <button
                                     key={idx}
                                     value={alignmentStr}
-                                    onClick={(e) => setAlignment(e)}
-                                    style={{ width: 200, backgroundColor: (alignmentStr === character.background.alignment) ? 'red' : '' }}
+                                    onClick={(e) => setStat(e, 'alignment')}
+                                    style={{ width: 200, backgroundColor: alignmentStr === character.background.alignment ? 'red' : '' }}
                                 >
                                     {alignmentStr}
                                 </button>
                                 <br />
                             </React.Fragment>
-                            
-                        )
+                        ))
                     }
                 </section>
             </form>

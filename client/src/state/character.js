@@ -22,6 +22,7 @@ const INITIAL_CHARACTER_STATE = {
     charisma: 0,
   },
   background: {
+    characterName: "",
     name: "",
     url: "",
     appearance: "",
@@ -59,14 +60,14 @@ const INITIAL_CHARACTER_STATE = {
   },
 
   //   {
-    //     name: "",
-    //     type: "", type of equipment
-    //     url: ""
-    //   }
-    // ],
+  //     name: "",
+  //     type: "", type of equipment
+  //     url: ""
+  //   }
+  // ],
 
   equipment: {
-    total:[]
+    total: []
     /*armor: [
       {
         name: "",
@@ -92,7 +93,7 @@ const INITIAL_CHARACTER_STATE = {
       }
     ]*/
 
-  
+
   }
 };
 
