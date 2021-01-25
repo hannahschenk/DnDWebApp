@@ -5,12 +5,13 @@ import dndApi from "./../../utils/dnd5eApi";
 import * as ACTION from '../../state/actions';
 import { useCharacter } from '../../state/logic';
 import axios from 'axios';
+import FormControlContext from "./../../state/formControlManager";
 const EquipmentForm = () => {
     const [initialEquipment, setInitialEquipment] = useState([]);
     const [totalChoices, setChoices] = useState({wrap:[]});
     const [backgroundEquipment, setBackgroundEquipment] = useState([]);
     const { character, setCharacter, setDetails } = useCharacter();
-
+    const {formControlState, setFormControlState} = useContext(FormControlContext);
     /*
     * Signature: useEffect(func, [])
     * Description: Fetches all initial equipments from background
@@ -70,6 +71,22 @@ const EquipmentForm = () => {
         }
         
     }, []);
+
+    /*
+    * Signature: useEffect(func, [character])
+    * Description: watch for character changes on equipment to determine if the 
+    *              user can move on to the next section via the formControlState
+    */
+    useEffect(() => {
+        let formDone = true;
+        if(character.background.total.length == (initialEquipment.length + 
+        backgroundEquipment + totalChoices.wrap.length)){
+            setFormControlState({...formControlState, currentFormDone: true})
+        }
+        else{
+            setFormControlState({...formControlState, currentFormDone: false})
+        }
+    }, [character])
 
     /*
     * Signature: determineEquipmentType(equipmentCat)

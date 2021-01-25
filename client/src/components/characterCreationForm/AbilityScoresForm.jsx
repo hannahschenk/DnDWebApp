@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import constants from './../../utils/constants';
 import dndApi from './../../utils/dnd5eApi';
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 import axios from 'axios';
-
+import FormControlContext from "./../../state/formControlManager";
 const AbilityScoresForm = ({ formDetailsState }) => {
     const { character, setCharacter, setDetails } = useCharacter();
     const [abilityScoreChoices, setAbilityScoreChoices] = useState([]);
@@ -17,6 +17,7 @@ const AbilityScoresForm = ({ formDetailsState }) => {
         charisma: -1,
     });
     const [forceRemount, setForceRemount] = useState(false)
+    const {formControlState, setFormControlState} = useContext(FormControlContext);
 
     /*
     * Signature: useEffect(func, [])
@@ -27,16 +28,18 @@ const AbilityScoresForm = ({ formDetailsState }) => {
         let mounted = true;
         if (mounted) {
             try{
-                let apiRaceEndpoints = character.race.url
-                for(let i = 0; i < apiRaceEndpoints.length; i++){
-                    let raceObj = (await dndApi.getMoreInfo(apiRaceEndpoints[i])).data
-                    
-                    let abilityBonusArr = raceObj.ability_bonuses
-                    for(let a = 0; a < abilityBonusArr.length; a++){
-                        let abilityScoreKey = constants.ABILITY_KEY_MAP[abilityBonusArr[a].ability_score.index]
-                        character.abilities[abilityScoreKey] = abilityBonusArr[a].bonus
+                if(Object.values(character.abilities).includes(0)){ // reintialize based on race
+                    let apiRaceEndpoints = character.race.url
+                    for(let i = 0; i < apiRaceEndpoints.length; i++){
+                        let raceObj = (await dndApi.getMoreInfo(apiRaceEndpoints[i])).data
+                        
+                        let abilityBonusArr = raceObj.ability_bonuses
+                        for(let a = 0; a < abilityBonusArr.length; a++){
+                            let abilityScoreKey = constants.ABILITY_KEY_MAP[abilityBonusArr[a].ability_score.index]
+                            character.abilities[abilityScoreKey] = abilityBonusArr[a].bonus
+                        }
+                        setCharacter({ type: ACTION.UPDATE_ABILITIES, payload: {...character.abilities} });
                     }
-                    setCharacter({ type: ACTION.UPDATE_ABILITIES, payload: {...character.abilities} });
                 }
             } catch (e){
                 console.error(e) 
@@ -46,6 +49,23 @@ const AbilityScoresForm = ({ formDetailsState }) => {
             mounted = false;
         };
     }, [forceRemount])
+
+    /*
+    * Signature: useEffect(func, [character,  abilityScoreIdxMatch, abilityScoreChoices])
+    * Description: watch for character changes on abilities, and state changes on
+    *              abilityScoreIdxMatch and abilityScoreChoices to determine if the 
+    *              user can move on to the next section via the formControlState
+    */
+   useEffect(() => {
+        let abilitiesFilled = !scoresAreInitial();
+        let choicesConsumed = (!Object.values(abilityScoreIdxMatch).includes(-1) || abilityScoreChoices.length == 0)
+        if(abilitiesFilled && choicesConsumed) {
+            setFormControlState({...formControlState, currentFormDone: true})
+        }
+        else{
+            setFormControlState({...formControlState, currentFormDone: false})
+        }
+    }, [character, abilityScoreIdxMatch, abilityScoreChoices])
 
     /*
     * Signature: generateAbilityScoreChoices(choiceType)
@@ -133,6 +153,22 @@ const AbilityScoresForm = ({ formDetailsState }) => {
         setForceRemount(!forceRemount)
     }
 
+    /*
+    * Signature: scoresAreInitial()
+    * Description: this will check if the choices were distributed;
+    *               if not all are distributed, this will return true
+    *               else false
+    */
+    const scoresAreInitial = () => {
+        let scores = Object.values(character.abilities)
+        for (let i = 0; i < scores.length; i++){
+            if (scores[i] < 3){ // if distributed, no scores < 3
+                return true
+            }
+        }
+        return false
+    }
+
     return (
         <>
             <p>
@@ -140,7 +176,7 @@ const AbilityScoresForm = ({ formDetailsState }) => {
             </p>
 
             {
-                (!Object.values(character.abilities).includes(0) && (!Object.values(abilityScoreIdxMatch).includes(-1) || abilityScoreChoices.length == 0) ) ? 
+                (!scoresAreInitial() && (!Object.values(abilityScoreIdxMatch).includes(-1) || abilityScoreChoices.length == 0) ) ? 
                     <>
                         <button onClick={resetComponent}>Reset Scores</button>
                         {

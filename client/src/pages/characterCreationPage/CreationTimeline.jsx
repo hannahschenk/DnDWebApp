@@ -10,7 +10,14 @@ const CreationTimeline = () => {
     
     const switchSection = (newIndex) => {
         if (newIndex <= formControlState.sectionIndex + 1) {
-            setFormControlState({...formControlState, sectionIndex: newIndex})
+            if(newIndex == formControlState.sectionIndex + 1){
+                if(formControlState.currentFormDone){
+                    setFormControlState({currentFormDone: false, sectionIndex: newIndex})
+                }
+            }
+            else{
+                setFormControlState({...formControlState, sectionIndex: newIndex})
+            }
         }
     }
 

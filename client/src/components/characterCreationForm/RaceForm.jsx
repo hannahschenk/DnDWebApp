@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 
 import dndApi from './../../utils/dnd5eApi';
 
+import FormControlContext from "./../../state/formControlManager"
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
 const RaceForm = () => {
     const { character, setCharacter, setDetails } = useCharacter();
-
     const [raceChoices, setRaceChoices] = useState([]);
     const [subRaceChoices, setSubRaceChoices] = useState([]);
+    const {formControlState, setFormControlState} = useContext(FormControlContext);
 
     /*
     * Signature: useEffect(func, [])
@@ -34,6 +35,23 @@ const RaceForm = () => {
             mounted = false;
         };
     }, []);
+
+   /*
+    * Signature: useEffect(func, [character, subRaceChoices])
+    * Description: watch for character changes and subRaceChoices state to 
+    *               determine if the user can move on to the next section
+    *               via the formControlState
+    */
+    useEffect(() => {
+        let isSubRaceFilled = ((subRaceChoices.length != 0 && character.race.subrace != "") ||
+                                (subRaceChoices.length == 0 && character.race.subrace == ""))
+        if(character.race.name != "" && isSubRaceFilled){
+            setFormControlState({...formControlState, currentFormDone: true})
+        }
+        else{
+            setFormControlState({...formControlState, currentFormDone: false})
+        }
+    }, [character, subRaceChoices])
 
     /*
     * Signature: pickRace(chosenRace)

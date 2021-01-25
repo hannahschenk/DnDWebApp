@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import dndApi from '../../utils/dnd5eApi';
 import CONSTANTS from '../../utils/constants';
@@ -6,15 +6,16 @@ import CONSTANTS from '../../utils/constants';
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 import constants from '../../utils/constants';
-
+import FormControlContext from "./../../state/formControlManager";
 const CharacterDetailsForm = () => {
     const { character, setCharacter, setDetails } = useCharacter();
 
+    const {formControlState, setFormControlState} = useContext(FormControlContext);
     const [backgroundChoices, setBackgroundChoices] = useState([]);
     const [languageChoices, setLanguageChoices] = useState([]);
     // length of array = # choices based on background; value is index offset to add/remove 
     const [languageChoicesOffset, setLanguageChoicesOffset] = useState([]); 
-    const [raceLanguages, setRaceLanguages] = useState();
+    const [raceLanguages, setRaceLanguages] = useState([]);
 
     /*
     * Signature: useEffect(func, [])
@@ -55,6 +56,26 @@ const CharacterDetailsForm = () => {
             mounted = false;
         };
     }, []);
+
+    /*
+    * Signature: useEffect(func, [character,  abilityScoreIdxMatch, abilityScoreChoices])
+    * Description: watch for character changes on background to determine if the 
+    *              user can move on to the next section via the formControlState
+    */
+    useEffect(() => {
+        let formDone = true;
+        for(const key in character.background){
+            let backgroundProp = character.background[key];
+
+            if( (typeof(backgroundProp) == "string" && backgroundProp == "") ||
+                (typeof(backgroundProp) == "number" && backgroundProp == 0) || 
+                (Array.isArray(backgroundProp) && backgroundProp.length != raceLanguages.length + languageChoicesOffset.length)){
+                formDone = false;
+                break;
+            }
+        }
+        setFormControlState({...formControlState, currentFormDone: formDone})
+    }, [character])
 
     // ====================================================================================================================
     /*

@@ -20,14 +20,20 @@ const CharacterCreationPage = () => {
 
     const setSectionIndex = (offset) => {
         let newIndex = formControlState.sectionIndex + offset;
-        setFormControlState({...formControlState, sectionIndex: newIndex})
+        if(offset == 1){
+            setFormControlState({currentFormDone: false, sectionIndex: newIndex})
+        }
+        else{
+            setFormControlState({...formControlState, sectionIndex: newIndex})
+        }
     }
 
     const isPreviousDisabled = () => {
         return formControlState.sectionIndex == 0
     }    
     const isNextDisabled = () => {
-        return formControlState.sectionIndex == constants.CREATION_SECTIONS.length - 1
+        return (formControlState.sectionIndex == constants.CREATION_SECTIONS.length - 1 ||
+                !formControlState.currentFormDone)
     }
 
     return (

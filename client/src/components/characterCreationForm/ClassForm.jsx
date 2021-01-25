@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import dndApi from '../../utils/dnd5eApi';
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
+import FormControlContext from "./../../state/formControlManager";
 
 const ClassForm = () => {
     const { character, setCharacter, setDetails } = useCharacter();
     const [classChoices, setClassChoices] = useState([]);
+    const {formControlState, setFormControlState} = useContext(FormControlContext);
 
     /*
     * Signature: useEffect(func, [])
@@ -29,6 +31,22 @@ const ClassForm = () => {
             mounted = false;
         };
     }, []);
+
+    /*
+    * Signature: useEffect(func, [character])
+    * Description: watch for character changes on class name to
+    *               determine if the user can move on to the next section
+    *               via the formControlState
+    */
+   useEffect(() => {
+        if(character.class.name != ""){
+            setFormControlState({...formControlState, currentFormDone: true})
+        }
+        else{
+            setFormControlState({...formControlState, currentFormDone: false})
+        }
+    }, [character])
+
 
     /*
     * Signature: pickClass(chosenClass)
