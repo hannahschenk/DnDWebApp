@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
         },
         type: {
-            type: DataTypes.ENUM,
+            type: DataTypes.ENUM("skill", "spell", "saving throws"),
         },
         dnd5eEndpoint: {
             type: DataTypes.STRING,
@@ -18,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     {
     });
     
-    Proficiencies.associate = ({ characterSheet }) => {
-        Proficiencies.belongsTo(characterSheet);
+    Proficiencies.associate = ({ CharacterSheet }) => {
+        Proficiencies.belongsTo(CharacterSheet);
     };
     
     return Proficiencies;

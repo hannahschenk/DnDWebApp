@@ -32,10 +32,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
         },
         size: {
-            type: DataTypes.ENUM,
+            type: DataTypes.ENUM("Small", "Medium", "Large"),
         },
         type: {
-            type: DataTypes.ENUM,
+            type: DataTypes.ENUM("Acolyte", "Criminal/ Spy", "Folk Hero", "Noble", "Sage", "Soldier"),
         },
         api_endpoint: {
             type: DataTypes.STRING,
@@ -44,8 +44,8 @@ module.exports = (sequelize, DataTypes) => {
     {
     });
     
-    Background.associate = ({ characterSheet }) => {
-        Background.belongsTo(characterSheet);
+    Background.associate = ({ CharacterSheet }) => {
+        Background.belongsTo(CharacterSheet);
     };
     
     return Background;
