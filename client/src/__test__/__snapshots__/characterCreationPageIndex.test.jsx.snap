@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The characterCreationPage Component... will match snapshot 1`] = `
+<section>
+  This is the guided character Creation process. Please fill out each section before clicking next.
+  <button
+    onClick={[Function]}
+  >
+    Start Character Creation
+  </button>
+</section>
+`;

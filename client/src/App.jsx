@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 
 import INITIAL_CHARACTER_STATE from './state/character';
 import { CharacterContext, characterReducer } from './state/logic';
@@ -10,19 +10,27 @@ const App = () => {
     // Grab initial character state and assign the CharacterReducer to the setCharacter function
     const [character, setCharacter] = useReducer(characterReducer, INITIAL_CHARACTER_STATE, () => {
         // Tries to get character from local storage, if one is not present, set to initial combined character state
-        const localCharacter = localStorage.getItem('character');
-        return localCharacter ? JSON.parse(localCharacter) : INITIAL_CHARACTER_STATE;
+        
+        /*const localCharacter = localStorage.getItem('character');
+        return localCharacter ? JSON.parse(localCharacter) : INITIAL_CHARACTER_STATE;*/
+        return INITIAL_CHARACTER_STATE;
     });
+
+    const [details, setDetails] = useState({});
 
     // Updates the local storage with changes in state (also prints to console)
     useEffect(() => {
-        console.log(character);
-        localStorage.setItem('character', JSON.stringify(character));
+        // console.log(character);
+        //localStorage.setItem('character', JSON.stringify(character));
     }, [character]);
+
+    useEffect(() => {
+        console.log('Data sent to details component: ', details);
+    }, [details]);
 
     return (
         <>
-            <CharacterContext.Provider value={{ character, setCharacter }}>
+            <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
                 {/* <Demo /> */}
                 <CharacterCreationPage />
             </CharacterContext.Provider>

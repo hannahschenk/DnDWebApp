@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The AbilityScoresForm Component... will match snapshot 1`] = `
+<form>
+  <p>
+    Pick a Class: 
+  </p>
+</form>
+`;
