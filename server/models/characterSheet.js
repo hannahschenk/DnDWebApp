@@ -29,5 +29,10 @@ module.exports = (sequelize, DataTypes) => {
     CharacterSheet.hasMany(Spells, {onDelete: "CASCADE"});
   };
 
+  CharacterSheet.associate = ({ Languages }) => {
+    CharacterSheet.hasMany(Languages, {onDelete: "CASCADE"});
+  };
+  
+
   return CharacterSheet;
 }
