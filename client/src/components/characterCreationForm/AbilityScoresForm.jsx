@@ -16,6 +16,7 @@ const AbilityScoresForm = ({ formDetailsState }) => {
         wisdom: -1,
         charisma: -1,
     });
+    const [forceRemount, setForceRemount] = useState(false)
 
     /*
     * Signature: useEffect(func, [])
@@ -44,7 +45,7 @@ const AbilityScoresForm = ({ formDetailsState }) => {
         return () => {
             mounted = false;
         };
-    }, [])
+    }, [forceRemount])
 
     /*
     * Signature: generateAbilityScoreChoices(choiceType)
@@ -112,6 +113,25 @@ const AbilityScoresForm = ({ formDetailsState }) => {
         });
     };
 
+    /*
+    * Signature: resetComponent()
+    * Description: this will chnage the value of forceRemount state 
+    *               after clearing out the ability scores in order
+    *               to get new choices
+    */
+    const resetComponent = () => {
+        setAbilityScoreIdxMatch({
+            strength: -1,
+            dexterity: -1,
+            constitution: -1,
+            intelligence: -1,
+            wisdom: -1,
+            charisma: -1,
+        })
+        setAbilityScoreChoices([])
+        setCharacter({ type: ACTION.CLEAR_ABILITIES });
+        setForceRemount(!forceRemount)
+    }
 
     return (
         <>
@@ -120,12 +140,21 @@ const AbilityScoresForm = ({ formDetailsState }) => {
             </p>
 
             {
-                abilityScoreChoices.length == 0 ? //if block
+                (!Object.values(character.abilities).includes(0) && (!Object.values(abilityScoreIdxMatch).includes(-1) || abilityScoreChoices.length == 0) ) ? 
+                    <>
+                        <button onClick={resetComponent}>Reset Scores</button>
+                        {
+                            Object.entries(character.abilities).map(([abilityName, score]) => 
+                                    <p key={abilityName}>current score for {abilityName}: {character.abilities[abilityName]}</p>  
+                            )
+                        }
+                    </>
+                : (abilityScoreChoices.length == 0)? //if block
                     <>
                         <button onClick={() => generateAbilityScoreChoices('STANDARD_ARRAY')}>Use Standard Array</button>
                         <button onClick={() => generateAbilityScoreChoices('RANDOM_ARRAY')}>Generate Random Scores</button>
                     </>
-                : //else block
+                : 
                     Object.entries(character.abilities).map(([abilityName, score]) => {
                         return (
                             <React.Fragment key={abilityName}>
@@ -146,6 +175,7 @@ const AbilityScoresForm = ({ formDetailsState }) => {
                             </React.Fragment>
                         );
                     })
+                
             }
         </>
     );

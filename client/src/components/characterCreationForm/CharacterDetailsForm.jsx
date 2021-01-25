@@ -38,6 +38,7 @@ const CharacterDetailsForm = () => {
                 }*/
 
                 const raceLanguages = (await dndApi.getMoreInfo(character.race.url[0])).data.languages;
+   
                 character.background.languages = raceLanguages.map((content) => {
                     return {
                         name: content.name, 
@@ -62,6 +63,10 @@ const CharacterDetailsForm = () => {
     * Description: set character State background
     */
     const pickBackground = (chosenBackground) => {
+        if(chosenBackground.name != character.background.name){
+            let maxIndexOfBkLang = character.background.languages.length - raceLanguages.length
+            character.background.languages.splice(raceLanguages.length, maxIndexOfBkLang)
+        }     
         setCharacter({ 
             type: ACTION.UPDATE_BACKGROUND, 
             payload: { 

@@ -16,7 +16,7 @@ export const CharacterContext = React.createContext(undefined);
 export const useCharacter = () => React.useContext(CharacterContext);
 
 
-export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) => {
+export const characterReducer = (character = INITIAL_CHARACTER_STATE, action, cleanUp = ()=> {}) => {
   const [ACTION, TYPE] = action.type.split('_');
   const stat = TYPE.toLowerCase();
   // ACTION is: UPDATE or CLEAR
@@ -26,6 +26,7 @@ export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) =>
   switch (action.type) {
     case `UPDATE_${TYPE}`: {
       if (action.payload) {
+        cleanUp()
         clearPropAfter(character, stat)
         return (character = {
           ...character,
@@ -44,7 +45,11 @@ export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) =>
 };
 
 const clearPropAfter = (character, stat) => {
+  // took out abilities because it does not affect anything
   const propOrder = ["race", "class", "abilities", "background", "proficiencies", "equipment"]
+  if(stat == "abilities" || stat == "proficiencies"){ //changes here should not affect anything
+    return;
+  }
   let startIndex = propOrder.indexOf(stat)
   for(let i = startIndex + 1; i < propOrder.length; i++){
     for(const key in character[propOrder[i]]){

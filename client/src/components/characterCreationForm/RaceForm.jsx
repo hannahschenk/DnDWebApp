@@ -22,6 +22,10 @@ const RaceForm = () => {
         if (mounted) {
             try {
                 setRaceChoices((await dndApi.getRaces()).data.results);
+                if(character.race.name !== ""){ // a race is already picked
+                    const raceInfo = (await dndApi.getMoreInfo(character.race.url[0])).data;
+                    setSubRaceChoices(raceInfo.subraces);
+                }
             } catch (err) {
                 console.error(err);
             }
@@ -42,7 +46,11 @@ const RaceForm = () => {
             const raceInfo = (await dndApi.getMoreInfo(chosenRace.url)).data;
             setSubRaceChoices(raceInfo.subraces);
 
-            //setCharacter({ type: ACTION.CLEAR_RACE }); // Clear race and subrace before selecting a new race
+
+            // Clear race and subrace before selecting a new race
+            if(chosenRace.name != character.race.name){
+                setCharacter({ type: ACTION.CLEAR_RACE });
+            }        
             setCharacter({
                 type: ACTION.UPDATE_RACE,
                 payload: { 
@@ -50,7 +58,7 @@ const RaceForm = () => {
                     url: [chosenRace.url], 
                     size: raceInfo.size, 
                     speed: raceInfo.speed 
-                },
+                }
             });
 
             //setDetails(chosenRace);
