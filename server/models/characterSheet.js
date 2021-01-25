@@ -25,5 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     CharacterSheet.hasMany(Equipment, {onDelete: "CASCADE"});
   };
 
+  CharacterSheet.associate = ({ Spells }) => {
+    CharacterSheet.hasMany(Spells, {onDelete: "CASCADE"});
+  };
+
   return CharacterSheet;
 }
