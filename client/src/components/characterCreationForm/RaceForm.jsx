@@ -1,9 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import dndApi from "./../../utils/dnd5eApi";
+import { useCharacter } from '../../state/logic';
+import * as ACTION from '../../state/actions';
+
 
 const RaceForm = () => {
     const [raceChoices, setRaceChoices]  = useState([]);
     const [subRaceChoices, setSubRaceChoices] = useState([]);
+    const { character, setCharacter, details, setDetails } = useCharacter();
+    
 
     useEffect(() => {
         dndApi.getRaces()
@@ -18,7 +23,9 @@ const RaceForm = () => {
             /*
                 TODO: this is a good spot to format the data and send what ever we need to the global state
             */
-            setSubRaceChoices(response.data.subraces)
+           setDetails(response.data);
+           //console.log(response.data);
+            setSubRaceChoices(response.data.subraces);
         })
         .catch(err => console.log(err))
     }
