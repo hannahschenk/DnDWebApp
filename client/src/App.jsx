@@ -5,7 +5,7 @@ import { CharacterContext, characterReducer } from './state/logic';
 
 import Demo from './components/demo';
 import CharacterCreationPage from './pages/characterCreationPage';
-
+import FormControlContext from "./state/formControlManager";
 const App = () => {
     // Grab initial character state and assign the CharacterReducer to the setCharacter function
     const [character, setCharacter] = useReducer(characterReducer, INITIAL_CHARACTER_STATE, () => {
@@ -18,6 +18,11 @@ const App = () => {
 
     const [details, setDetails] = useState({});
 
+    const[formControlState, setFormControlState] = useState({
+        sectionIndex: -1,
+        currentFormDone: false
+      }
+    )
     // Updates the local storage with changes in state (also prints to console)
     useEffect(() => {
         // console.log(character);
@@ -31,8 +36,10 @@ const App = () => {
     return (
         <>
             <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
-                {/* <Demo /> */}
-                <CharacterCreationPage />
+                <FormControlContext.Provider value={{ formControlState, setFormControlState }}>
+                    {/* <Demo /> */}
+                    <CharacterCreationPage />
+                </FormControlContext.Provider>
             </CharacterContext.Provider>
         </>
     );

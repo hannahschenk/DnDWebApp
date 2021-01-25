@@ -89,6 +89,7 @@ const RaceForm = () => {
                                 type="radio"
                                 name="race"
                                 id={raceObj.name}
+                                defaultChecked={raceObj.name == character.race.name}
                                 value={JSON.stringify(raceObj)}
                                 onClick={() => pickRace(raceObj)}
                             />
@@ -109,6 +110,7 @@ const RaceForm = () => {
                                     type="radio"
                                     name="subrace"
                                     id={subRaceObj.name}
+                                    defaultChecked={subRaceObj.name == character.race.subrace}
                                     value={JSON.stringify(subRaceObj)}
                                     onClick={() => pickSubRace(subRaceObj)}
                                 />

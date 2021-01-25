@@ -15,6 +15,7 @@ export const CharacterContext = React.createContext(undefined);
 //      const { character, setCharacter } = useCharacter()!;
 export const useCharacter = () => React.useContext(CharacterContext);
 
+
 export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) => {
   const [ACTION, TYPE] = action.type.split('_');
   const stat = TYPE.toLowerCase();
@@ -25,6 +26,7 @@ export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) =>
   switch (action.type) {
     case `UPDATE_${TYPE}`: {
       if (action.payload) {
+        clearPropAfter(character, stat)
         return (character = {
           ...character,
           [stat]: { ...character[stat], ...action.payload },
@@ -40,6 +42,24 @@ export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) =>
       return character;
   }
 };
+
+const clearPropAfter = (character, stat) => {
+  const propOrder = ["race", "class", "abilities", "background", "proficiencies", "equipment"]
+  let startIndex = propOrder.indexOf(stat)
+  for(let i = startIndex + 1; i < propOrder.length; i++){
+    for(const key in character[propOrder[i]]){
+      if(typeof(character[propOrder[i]][key]) == "string"){
+        character[propOrder[i]][key] = ""
+      }
+      else if(typeof(character[propOrder[i]][key]) == "number"){
+        character[propOrder[i]][key] = 0
+      }
+      else{
+        character[propOrder[i]][key] = []
+      }
+    }
+  }
+}
 
 // CODE TO IMPLEMENT REDUCER
   // Grab initial character state and assign the CharacterReducer to the setCharacter function

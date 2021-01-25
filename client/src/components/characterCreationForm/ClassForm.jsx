@@ -68,6 +68,7 @@ const ClassForm = () => {
                                 type="radio"
                                 name="class"
                                 id={classObj.name}
+                                defaultChecked={classObj.name == character.class.name}
                                 value={JSON.stringify(classObj)}
                                 onClick={() => pickClass(classObj)}
                             />
