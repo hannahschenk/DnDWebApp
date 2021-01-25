@@ -5,7 +5,7 @@ import ClassForm from './ClassForm';
 import AbilityScoresForm from './AbilityScoresForm';
 import CharacterDetailsForm from './CharacterDetailsForm';
 import EquipmentForm from './EquipmentForm';
-import ProficienciesForm from './ProficienciesForm';
+import ProficienciesForm from './proficienciesForm/index';
 
 const characterCreationForm = ({ currentSectionIdx }) => {
     const formGenerator = () => {

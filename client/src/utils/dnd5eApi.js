@@ -23,7 +23,7 @@ module.exports = {
     getStartingEquipment:(chosenClass) => {
         return axios.get(constants.API_BASE_URL + '/api/starting-equipment/'+ chosenClass);
     },
-    getBackground:(id) => {
-        return axios.get('https://dnd-backgrounds-default-rtdb.firebaseio.com/backgrounds/' + id + '.json');
+    getBackground:(endPoint) => {
+        return axios.get(constants.BACKGROUNDS_BASE_URL +  endPoint);
     }
 }

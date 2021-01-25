@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
-
 import dndApi from '../../utils/dnd5eApi';
-
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
 const ClassForm = () => {
     const { character, setCharacter, setDetails } = useCharacter();
-
     const [classChoices, setClassChoices] = useState([]);
 
+    /*
+    * Signature: useEffect(func, [])
+    * Description: Fetches all possible class choices from dnd5e api
+    *               each class choice is an object with the format
+    *               {index, name, url}  
+    */
     useEffect(async () => {
         let mounted = true;
-
         if (mounted) {
             try {
                 setClassChoices((await dndApi.getClasses()).data.results);
-
-                if (character.class.name !== '') {
-                    // Sets details component to render data based on currently selected class, if available
+                /*if (character.class.name !== '') {
                     setDetails((await dndApi.getMoreInfo(character.class.url)).data);
-                }
+                }*/
             } catch (err) {
                 console.log(err);
             }
@@ -30,18 +30,29 @@ const ClassForm = () => {
         };
     }, []);
 
-    const pickClass = async (chosenClassInfo) => {
+    /*
+    * Signature: pickClass(chosenClass)
+    * Input: chosenClass - the class object ({name, index, url}) the user chooses
+    * Description: Sets the character state property class to reflect the user's
+    *               chosen class
+    */
+    const pickClass = async (chosenClass) => {
         try {
-            // Grabs class specific data from api based on selected class
-            const classSpecificInfo = (await dndApi.getMoreInfo(chosenClassInfo.url)).data;
+            const classInfo = (await dndApi.getMoreInfo(chosenClass.url)).data;
 
-            setCharacter({ type: ACTION.CLEAR_CLASS });
-            setCharacter({ type: ACTION.UPDATE_CLASS, payload: { name: chosenClassInfo.index, url: chosenClassInfo.url, hitDie: classSpecificInfo.hit_die } });
-            //setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { savingThrows: [...classSpecificInfo.saving_throws] } });
+            //setCharacter({ type: ACTION.CLEAR_CLASS });
+            setCharacter({ 
+                type: ACTION.UPDATE_CLASS, 
+                payload: { 
+                    name: chosenClass.name, 
+                    url: chosenClass.url, 
+                    hitDie: classInfo.hit_die 
+                } 
+            });
 
-            setDetails(classSpecificInfo);
+            //setDetails(classSpecificInfo);
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     };
 
@@ -49,20 +60,21 @@ const ClassForm = () => {
         <>
             <form>
                 <p>Pick a Class: </p>
-                {classChoices.map((classContent) => (
-                    <React.Fragment key={`${classContent.index}`}>
-                        <label htmlFor="class">{classContent.name}</label>
-                        <input
-                            type="radio"
-                            name="class"
-                            id={classContent.name}
-                            defaultChecked={character.class.name === classContent.index}
-                            value={classContent.index}
-                            onClick={() => pickClass(classContent)}
-                        />
-                        <br />
-                    </React.Fragment>
-                ))}
+                { //render radio options for classes
+                    classChoices.map((classObj, idx) => (
+                        <React.Fragment key={idx}>
+                            <label htmlFor={classObj.name}>{classObj.name}</label>
+                            <input
+                                type="radio"
+                                name="class"
+                                id={classObj.name}
+                                value={JSON.stringify(classObj)}
+                                onClick={() => pickClass(classObj)}
+                            />
+                            <br />
+                        </React.Fragment>
+                    ))
+                }
             </form>
         </>
     );
