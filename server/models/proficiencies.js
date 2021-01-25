@@ -19,8 +19,8 @@ module.exports = (sequelize, DataTypes) => {
     });
     
     Proficiencies.associate = ({ characterSheet }) => {
-        Books.belongsTo(characterSheet);
+        Proficiencies.belongsTo(characterSheet);
     };
     
-    return Books;
+    return Proficiencies;
 };

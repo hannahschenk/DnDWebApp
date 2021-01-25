@@ -18,5 +18,9 @@ module.exports = (sequelize, DataTypes) => {
     CharacterSheet.hasMany(Proficiencies, {onDelete: "CASCADE"});
   };
 
+  CharacterSheet.associate = ({ Background }) => {
+    CharacterSheet.hasOne(Background, {onDelete: "CASCADE"});
+  };
+
   return CharacterSheet;
-};
+}
