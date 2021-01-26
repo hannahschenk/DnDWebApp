@@ -6,7 +6,7 @@ const NavBar = () => {
     const anon = [
         {
             name: "Home",
-            link: "#" //replace with id
+            link: "/" //replace with id
         },
         {
             name: "Sign In",
@@ -41,10 +41,13 @@ const NavBar = () => {
         <section>
             
             <ul>
-                
-                <li>
-                    
-                </li>
+                {
+                    anon.map((content) => 
+                        <NavLink to={content.link}>
+                            <li key={content.name}>{content.name}</li>
+                        </NavLink>
+                    )
+                }
             </ul>
         </section>
     );

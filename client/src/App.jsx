@@ -9,7 +9,8 @@ import FormControlContext from "./state/formControlManager";
 import CharacterOverview from './pages/characterOverview';
 import HomePage from './pages/homePage';
 import DashboardPage from "./pages/dashboardPage";
-
+import Footer from "./components/footer"
+import NavBar from "./components/NavBar"
 const App = () => {
     // Grab initial character state and assign the CharacterReducer to the setCharacter function
     const [character, setCharacter] = useReducer(characterReducer, INITIAL_CHARACTER_STATE, () => {
@@ -40,6 +41,7 @@ const App = () => {
         <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
         <FormControlContext.Provider value={{ formControlState, setFormControlState }}>
             <Router>
+                <NavBar/>
                 <Switch>
                     <Route exact path="/">
                         <HomePage />
@@ -55,6 +57,7 @@ const App = () => {
                         <DashboardPage/>
                     </Route>
                 </Switch>
+                <Footer/>
             </Router>
         </FormControlContext.Provider>
         </CharacterContext.Provider>
