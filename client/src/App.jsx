@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useEffect, useReducer, useState } from 'react';
-=======
-import React, { useEffect, useReducer } from 'react';
->>>>>>> e23423b376c64a341ac60964d2226e831daba385
 
 import INITIAL_CHARACTER_STATE from './state/character';
 import { CharacterContext, characterReducer } from './state/logic';
