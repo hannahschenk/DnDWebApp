@@ -8,6 +8,7 @@ import CharacterCreationPage from './pages/characterCreationPage';
 import FormControlContext from "./state/formControlManager";
 import CharacterOverview from './pages/characterOverview';
 import HomePage from './pages/homePage';
+import DashboardPage from "./pages/dashboardPage";
 
 const App = () => {
     // Grab initial character state and assign the CharacterReducer to the setCharacter function
@@ -48,6 +49,10 @@ const App = () => {
                     </Route>
                     <Route exact path="/overview">
                         <CharacterOverview />
+                    </Route>
+
+                    <Route exact path="/dashboard">
+                        <DashboardPage/>
                     </Route>
                 </Switch>
             </Router>
