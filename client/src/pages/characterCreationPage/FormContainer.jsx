@@ -9,7 +9,6 @@ const FormContainer = () => {
 
     return (
         <section>
-<<<<<<< HEAD
             <h3>{constants.CREATION_SECTIONS[formControlState.sectionIndex].title}</h3>
             <article>
                 <CharacterCreationForm currentSectionIdx={formControlState.sectionIndex} />
@@ -22,11 +21,6 @@ const FormContainer = () => {
                     <Details />
                 </section>
             </article>
-=======
-            <h3>{constants.CREATION_SECTIONS[currentSectionIdx].title}</h3>
-            <CharacterCreationForm currentSectionIdx={currentSectionIdx} />
-            <Details />
->>>>>>> 4a70b2f06ba0d08582459d279e8cf437f8e5c275
         </section>
     );
 };
