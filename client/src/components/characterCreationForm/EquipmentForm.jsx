@@ -18,23 +18,24 @@ const EquipmentForm = () => {
     *               and race; get all choices for equipments
     */
     useEffect( async () => {
+        let totalUserEquipments = initialEquipment.length + backgroundEquipment.length + totalChoices.wrap.length
         // getting equipment from background------------------------------------------------------
         let bkEquipmentsRaw = ((await dndApi.getBackground(character.background.url)).data["misc-equipments"])
-        let backgroundEquipments = bkEquipmentsRaw.map((content) => {
-            return { 
+        let characterStateHasBackgroundEquipments = false; 
+        bkEquipmentsRaw.map((content) => {
+            let bkEquipmentObj = { 
                 name: content, 
                 url: null, 
                 type: "misc"
             }  
+            if(!character.equipment.total.map((equipment) => equipment.name).includes(content)){
+                character.equipment.total.push(bkEquipmentObj)
+            }
         });
-        character.equipment.total = (character.equipment.total.length > 0) ? 
-            (character.equipment.total).concat(backgroundEquipments) :
-            backgroundEquipments
-
         setCharacter({ type: ACTION.UPDATE_EQUIPMENT, payload: { total: [...character.equipment.total] } })
         setBackgroundEquipment(bkEquipmentsRaw)
 
-        //getting initial equipment from race-------------------------------------------------------
+        //getting initial equipment from class-------------------------------------------------------
         let equipmentEndPoint = (await dndApi.getMoreInfo(character.class.url)).data.starting_equipment
         const equipmentObj = (await dndApi.getMoreInfo(equipmentEndPoint)).data
 
@@ -43,10 +44,15 @@ const EquipmentForm = () => {
         for(let i = 0; i < initialEquipments.length; i++){
             let equipmentCat = (await dndApi.getMoreInfo(initialEquipments[i].equipment.url)).data.equipment_category.index;
             
-            character.equipment.total.push({ 
+            let classEquipmentObj = { 
                 name: `${initialEquipments[i].equipment.name} (${initialEquipments[i].quantity})`, 
                 url: initialEquipments[i].equipment.url, 
-                type: determineEquipmentType(equipmentCat)}) 
+                type: determineEquipmentType(equipmentCat)
+            }
+            
+            if(!character.equipment.total.map((equipment) => equipment.name).includes(classEquipmentObj.name)){
+                character.equipment.total.push(classEquipmentObj)
+            }
 
             setCharacter({ type: ACTION.UPDATE_EQUIPMENT, payload: { total: [...character.equipment.total] } })
         }
@@ -85,7 +91,7 @@ const EquipmentForm = () => {
         else{
             setFormControlState({...formControlState, currentFormDone: false})
         }
-    }, [character])
+    }, [character, totalChoices, backgroundEquipment, initialEquipment])
 
     /*
     * Signature: determineEquipmentType(equipmentCat)
@@ -188,11 +194,19 @@ const EquipmentForm = () => {
                     totalChoices.wrap.map((equipmentContent, idx) => 
                         <React.Fragment key={idx}>
                             <label htmlFor="equipmentChoices">Pick one</label>
-                            <select name={`equipmentChoices-${idx}`} key={idx} id={idx} onChange={(e) => pickEquipment(e)} defaultValue={-1}>
+                            <select name={`equipmentChoices-${idx}`} 
+                                    key={idx} 
+                                    id={idx} 
+                                    onChange={(e) => pickEquipment(e)} defaultValue={-1}
+                                    defaultValue={character.equipment.total.length >= initialEquipment.length + backgroundEquipment.length + idx + 1 ? 
+                                        JSON.stringify(character.equipment.total[initialEquipment.length + backgroundEquipment.length + idx]): -1}
+                            >
                                 <option value={-1} disabled>no assignment</option>
                                 {
                                     equipmentContent.map((groupChoice, index) => 
-                                        <option key={index} value={JSON.stringify(groupChoice)}>{groupChoice.name}</option>
+                                        <option key={index} value={JSON.stringify(groupChoice)}>
+                                            {groupChoice.name}
+                                        </option>
                                     )
                                 }
                             </select>

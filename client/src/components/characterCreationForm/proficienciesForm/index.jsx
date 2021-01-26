@@ -40,7 +40,9 @@ const ProficienciesForm = () => {
 
                 //adding on the saving throws:
                 let savingThrowsStringArr =  classObj.saving_throws.map((obj) => constants.ABILITY_KEY_MAP[obj.index])
-                setCharacter({ type: ACTION.UPDATE_PROFICIENCIES, payload: { savingThrows: savingThrowsStringArr } });
+                if(character.proficiencies.savingThrows.length == 0){
+                    setCharacter({ type: ACTION.UPDATE_PROFICIENCIES, payload: { savingThrows: savingThrowsStringArr } });
+                }
 
                 if (isSpellcaster) {
                     // Assigns these two constants to a string array containing the spells for the class and all level 1 spells

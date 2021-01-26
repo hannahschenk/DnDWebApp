@@ -16,6 +16,7 @@ const App = () => {
     const [character, setCharacter] = useReducer(characterReducer, INITIAL_CHARACTER_STATE, () => {
         // Tries to get character from local storage, if one is not present, set to initial combined character state
         const localCharacter = localStorage.getItem('character');
+        console.log(JSON.parse(localCharacter))
         return localCharacter ? JSON.parse(localCharacter) : INITIAL_CHARACTER_STATE;
     });
 

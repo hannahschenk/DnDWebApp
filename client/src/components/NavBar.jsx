@@ -43,8 +43,8 @@ const NavBar = () => {
             <ul>
                 {
                     anon.map((content) => 
-                        <NavLink to={content.link}>
-                            <li key={content.name}>{content.name}</li>
+                        <NavLink key={content.name} to={content.link}>
+                            <li>{content.name}</li>
                         </NavLink>
                     )
                 }

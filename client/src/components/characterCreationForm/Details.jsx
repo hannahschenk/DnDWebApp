@@ -24,10 +24,10 @@ const Details = () => {
                 } else {
                     if (key !== 'index' && key !== 'url') {
                         elements.push(
-                            <>
+                            <React.Fragment>
                                 {/* <h3>{key.replace('_', 's')}</h3> */}
                                 <p>{value}</p>
-                            </>
+                            </React.Fragment>
                         );
                     }
                 }
@@ -42,10 +42,10 @@ const Details = () => {
                     dealArray(newArray);
                 } else {
                     elements.push(
-                        <>
+                        <React.Fragment>
                             <h3>{key}</h3>
                             <p>{value}</p>
-                        </>
+                        </React.Fragment>
                     );
                 }
             }
@@ -63,10 +63,10 @@ const Details = () => {
             } else {
                 if (key !== 'index' && key !== 'url') {
                     elements.push(
-                        <>
+                        <React.Fragment>
                             {/* <h3>{key.replace('_', ' ')}</h3> */}
                             <p>{value}</p>
-                        </>
+                        </React.Fragment>
                     );
                 }
             }

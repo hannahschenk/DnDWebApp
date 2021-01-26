@@ -70,7 +70,9 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState }) => {
                                 const skillName = skill.name.match(/\b(?!Skill:\s\b)\w+.+/);
                                 return (
                                     <React.Fragment key={idxx}>
-                                        <button onClick={(e) => handleSkillChoice(e)} name={skillName} style={{ width: 200 }}>
+                                        <button onClick={(e) => handleSkillChoice(e)} name={skillName} 
+                                        style={{ width: 200 , 
+                                        backgroundColor: (character.proficiencies.skills.map(skillObj => skillObj.name).includes(skillName[0])) ? "red" : ""}}>
                                             {skillName}
                                         </button>
                                         <br />
