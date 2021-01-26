@@ -18,11 +18,8 @@ const App = () => {
         return localCharacter ? JSON.parse(localCharacter) : INITIAL_CHARACTER_STATE;
     });
 
-<<<<<<< HEAD
     const [details, setDetails] = useState({});
 
-=======
->>>>>>> e23423b376c64a341ac60964d2226e831daba385
     // Updates the local storage with changes in state (also prints to console)
     useEffect(() => {
         console.log(character);
@@ -31,11 +28,7 @@ const App = () => {
 
     return (
         <>
-<<<<<<< HEAD
             <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
-=======
-            <CharacterContext.Provider value={{ character, setCharacter }}>
->>>>>>> e23423b376c64a341ac60964d2226e831daba385
                 {/* <Demo /> */}
                 <CharacterCreationPage />
             </CharacterContext.Provider>

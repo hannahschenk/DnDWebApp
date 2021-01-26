@@ -15,10 +15,6 @@ const ClassForm = () => {
         dndApi.getMoreInfo(chosenClassInfo.url)
         .then(data => {
             console.log(data.response)
-<<<<<<< HEAD
-            
-=======
->>>>>>> e23423b376c64a341ac60964d2226e831daba385
             /*
                 TODO: this is a good spot to format the data and send what ever we need to the global state
             */
