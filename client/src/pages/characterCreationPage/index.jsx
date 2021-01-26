@@ -11,15 +11,6 @@ import { useHistory } from 'react-router-dom';
 
 const CharacterCreationPage = () => {
     const {formControlState, setFormControlState} = useContext(FormControlContext);
-
-    //TESTING STATE UPDATERS:
-    const { character, setCharacter } = useCharacter();
-    useEffect(() => {
-        console.log(character)
-
-    }, [character])
-    //end state tester
-    
     const history = useHistory();
 
     const setSectionIndex = (offset) => {
@@ -57,11 +48,17 @@ const CharacterCreationPage = () => {
                     <button onClick={() => setSectionIndex(-1)} disabled={isPreviousDisabled()}>
                         Previous
                     </button>
+
                     <button onClick={() => setSectionIndex(1)} disabled={isNextDisabled()}>
                         Next
                     </button>
 
-                    {currentSectionIdx === 5 && <button onClick={() => history.push('/overview')}>View Character Sheet</button>}
+                    {
+                        formControlState.sectionIndex === 5 && 
+                        <button onClick={() => history.push('/overview')} disabled={!formControlState.currentFormDone}>
+                            View Character Sheet
+                        </button>
+                    }
                 </section>
             }
         </>

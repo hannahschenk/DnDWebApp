@@ -25,7 +25,8 @@ const App = () => {
     )
     // Updates the local storage with changes in state (also prints to console)
     useEffect(() => {
-        // console.log(character);
+        console.log("in use effect where local storage is set")
+        console.log(character);
         localStorage.setItem('character', JSON.stringify(character));
     }, [character]);
 

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { characterReducer } from '../../state/logic';
 import dndApi from "./../../utils/dnd5eApi";
 
@@ -78,9 +78,8 @@ const EquipmentForm = () => {
     *              user can move on to the next section via the formControlState
     */
     useEffect(() => {
-        let formDone = true;
-        if(character.background.total.length == (initialEquipment.length + 
-        backgroundEquipment + totalChoices.wrap.length)){
+        if(character.equipment.total.length == (initialEquipment.length + 
+        backgroundEquipment.length + totalChoices.wrap.length)){
             setFormControlState({...formControlState, currentFormDone: true})
         }
         else{

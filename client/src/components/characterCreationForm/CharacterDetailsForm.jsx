@@ -13,15 +13,9 @@ const CharacterDetailsForm = () => {
     const {formControlState, setFormControlState} = useContext(FormControlContext);
     const [backgroundChoices, setBackgroundChoices] = useState([]);
     const [languageChoices, setLanguageChoices] = useState([]);
-<<<<<<< HEAD
     // length of array = # choices based on background; value is index offset to add/remove 
     const [languageChoicesOffset, setLanguageChoicesOffset] = useState([]); 
     const [raceLanguages, setRaceLanguages] = useState([]);
-=======
-    // length of array = # choices based on background; value is index offset to add/remove
-    const [languageChoicesOffset, setLanguageChoicesOffset] = useState([]);
-    const [raceLanguages, setRaceLanguages] = useState();
->>>>>>> 4a70b2f06ba0d08582459d279e8cf437f8e5c275
 
     /*
      * Signature: useEffect(func, [])
@@ -90,7 +84,6 @@ const CharacterDetailsForm = () => {
      * Description: set character State background
      */
     const pickBackground = (chosenBackground) => {
-<<<<<<< HEAD
         if(chosenBackground.name != character.background.name){
             let maxIndexOfBkLang = character.background.languages.length - raceLanguages.length
             character.background.languages.splice(raceLanguages.length, maxIndexOfBkLang)
@@ -98,17 +91,10 @@ const CharacterDetailsForm = () => {
         setCharacter({ 
             type: ACTION.UPDATE_BACKGROUND, 
             payload: { 
+                ...character.background, 
                 name: chosenBackground.name, 
                 url: `/${chosenBackground.id}.json`
             } 
-=======
-        setCharacter({
-            type: ACTION.UPDATE_BACKGROUND,
-            payload: {
-                name: chosenBackground.name,
-                url: `/${chosenBackground.id}.json`,
-            },
->>>>>>> 4a70b2f06ba0d08582459d279e8cf437f8e5c275
         });
         setDetails(chosenBackground);
 
@@ -147,13 +133,14 @@ const CharacterDetailsForm = () => {
         setCharacter({
             type: ACTION.UPDATE_BACKGROUND,
             payload: {
+                ...character.background, 
                 languages: [...character.background.languages],
             },
         });
         //setDetails();
         try {
             let languageInfo = (await dndApi.getMoreInfo(chosenLanguage.url)).data
-            setDetails(languageInfo);
+            //setDetails(languageInfo); there is a bug here
         } catch (err) {
             console.log(err);
         }
@@ -172,6 +159,7 @@ const CharacterDetailsForm = () => {
         setCharacter({
             type: ACTION.UPDATE_BACKGROUND,
             payload: {
+                ...character.background, 
                 [stat]: e.target.value,
             },
         });
@@ -195,6 +183,7 @@ const CharacterDetailsForm = () => {
                                 name="background"
                                 id={backgroundContent.name}
                                 value={backgroundContent.name}
+                                defaultChecked={backgroundContent.name == character.background.name}
                                 onClick={() => pickBackground(backgroundContent)}
                             />
                             <label htmlFor={backgroundContent.name}>{backgroundContent.name}</label>

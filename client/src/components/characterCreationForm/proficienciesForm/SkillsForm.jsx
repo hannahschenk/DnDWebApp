@@ -3,9 +3,9 @@ import { useCharacter } from './../../../state/logic';
 import * as ACTION from './../../../state/actions';
 import dndApi from '../../../utils/dnd5eApi';
 
-const SkillsForm = ({ skillProficiencies }) => {
+const SkillsForm = ({ skillProficiencies, skillsFormDoneState }) => {
     const { character, setCharacter, details, setDetails } = useCharacter();
-
+    const {skillsFormDone, setSkillsFormDone} = skillsFormDoneState
    
     /*
     * Signature: handleSkillChoice(e)
@@ -46,6 +46,18 @@ const SkillsForm = ({ skillProficiencies }) => {
             }
         }
     };
+
+   //UPDATE FORM CONTROL TO ALLOW TO GO TO NEXT SECTION
+   useEffect(() => {
+        let totalSkillChoices = skillProficiencies.map((content) => content.choose)
+                            .reduce((accum, currVal) => accum + currVal);
+        if(character.proficiencies.skills.length == totalSkillChoices){
+            setSkillsFormDone(true)
+        }
+        else{
+            setSkillsFormDone(false)
+        }
+    }, [character])
 
     return (
         <>

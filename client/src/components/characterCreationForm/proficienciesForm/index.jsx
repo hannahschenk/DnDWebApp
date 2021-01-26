@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import dndApi from "./../../../utils/dnd5eApi";
 import SkillsForm from "./SkillsForm"
@@ -6,7 +6,7 @@ import SpellsForm from "./SpellsForm"
 import { useCharacter } from './../../../state/logic';
 import * as ACTION from './../../../state/actions';
 import constants from '../../../utils/constants';
-
+import FormControlContext from "./../../../state/formControlManager";
 const ProficienciesForm = () => {
     const { character, setCharacter, details, setDetails } = useCharacter();
 
@@ -15,6 +15,9 @@ const ProficienciesForm = () => {
     const [spellCasting, setSpellCasting] = useState(undefined);
     const [availableSpells, setAvailableSpells] = useState([]);
 
+    const [skillsFormDone, setSkillsFormDone] = useState(false);
+    const [spellsFormDone, setSpellsFormDone] = useState(false);
+    const {formControlState, setFormControlState} = useContext(FormControlContext);
     /*
     * Signature: useEffect(func, [])
     * Description: sets all the skill choices and all the 
@@ -58,9 +61,20 @@ const ProficienciesForm = () => {
         };
     }, []);
 
+    /*
+    * Signature: useEffect(func, [character])
+    * Description: watch for character changes on class name to
+    *               determine if the user can move on to the next section
+    *               via the formControlState
+    */
+   useEffect(() => {
+        // set it as setSkillsFormDone && spellsFormDone once we get spells figured out
+        setFormControlState({...formControlState, currentFormDone: skillsFormDone})
+    }, [skillsFormDone, spellsFormDone])
+
     return (
         <>
-            {skillProficiencies.length !== 0 && <SkillsForm skillProficiencies={skillProficiencies} />}
+            {skillProficiencies.length !== 0 && <SkillsForm skillProficiencies={skillProficiencies} skillsFormDoneState={{skillsFormDone, setSkillsFormDone}} />}
             {/* Render spells form only if user's class is: 'bard', 'cleric', 'druid', 'paladin', 'ranger', 'sorcerer', 'warlock', 'wizard' */}
             {spellCasting && <SpellsForm availableSpells={availableSpells} />}
         </>
