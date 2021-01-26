@@ -1,16 +1,31 @@
-import React from 'react';
-import constants from './../../utils/constants';
+import React, {useContext} from 'react';
+import constants from "./../../utils/constants";
 
-const CreationTimeline = ({ sectionIdxState }) => {
+import FormControlContext from "./../../state/formControlManager"
+const CreationTimeline = () => {
     /*NOTE: might change later if state becomes global*/
-    const { currentSectionIdx, currentSectionIdxReducer } = sectionIdxState;
+
+    const {formControlState, setFormControlState} = useContext(FormControlContext);
     /* END NOTE */
+    
+    const switchSection = (newIndex) => {
+        if (newIndex <= formControlState.sectionIndex + 1) {
+            if(newIndex == formControlState.sectionIndex + 1){
+                if(formControlState.currentFormDone){
+                    setFormControlState({currentFormDone: false, sectionIndex: newIndex})
+                }
+            }
+            else{
+                setFormControlState({...formControlState, sectionIndex: newIndex})
+            }
+        }
+    }
 
     return (
-        <aside>
-            <ul>
-                {constants.CREATION_SECTIONS.map((sectionContent, sectionContentIdx) => (
-                    <li key={sectionContent.title} onClick={() => currentSectionIdxReducer('SWITCH_SECTION', sectionContentIdx)}>
+        <ul>
+            {
+                constants.CREATION_SECTIONS.map((sectionContent, sectionContentIdx) => 
+                    <li key={sectionContent.title} onClick={() => switchSection(sectionContentIdx)}>
                         <p>{sectionContent.title}</p>
                         <ul>
                             {sectionContent.subSections.map((subSectionContent) => (
@@ -18,9 +33,8 @@ const CreationTimeline = ({ sectionIdxState }) => {
                             ))}
                         </ul>
                     </li>
-                ))}
-            </ul>
-        </aside>
+                )}
+        </ul>
     );
 };
 

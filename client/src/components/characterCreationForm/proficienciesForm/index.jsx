@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import dndApi from './../../../utils/dnd5eApi';
 import SkillsForm from './SkillsForm';
@@ -7,42 +7,44 @@ import SpellsForm from './SpellsForm';
 import { useCharacter } from './../../../state/logic';
 import * as ACTION from './../../../state/actions';
 import constants from '../../../utils/constants';
+import FormControlContext from './../../../state/formControlManager';
 
 const ProficienciesForm = () => {
-    const { character, setCharacter } = useCharacter();
+    const { character, setCharacter, setDetails } = useCharacter();
 
     const [skillProficiencies, setSkillProficiencies] = useState([]);
 
     const [spellCasting, setSpellCasting] = useState(undefined);
     const [availableSpells, setAvailableSpells] = useState([]);
 
-    useEffect(() => {
-        console.log(skillProficiencies);
-    }, [skillProficiencies]);
-
+    const [skillsFormDone, setSkillsFormDone] = useState(false);
+    const [spellsFormDone, setSpellsFormDone] = useState(false);
+    const { formControlState, setFormControlState } = useContext(FormControlContext);
     /*
      * Signature: useEffect(func, [])
      * Description: sets all the skill choices and all the
      *               spells that the user can have
      */
     useEffect(async () => {
+        // Reset details component
+        setDetails({});
+
         let mounted = true;
         if (mounted) {
             try {
-                const classObj = (await dndApi.getMoreInfo(character.character_class.url)).data;
-
-                console.log(classObj);
                 // Grab the class's skills
-                const skillProficiencies = classObj.proficiency_choices;
-                setSkillProficiencies(skillProficiencies);
+                const classObj = (await dndApi.getMoreInfo(character.character_class.url)).data;
+                setSkillProficiencies(classObj.proficiency_choices);
 
                 // Set ifSpellcaster to the spellcasting object if a spellcasting class, or undefined if not (controls rendering of <SpellsForm /> component)
                 const isSpellcaster = classObj.spellcasting;
                 setSpellCasting(isSpellcaster);
 
-                //adding on the saving throws:
+                // Adding on the saving throws:
                 let savingThrowsStringArr = classObj.saving_throws.map((obj) => constants.ABILITY_KEY_MAP[obj.index]);
-                setCharacter({ type: ACTION.UPDATE_PROFICIENCIES, payload: { savingThrows: savingThrowsStringArr } });
+                if (character.proficiencies.savingThrows.length == 0) {
+                    setCharacter({ type: ACTION.UPDATE_PROFICIENCIES, payload: { savingThrows: savingThrowsStringArr } });
+                }
 
                 if (isSpellcaster) {
                     // Assigns these two constants to a string array containing the spells for the class and all level 1 spells
@@ -62,10 +64,30 @@ const ProficienciesForm = () => {
         };
     }, []);
 
+    /*
+     * Signature: useEffect(func, [character])
+     * Description: watch for character changes on class name to
+     *               determine if the user can move on to the next section
+     *               via the formControlState
+     */
+    useEffect(() => {
+        let mounted = true;
+        // set it as setSkillsFormDone && spellsFormDone once we get spells figured out
+        mounted && setFormControlState({ ...formControlState, currentFormDone: skillsFormDone });
+
+        return () => {
+            mounted = false;
+        };
+    }, [skillsFormDone, spellsFormDone]);
+
     return (
         <>
-            {skillProficiencies.length >= 1 && <SkillsForm skillProficiencies={skillProficiencies[0]} field="skills" />}
-            {skillProficiencies.length == 2 && <SkillsForm skillProficiencies={skillProficiencies[1]} field="items" />}
+            {skillProficiencies.length >= 1 && (
+                <SkillsForm skillProficiencies={skillProficiencies[0]} field="skills" skillsFormDoneState={{ skillsFormDone, setSkillsFormDone }} />
+            )}
+            {skillProficiencies.length == 2 && (
+                <SkillsForm skillProficiencies={skillProficiencies[1]} field="items" skillsFormDoneState={{ skillsFormDone, setSkillsFormDone }} />
+            )}
             {/* Render spells form only if user's class is: 'bard', 'cleric', 'druid', 'paladin', 'ranger', 'sorcerer', 'warlock', 'wizard' */}
             {spellCasting && <SpellsForm availableSpells={availableSpells} />}
         </>

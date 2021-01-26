@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import dndApi from './../../utils/dnd5eApi';
 
+import FormControlContext from './../../state/formControlManager';
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
 const RaceForm = () => {
-    const { character, setCharacter, setDetails } = useCharacter();
-
     const [raceChoices, setRaceChoices] = useState([]);
     const [subRaceChoices, setSubRaceChoices] = useState([]);
+    const { formControlState, setFormControlState } = useContext(FormControlContext);
+    const { character, setCharacter, setDetails } = useCharacter();
 
     /*
      * Signature: useEffect(func, [])
@@ -18,10 +19,18 @@ const RaceForm = () => {
      *               {index, name, url}
      */
     useEffect(async () => {
+        // Reset details component
+        setDetails({});
+
         let mounted = true;
         if (mounted) {
             try {
                 setRaceChoices((await dndApi.getRaces()).data.results);
+                if (character.race.name !== '') {
+                    // a race is already picked
+                    const raceInfo = (await dndApi.getMoreInfo(character.race.url[0])).data;
+                    setSubRaceChoices(raceInfo.subraces);
+                }
             } catch (err) {
                 console.error(err);
             }
@@ -30,6 +39,21 @@ const RaceForm = () => {
             mounted = false;
         };
     }, []);
+
+    /*
+     * Signature: useEffect(func, [character, subRaceChoices])
+     * Description: watch for character changes and subRaceChoices state to
+     *               determine if the user can move on to the next section
+     *               via the formControlState
+     */
+    useEffect(() => {
+        let isSubRaceFilled = (subRaceChoices.length != 0 && character.race.subrace != '') || (subRaceChoices.length == 0 && character.race.subrace == '');
+        if (character.race.name != '' && isSubRaceFilled) {
+            setFormControlState({ ...formControlState, currentFormDone: true });
+        } else {
+            setFormControlState({ ...formControlState, currentFormDone: false });
+        }
+    }, [character, subRaceChoices]);
 
     /*
      * Signature: pickRace(chosenRace)
@@ -42,7 +66,12 @@ const RaceForm = () => {
             const raceInfo = (await dndApi.getMoreInfo(chosenRace.url)).data;
             setSubRaceChoices(raceInfo.subraces);
 
-            setCharacter({ type: ACTION.CLEAR_RACE }); // Clear race and subrace before selecting a new race
+            setDetails(raceInfo);
+
+            // Clear race and subrace before selecting a new race
+            if (chosenRace.name != character.race.name) {
+                setCharacter({ type: ACTION.CLEAR_RACE });
+            }
             setCharacter({
                 type: ACTION.UPDATE_RACE,
                 payload: {
@@ -66,8 +95,6 @@ const RaceForm = () => {
      *               chosen subrace
      */
     const pickSubRace = async (chosenSubRace) => {
-        const subRaceInfo = (await dndApi.getMoreInfo(chosenSubRace.url)).data;
-
         setCharacter({
             type: ACTION.UPDATE_RACE,
             payload: {
@@ -76,7 +103,8 @@ const RaceForm = () => {
             },
         });
 
-        setDetails(subRaceInfo);
+        const chosenSubRaceInfo = (await dndApi.getMoreInfo(chosenSubRace.url)).data;
+        setDetails(chosenSubRaceInfo);
     };
 
     return (
@@ -88,7 +116,14 @@ const RaceForm = () => {
                     raceChoices.map((raceObj, idx) => (
                         <React.Fragment key={idx}>
                             <label htmlFor={raceObj.name}>{raceObj.name}</label>
-                            <input type="radio" name="race" id={raceObj.name} value={JSON.stringify(raceObj)} onClick={() => pickRace(raceObj)} />
+                            <input
+                                type="radio"
+                                name="race"
+                                id={raceObj.name}
+                                defaultChecked={raceObj.name == character.race.name}
+                                value={JSON.stringify(raceObj)}
+                                onClick={() => pickRace(raceObj)}
+                            />
                             <br />
                         </React.Fragment>
                     ))
@@ -107,6 +142,7 @@ const RaceForm = () => {
                                     type="radio"
                                     name="subrace"
                                     id={subRaceObj.name}
+                                    defaultChecked={subRaceObj.name == character.race.subrace}
                                     value={JSON.stringify(subRaceObj)}
                                     onClick={() => pickSubRace(subRaceObj)}
                                 />

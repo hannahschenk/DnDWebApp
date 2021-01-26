@@ -29,6 +29,8 @@ export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) =>
   switch (action.type) {
     case `UPDATE_${TYPE}`: {
       if (action.payload) {
+        // cleanUp()
+        clearPropAfter(character, stat)
         return (character = {
           ...character,
           [stat]: { ...character[stat], ...action.payload },
@@ -46,6 +48,28 @@ export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) =>
       return character;
   }
 };
+
+const clearPropAfter = (character, stat) => {
+  // took out abilities because it does not affect anything
+  const propOrder = ["race", "character_class", "abilities", "background", "proficiencies", "equipment"]
+  if (stat == "abilities" || stat == "proficiencies") { //changes here should not affect anything
+    return;
+  }
+  let startIndex = propOrder.indexOf(stat)
+  for (let i = startIndex + 1; i < propOrder.length; i++) {
+    for (const key in character[propOrder[i]]) {
+      if (typeof (character[propOrder[i]][key]) == "string") {
+        character[propOrder[i]][key] = ""
+      }
+      else if (typeof (character[propOrder[i]][key]) == "number") {
+        character[propOrder[i]][key] = 0
+      }
+      else {
+        character[propOrder[i]][key] = []
+      }
+    }
+  }
+}
 
 // CODE TO IMPLEMENT REDUCER
   // Grab initial character state and assign the CharacterReducer to the setCharacter function

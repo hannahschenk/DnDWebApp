@@ -69,6 +69,7 @@ const INITIAL_CHARACTER_STATE = {
     total: [
       //   {
       //     name: "",
+      //     type: "",
       //     url: ""
       //   }
     ]

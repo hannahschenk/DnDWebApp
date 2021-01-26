@@ -1,44 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { characterReducer } from '../../state/logic';
 import dndApi from './../../utils/dnd5eApi';
 
 import * as ACTION from '../../state/actions';
 import { useCharacter } from '../../state/logic';
 import axios from 'axios';
+import FormControlContext from './../../state/formControlManager';
 const EquipmentForm = () => {
     const [initialEquipment, setInitialEquipment] = useState([]);
     const [totalChoices, setChoices] = useState({ wrap: [] });
     const [backgroundEquipment, setBackgroundEquipment] = useState([]);
     const { character, setCharacter, setDetails } = useCharacter();
-
+    const { formControlState, setFormControlState } = useContext(FormControlContext);
     /*
      * Signature: useEffect(func, [])
      * Description: Fetches all initial equipments from background
      *               and race; get all choices for equipments
      */
     useEffect(async () => {
+        // Reset details component
+        setDetails({});
+
+        let totalUserEquipments = initialEquipment.length + backgroundEquipment.length + totalChoices.wrap.length;
         // getting equipment from background------------------------------------------------------
         let bkEquipmentsRaw = (await dndApi.getBackground(character.background.url)).data['misc-equipments'];
-        let backgroundEquipments = bkEquipmentsRaw.map((content) => {
-            return {
+        let characterStateHasBackgroundEquipments = false;
+        bkEquipmentsRaw.map((content) => {
+            let bkEquipmentObj = {
                 name: content,
                 url: null,
                 type: 'misc',
             };
+            if (!character.equipment.total.map((equipment) => equipment.name).includes(content)) {
+                character.equipment.total.push(bkEquipmentObj);
+            }
         });
-        character.equipment.total = character.equipment.total.length > 0 ? character.equipment.total.concat(backgroundEquipments) : backgroundEquipments;
-
         setCharacter({ type: ACTION.UPDATE_EQUIPMENT, payload: { total: [...character.equipment.total] } });
         setBackgroundEquipment(bkEquipmentsRaw);
 
-        //getting initial equipment from race-------------------------------------------------------
-        let equipmentEndPoint = (await dndApi.getMoreInfo(character.character_class.url)).data.starting_equipment;
+        //getting initial equipment from class-------------------------------------------------------
+        let equipmentEndPoint = (await dndApi.getMoreInfo(character.class.url)).data.starting_equipment;
         const equipmentObj = (await dndApi.getMoreInfo(equipmentEndPoint)).data;
 
         setInitialEquipment(equipmentObj.starting_equipment);
         let initialEquipments = equipmentObj.starting_equipment;
         for (let i = 0; i < initialEquipments.length; i++) {
             let equipmentCat = (await dndApi.getMoreInfo(initialEquipments[i].equipment.url)).data.equipment_category.index;
+
+            let classEquipmentObj = {
+                name: `${initialEquipments[i].equipment.name} (${initialEquipments[i].quantity})`,
+                url: initialEquipments[i].equipment.url,
+                type: determineEquipmentType(equipmentCat),
+            };
+
+            if (!character.equipment.total.map((equipment) => equipment.name).includes(classEquipmentObj.name)) {
+                character.equipment.total.push(classEquipmentObj);
+            }
 
             character.equipment.total.push({
                 name: `${initialEquipments[i].equipment.name} (${initialEquipments[i].quantity})`,
@@ -66,6 +83,19 @@ const EquipmentForm = () => {
             }
         }
     }, []);
+
+    /*
+     * Signature: useEffect(func, [character])
+     * Description: watch for character changes on equipment to determine if the
+     *              user can move on to the next section via the formControlState
+     */
+    useEffect(() => {
+        if (character.equipment.total.length == initialEquipment.length + backgroundEquipment.length + totalChoices.wrap.length) {
+            setFormControlState({ ...formControlState, currentFormDone: true });
+        } else {
+            setFormControlState({ ...formControlState, currentFormDone: false });
+        }
+    }, [character, totalChoices, backgroundEquipment, initialEquipment]);
 
     /*
      * Signature: determineEquipmentType(equipmentCat)
@@ -125,7 +155,7 @@ const EquipmentForm = () => {
      * Input: e - the change event
      * Description: adds/replace an equipment in the character state
      */
-    const pickEquipment = (e) => {
+    const pickEquipment = async (e) => {
         let indexOffset = parseInt(e.target.id);
         let indexToEdit = initialEquipment.length + backgroundEquipment.length + indexOffset;
         let equipmentToAdd = JSON.parse(e.target.value);
@@ -140,6 +170,7 @@ const EquipmentForm = () => {
                 total: [...character.equipment.total],
             },
         });
+        setDetails((await dndApi.getMoreInfo(equipmentToAdd.url)).data.results);
     };
 
     return (
@@ -156,7 +187,18 @@ const EquipmentForm = () => {
             {totalChoices.wrap.map((equipmentContent, idx) => (
                 <React.Fragment key={idx}>
                     <label htmlFor="equipmentChoices">Pick one</label>
-                    <select name={`equipmentChoices-${idx}`} key={idx} id={idx} onChange={(e) => pickEquipment(e)} defaultValue={-1}>
+                    <select
+                        name={`equipmentChoices-${idx}`}
+                        key={idx}
+                        id={idx}
+                        onChange={(e) => pickEquipment(e)}
+                        defaultValue={-1}
+                        defaultValue={
+                            character.equipment.total.length >= initialEquipment.length + backgroundEquipment.length + idx + 1
+                                ? JSON.stringify(character.equipment.total[initialEquipment.length + backgroundEquipment.length + idx])
+                                : -1
+                        }
+                    >
                         <option value={-1} disabled>
                             no assignment
                         </option>

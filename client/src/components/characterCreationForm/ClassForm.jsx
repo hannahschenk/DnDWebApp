@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import dndApi from '../../utils/dnd5eApi';
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
+import FormControlContext from './../../state/formControlManager';
 
 const ClassForm = () => {
     const { character, setCharacter, setDetails } = useCharacter();
     const [classChoices, setClassChoices] = useState([]);
+    const { formControlState, setFormControlState } = useContext(FormControlContext);
 
     /*
      * Signature: useEffect(func, [])
@@ -14,6 +16,9 @@ const ClassForm = () => {
      *               {index, name, url}
      */
     useEffect(async () => {
+        // Reset details component
+        setDetails({});
+
         let mounted = true;
         if (mounted) {
             try {
@@ -31,6 +36,20 @@ const ClassForm = () => {
     }, []);
 
     /*
+     * Signature: useEffect(func, [character])
+     * Description: watch for character changes on class name to
+     *               determine if the user can move on to the next section
+     *               via the formControlState
+     */
+    useEffect(() => {
+        if (character.character_class.name != '') {
+            setFormControlState({ ...formControlState, currentFormDone: true });
+        } else {
+            setFormControlState({ ...formControlState, currentFormDone: false });
+        }
+    }, [character]);
+
+    /*
      * Signature: pickClass(chosenClass)
      * Input: chosenClass - the class object ({name, index, url}) the user chooses
      * Description: Sets the character state property class to reflect the user's
@@ -40,7 +59,6 @@ const ClassForm = () => {
         try {
             const classInfo = (await dndApi.getMoreInfo(chosenClass.url)).data;
 
-            setCharacter({ type: ACTION.CLEAR_CHARACTER_CLASS });
             setCharacter({
                 type: ACTION.UPDATE_CHARACTER_CLASS,
                 payload: {
@@ -65,7 +83,14 @@ const ClassForm = () => {
                     classChoices.map((classObj, idx) => (
                         <React.Fragment key={idx}>
                             <label htmlFor={classObj.name}>{classObj.name}</label>
-                            <input type="radio" name="characterClass" id={classObj.name} value={JSON.stringify(classObj)} onClick={() => pickClass(classObj)} />
+                            <input
+                                type="radio"
+                                name="characterClass"
+                                id={classObj.name}
+                                defaultChecked={classObj.name == character.character_class.name}
+                                value={JSON.stringify(classObj)}
+                                onClick={() => pickClass(classObj)}
+                            />
                             <br />
                         </React.Fragment>
                     ))
