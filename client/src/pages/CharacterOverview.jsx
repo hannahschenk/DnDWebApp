@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 
 import { useCharacter } from '../state/logic';
-import CONSTANTS from '../utils/constants';
 
+import { deleteCharacter, postCharacter } from '../utils/api';
+import CONSTANTS from '../utils/constants';
 import dndApi from '../utils/dnd5eApi';
 
 const CharacterOverview = () => {
@@ -13,7 +15,12 @@ const CharacterOverview = () => {
     // This is necessary because the skills are stored as an array objects, not as strings
     const [proficientSkills, setProficientSkills] = useState([]);
 
-    // Pull spells data to render to details screen
+    const history = useHistory();
+
+    /*
+     * Signature: useEffect(func, [])
+     * Description: Pull spells data to render to details screen
+     */
     useEffect(async () => {
         window.scrollTo(0, 0);
 
@@ -43,7 +50,7 @@ const CharacterOverview = () => {
     }, []);
 
     return (
-        <>
+        <main>
             {/* Character Name */}
             <section>
                 <h2 className="stat__title">{character.background.characterName}</h2>
@@ -54,17 +61,20 @@ const CharacterOverview = () => {
             <section>
                 <h3 className="stat__title">Race</h3>
                 <h4 className="stat__name">
-                    {character.race.name} : {character.race.subrace}
+                    {character.race.name}
+                    {character.race.subrace !== '' && `: ${character.race.subrace}`}
                 </h4>
                 <p className="stat__text">Base Speed: {character.race.speed} ft.</p>
                 <p className="stat__text">Size: {character.race.size}</p>
                 <hr />
             </section>
 
-            {/* Class */}
+            {/* Class and HP */}
             <section>
                 <h3 className="stat__title">Class</h3>
-                <h4 className="stat__text">{character.class.name}</h4>
+                <h4 className="stat__text">{character.character_class.name}</h4>
+                <h3 className="stat__title">Hit Points</h3>
+                <h4 className="stat__text">{character.character_class.hitDie + Math.floor((character.abilities.constitution - 10) / 2)}</h4>
                 {/* Render class details / features here? */}
                 <hr />
             </section>
@@ -173,12 +183,18 @@ const CharacterOverview = () => {
                     })}
                     <hr />
                 </section>
-            ) : (
-                <p>LOADING</p>
-            )}
+            ) : null}
 
             {/* Equipment */}
             <section>
+                <h3 className="stat__title">Proficient Items</h3>
+                {character.proficiencies.items.map((item, idx) => {
+                    return (
+                        <p className="stat__text" key={idx}>
+                            {item.name}
+                        </p>
+                    );
+                })}
                 <h3 className="stat__title">Equipment</h3>
                 {character.equipment.total.map((item, idx) => {
                     return (
@@ -222,7 +238,14 @@ const CharacterOverview = () => {
                 <h3 className="stat__title">Personality</h3>
                 <p className="stat__text">{character.background.personality}</p>
             </section>
-        </>
+
+            {/* Buttons */}
+            <section>
+                <button onClick={() => postCharacter(character)}>Save</button>
+                <button onClick={() => history.push('/')}>Edit</button>
+                <button onClick={() => deleteCharacter(character, id)}>Delete</button>
+            </section>
+        </main>
     );
 };
 

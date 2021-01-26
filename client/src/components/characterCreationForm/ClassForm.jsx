@@ -8,18 +8,18 @@ const ClassForm = () => {
     const [classChoices, setClassChoices] = useState([]);
 
     /*
-    * Signature: useEffect(func, [])
-    * Description: Fetches all possible class choices from dnd5e api
-    *               each class choice is an object with the format
-    *               {index, name, url}  
-    */
+     * Signature: useEffect(func, [])
+     * Description: Fetches all possible class choices from dnd5e api
+     *               each class choice is an object with the format
+     *               {index, name, url}
+     */
     useEffect(async () => {
         let mounted = true;
         if (mounted) {
             try {
                 setClassChoices((await dndApi.getClasses()).data.results);
-                /*if (character.class.name !== '') {
-                    setDetails((await dndApi.getMoreInfo(character.class.url)).data);
+                /*if (character.character_class.name !== '') {
+                    setDetails((await dndApi.getMoreInfo(character.character_class.url)).data);
                 }*/
             } catch (err) {
                 console.log(err);
@@ -31,26 +31,26 @@ const ClassForm = () => {
     }, []);
 
     /*
-    * Signature: pickClass(chosenClass)
-    * Input: chosenClass - the class object ({name, index, url}) the user chooses
-    * Description: Sets the character state property class to reflect the user's
-    *               chosen class
-    */
+     * Signature: pickClass(chosenClass)
+     * Input: chosenClass - the class object ({name, index, url}) the user chooses
+     * Description: Sets the character state property class to reflect the user's
+     *               chosen class
+     */
     const pickClass = async (chosenClass) => {
         try {
             const classInfo = (await dndApi.getMoreInfo(chosenClass.url)).data;
 
-            //setCharacter({ type: ACTION.CLEAR_CLASS });
-            setCharacter({ 
-                type: ACTION.UPDATE_CLASS, 
-                payload: { 
-                    name: chosenClass.name, 
-                    url: chosenClass.url, 
-                    hitDie: classInfo.hit_die 
-                } 
+            setCharacter({ type: ACTION.CLEAR_CHARACTER_CLASS });
+            setCharacter({
+                type: ACTION.UPDATE_CHARACTER_CLASS,
+                payload: {
+                    name: chosenClass.name,
+                    url: chosenClass.url,
+                    hitDie: classInfo.hit_die,
+                },
             });
 
-            //setDetails(classSpecificInfo);
+            setDetails(classInfo);
         } catch (err) {
             console.error(err);
         }
@@ -60,17 +60,12 @@ const ClassForm = () => {
         <>
             <form>
                 <p>Pick a Class: </p>
-                { //render radio options for classes
+                {
+                    //render radio options for classes
                     classChoices.map((classObj, idx) => (
                         <React.Fragment key={idx}>
                             <label htmlFor={classObj.name}>{classObj.name}</label>
-                            <input
-                                type="radio"
-                                name="class"
-                                id={classObj.name}
-                                value={JSON.stringify(classObj)}
-                                onClick={() => pickClass(classObj)}
-                            />
+                            <input type="radio" name="characterClass" id={classObj.name} value={JSON.stringify(classObj)} onClick={() => pickClass(classObj)} />
                             <br />
                         </React.Fragment>
                     ))

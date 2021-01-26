@@ -62,6 +62,8 @@ const CharacterDetailsForm = () => {
      * Description: set character State background
      */
     const pickBackground = (chosenBackground) => {
+        // Need logic here to erase languages granted by a background if the user switches backgrounds!
+        // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { }  })
         setCharacter({
             type: ACTION.UPDATE_BACKGROUND,
             payload: {
@@ -69,7 +71,7 @@ const CharacterDetailsForm = () => {
                 url: `/${chosenBackground.id}.json`,
             },
         });
-        //setDetails(chosenBackgroundInfo);
+        // setDetails(chosenBackground.url);
 
         // Erase background languages, NOT race languages
         //setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: raceLanguages } });
@@ -109,9 +111,9 @@ const CharacterDetailsForm = () => {
                 languages: [...character.background.languages],
             },
         });
-        //setDetails();
+
         try {
-            //setDetails((await dndApi.getMoreInfo(formatUrl)).data);
+            setDetails((await dndApi.getMoreInfo(chosenLanguage.url)).data);
         } catch (err) {
             console.log(err);
         }

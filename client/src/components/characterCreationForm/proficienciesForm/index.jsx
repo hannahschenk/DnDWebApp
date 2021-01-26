@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import dndApi from "./../../../utils/dnd5eApi";
-import SkillsForm from "./SkillsForm"
-import SpellsForm from "./SpellsForm"
+import dndApi from './../../../utils/dnd5eApi';
+import SkillsForm from './SkillsForm';
+import SpellsForm from './SpellsForm';
+
 import { useCharacter } from './../../../state/logic';
 import * as ACTION from './../../../state/actions';
 import constants from '../../../utils/constants';
@@ -15,18 +16,22 @@ const ProficienciesForm = () => {
     const [spellCasting, setSpellCasting] = useState(undefined);
     const [availableSpells, setAvailableSpells] = useState([]);
 
+    useEffect(() => {
+        console.log(skillProficiencies);
+    }, [skillProficiencies]);
+
     /*
-    * Signature: useEffect(func, [])
-    * Description: sets all the skill choices and all the 
-    *               spells that the user can have 
-    */
+     * Signature: useEffect(func, [])
+     * Description: sets all the skill choices and all the
+     *               spells that the user can have
+     */
     useEffect(async () => {
         let mounted = true;
         if (mounted) {
             try {
-                console.log(character.class.url)
-                const classObj = (await dndApi.getMoreInfo(character.class.url)).data;
+                const classObj = (await dndApi.getMoreInfo(character.character_class.url)).data;
 
+                console.log(classObj);
                 // Grab the class's skills
                 const skillProficiencies = classObj.proficiency_choices;
                 setSkillProficiencies(skillProficiencies);
@@ -36,7 +41,7 @@ const ProficienciesForm = () => {
                 setSpellCasting(isSpellcaster);
 
                 //adding on the saving throws:
-                let savingThrowsStringArr =  classObj.saving_throws.map((obj) => constants.ABILITY_KEY_MAP[obj.index])
+                let savingThrowsStringArr = classObj.saving_throws.map((obj) => constants.ABILITY_KEY_MAP[obj.index]);
                 setCharacter({ type: ACTION.UPDATE_PROFICIENCIES, payload: { savingThrows: savingThrowsStringArr } });
 
                 if (isSpellcaster) {
@@ -48,7 +53,6 @@ const ProficienciesForm = () => {
                     const filteredSpells = classSpells.filter((spell) => levelOneSpells.includes(spell));
                     setAvailableSpells(filteredSpells);
                 }
-
             } catch (err) {
                 console.error(err);
             }
@@ -60,7 +64,8 @@ const ProficienciesForm = () => {
 
     return (
         <>
-            {skillProficiencies.length !== 0 && <SkillsForm skillProficiencies={skillProficiencies} />}
+            {skillProficiencies.length >= 1 && <SkillsForm skillProficiencies={skillProficiencies[0]} field="skills" />}
+            {skillProficiencies.length == 2 && <SkillsForm skillProficiencies={skillProficiencies[1]} field="items" />}
             {/* Render spells form only if user's class is: 'bard', 'cleric', 'druid', 'paladin', 'ranger', 'sorcerer', 'warlock', 'wizard' */}
             {spellCasting && <SpellsForm availableSpells={availableSpells} />}
         </>

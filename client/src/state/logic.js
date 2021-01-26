@@ -16,10 +16,14 @@ export const CharacterContext = React.createContext(undefined);
 export const useCharacter = () => React.useContext(CharacterContext);
 
 export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) => {
-  const [ACTION, TYPE] = action.type.split('_');
+  // console.log(action);
+
+  // Removes UPDATE_ or CLEAR_ from action.type
+  const TYPE = action.type.match(/^(?:[A-Z]+_)(.+)/)[1]
   const stat = TYPE.toLowerCase();
+
   // ACTION is: UPDATE or CLEAR
-  // TYPE is: the key for the character state: 'abilities', 'alignment', 'background', 'class', 'languages', 'proficiencies', 'race', 'spells'
+  // TYPE is: the key for the character state: 'abilities', 'alignment', 'background', 'character_class', 'languages', 'proficiencies', 'race', 'spells'
   // console.log(ACTION, TYPE);
 
   switch (action.type) {
@@ -36,6 +40,8 @@ export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) =>
         ...character,
         [stat]: INITIAL_CHARACTER_STATE[stat],
       });
+    case 'CLEAR_CHARACTER':
+      return (character = INITIAL_CHARACTER_STATE)
     default:
       return character;
   }
