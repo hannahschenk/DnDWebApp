@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, {useContext} from 'react';
 import constants from "./../../utils/constants";
 
@@ -27,21 +26,6 @@ const CreationTimeline = () => {
             {
                 constants.CREATION_SECTIONS.map((sectionContent, sectionContentIdx) => 
                     <li key={sectionContent.title} onClick={() => switchSection(sectionContentIdx)}>
-=======
-import React from 'react';
-import constants from './../../utils/constants';
-
-const CreationTimeline = ({ sectionIdxState }) => {
-    /*NOTE: might change later if state becomes global*/
-    const { currentSectionIdx, currentSectionIdxReducer } = sectionIdxState;
-    /* END NOTE */
-
-    return (
-        <aside>
-            <ul>
-                {constants.CREATION_SECTIONS.map((sectionContent, sectionContentIdx) => (
-                    <li key={sectionContent.title} onClick={() => currentSectionIdxReducer('SWITCH_SECTION', sectionContentIdx)}>
->>>>>>> 4a70b2f06ba0d08582459d279e8cf437f8e5c275
                         <p>{sectionContent.title}</p>
                         <ul>
                             {sectionContent.subSections.map((subSectionContent) => (
@@ -49,9 +33,8 @@ const CreationTimeline = ({ sectionIdxState }) => {
                             ))}
                         </ul>
                     </li>
-                ))}
-            </ul>
-        </aside>
+                )}
+        </ul>
     );
 };
 
