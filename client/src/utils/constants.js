@@ -44,12 +44,32 @@ module.exports = {
         'Chaotic Neutral',
         'Chaotic Evil'
     ],
-    ABILITY_KEY_MAP:{
+    ABILITY_KEY_MAP: {
         "str": "strength",
         "dex": "dexterity",
         "con": "constitution",
         "int": "intelligence",
         "wis": "wisdom",
         "cha": "charisma"
+    },
+    SKILLS: {
+        'Acrobatics': 'dexterity',
+        'Animal Handling': 'wisdom',
+        'Arcana': 'intelligence',
+        'Athletics': 'strength',
+        'Deception': 'charisma',
+        'History': 'intelligence',
+        'Insight': 'wisdom',
+        'Intimidation': 'charisma',
+        'Investigation': 'intelligence',
+        'Medicine': 'wisdom',
+        'Nature': 'intelligence',
+        'Perception': 'wisdom',
+        'Performance': 'charisma',
+        'Persuasion': 'charisma',
+        'Religion': 'intelligence',
+        'Sleight of Hand': 'dexterity',
+        'Stealth': 'dexterity',
+        'Survival': 'wisdom',
     }
 }

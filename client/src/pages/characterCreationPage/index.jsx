@@ -2,7 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import FormContainer from './FormContainer';
 import CreationTimeline from './CreationTimeline';
 import constants from './../../utils/constants';
-import FormControlContext from "./../../state/formControlManager"
+import FormControlContext from "./../../state/formControlManager";
+import { useHistory } from 'react-router-dom';
+
  //TESTING STATE UPDATERS:
  import { useCharacter } from './../../state/logic';
  //end state tester
@@ -17,6 +19,8 @@ const CharacterCreationPage = () => {
 
     }, [character])
     //end state tester
+    
+    const history = useHistory();
 
     const setSectionIndex = (offset) => {
         let newIndex = formControlState.sectionIndex + offset;
@@ -56,6 +60,8 @@ const CharacterCreationPage = () => {
                     <button onClick={() => setSectionIndex(1)} disabled={isNextDisabled()}>
                         Next
                     </button>
+
+                    {currentSectionIdx === 5 && <button onClick={() => history.push('/overview')}>View Character Sheet</button>}
                 </section>
             }
         </>
