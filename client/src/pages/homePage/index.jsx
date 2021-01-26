@@ -11,7 +11,7 @@ const homePage = () => {
                 simplified down to a step by step process where we walk you through. This sheet will take you through the Race, Classes,
                 Ability scores, Character details, Proficiencies and Equipment. By creating your character anonymously, you will not be
                 able to save your character sheet for later use, but you can still use it immediately after creation.</p>
-                <Link to="/CharacterCreationPage">Get Started</Link>
+                <Link to="/create-character">Get Started</Link>
             </section>
             <section>
                 <h2>Authenticated Character Creation</h2>
