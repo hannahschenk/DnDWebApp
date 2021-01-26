@@ -18,11 +18,14 @@ const App = () => {
 
     const [details, setDetails] = useState({});
 
+<<<<<<< HEAD
     const[formControlState, setFormControlState] = useState({
         sectionIndex: -1,
         currentFormDone: false
       }
     )
+=======
+>>>>>>> e5205741c2f65b2764486087f2da3374313390b2
     // Updates the local storage with changes in state (also prints to console)
     useEffect(() => {
         // console.log(character);
@@ -36,10 +39,15 @@ const App = () => {
     return (
         <>
             <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
+<<<<<<< HEAD
                 <FormControlContext.Provider value={{ formControlState, setFormControlState }}>
                     {/* <Demo /> */}
                     <CharacterCreationPage />
                 </FormControlContext.Provider>
+=======
+                {/* <Demo /> */}
+                <CharacterCreationPage />
+>>>>>>> e5205741c2f65b2764486087f2da3374313390b2
             </CharacterContext.Provider>
         </>
     );

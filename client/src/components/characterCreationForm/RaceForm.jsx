@@ -7,10 +7,11 @@ import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
 const RaceForm = () => {
-    const { character, setCharacter, setDetails } = useCharacter();
     const [raceChoices, setRaceChoices] = useState([]);
     const [subRaceChoices, setSubRaceChoices] = useState([]);
     const {formControlState, setFormControlState} = useContext(FormControlContext);
+    const { character, setCharacter, details, setDetails } = useCharacter();
+    
 
     /*
     * Signature: useEffect(func, [])
@@ -63,8 +64,9 @@ const RaceForm = () => {
         try {
             const raceInfo = (await dndApi.getMoreInfo(chosenRace.url)).data;
             setSubRaceChoices(raceInfo.subraces);
-
-
+           
+            setDetails(response.data);
+            
             // Clear race and subrace before selecting a new race
             if(chosenRace.name != character.race.name){
                 setCharacter({ type: ACTION.CLEAR_RACE });
