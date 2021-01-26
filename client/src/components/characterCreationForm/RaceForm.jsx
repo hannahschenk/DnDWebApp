@@ -65,8 +65,8 @@ const RaceForm = () => {
             const raceInfo = (await dndApi.getMoreInfo(chosenRace.url)).data;
             setSubRaceChoices(raceInfo.subraces);
            
-            setDetails(response.data);
-            
+            setDetails(raceInfo);
+
             // Clear race and subrace before selecting a new race
             if(chosenRace.name != character.race.name){
                 setCharacter({ type: ACTION.CLEAR_RACE });
@@ -93,7 +93,7 @@ const RaceForm = () => {
     * Description: Sets the character state subrace to reflect the user's
     *               chosen subrace
     */
-    const pickSubRace = (chosenSubRace) => {
+    const pickSubRace = async (chosenSubRace) => {
         setCharacter({ 
             type: ACTION.UPDATE_RACE, 
             payload: {  
@@ -102,7 +102,8 @@ const RaceForm = () => {
             } 
         });
 
-        //setDetails(chosenSubRaceInfo); 
+        const chosenSubRaceInfo = (await dndApi.getMoreInfo(chosenSubRace.url)).data;
+        setDetails(chosenSubRaceInfo); 
     };
 
     return (

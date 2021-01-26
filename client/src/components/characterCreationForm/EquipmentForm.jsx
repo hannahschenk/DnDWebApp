@@ -10,7 +10,7 @@ const EquipmentForm = () => {
     const [initialEquipment, setInitialEquipment] = useState([]);
     const [totalChoices, setChoices] = useState({wrap:[]});
     const [backgroundEquipment, setBackgroundEquipment] = useState([]);
-    const { character, setCharacter, setDetails } = useCharacter();
+    const { character, setCharacter, details, setDetails } = useCharacter();
     const {formControlState, setFormControlState} = useContext(FormControlContext);
     /*
     * Signature: useEffect(func, [])
@@ -151,7 +151,7 @@ const EquipmentForm = () => {
     * Input: e - the change event
     * Description: adds/replace an equipment in the character state
     */
-    const pickEquipment = (e) => {
+    const pickEquipment = async (e) => {
         let indexOffset = parseInt(e.target.id);
         let indexToEdit = (initialEquipment.length + backgroundEquipment.length) + indexOffset
         let equipmentToAdd = JSON.parse(e.target.value);
@@ -167,6 +167,7 @@ const EquipmentForm = () => {
                 total: [...character.equipment.total] 
             } 
         })
+        setDetails((await dndApi.getMoreInfo(equipmentToAdd.url)).data.results)
     }
 
     return (

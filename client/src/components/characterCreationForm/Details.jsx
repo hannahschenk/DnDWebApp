@@ -12,7 +12,7 @@ const Details = () => {
 
         const dealObject = (newObject) => {
             Object.entries(newObject).map(([key, value]) => {
-                console.log(key);
+                //console.log(key);
                 if(key !== 'index' && key !== 'url' && typeof key === 'number') {
                     elements.push(<h4>{key.replace('_', ' ')}</h4>);
                 
@@ -75,7 +75,7 @@ const Details = () => {
     };
 
     useEffect(() => {
-        console.log(details);
+        //console.log(details);
     }, [details]);
 
     return <>{details && createDetails()}</>;

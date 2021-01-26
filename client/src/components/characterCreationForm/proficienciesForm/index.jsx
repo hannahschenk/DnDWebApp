@@ -8,7 +8,7 @@ import * as ACTION from './../../../state/actions';
 import constants from '../../../utils/constants';
 
 const ProficienciesForm = () => {
-    const { character, setCharacter } = useCharacter();
+    const { character, setCharacter, details, setDetails } = useCharacter();
 
     const [skillProficiencies, setSkillProficiencies] = useState([]);
 

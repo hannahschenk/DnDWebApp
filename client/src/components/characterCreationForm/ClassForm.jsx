@@ -5,7 +5,7 @@ import * as ACTION from '../../state/actions';
 import FormControlContext from "./../../state/formControlManager";
 
 const ClassForm = () => {
-    const { character, setCharacter, setDetails } = useCharacter();
+    const { character, setCharacter, details, setDetails } = useCharacter();
     const [classChoices, setClassChoices] = useState([]);
     const {formControlState, setFormControlState} = useContext(FormControlContext);
 
@@ -58,7 +58,6 @@ const ClassForm = () => {
         try {
             const classInfo = (await dndApi.getMoreInfo(chosenClass.url)).data;
 
-            //setCharacter({ type: ACTION.CLEAR_CLASS });
             setCharacter({ 
                 type: ACTION.UPDATE_CLASS, 
                 payload: { 
@@ -68,7 +67,8 @@ const ClassForm = () => {
                 } 
             });
 
-            //setDetails(classSpecificInfo);
+            setDetails(classInfo);
+            
         } catch (err) {
             console.error(err);
         }

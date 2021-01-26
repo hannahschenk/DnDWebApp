@@ -95,7 +95,7 @@ const CharacterDetailsForm = () => {
                 url: `/${chosenBackground.id}.json`
             } 
         });
-        //setDetails(chosenBackgroundInfo);
+        setDetails(chosenBackground);
 
         // Erase background languages, NOT race languages
         //setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: raceLanguages } });
@@ -138,7 +138,8 @@ const CharacterDetailsForm = () => {
         });
         //setDetails();
         try {
-            //setDetails((await dndApi.getMoreInfo(formatUrl)).data);
+            let languageInfo = (await dndApi.getMoreInfo(chosenLanguage.url)).data
+            setDetails(languageInfo);
         } catch (err) {
             console.log(err);
         }

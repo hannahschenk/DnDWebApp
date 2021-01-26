@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useCharacter } from './../../../state/logic';
 import * as ACTION from './../../../state/actions';
+import dndApi from '../../../utils/dnd5eApi';
 
 const SkillsForm = ({ skillProficiencies }) => {
-    const { character, setCharacter } = useCharacter();
+    const { character, setCharacter, details, setDetails } = useCharacter();
+
    
     /*
     * Signature: handleSkillChoice(e)
     * Input: e - the click event
     * Description: adds/ removes the skill from the character state
     */
-    const handleSkillChoice = (e) => {
+    const handleSkillChoice = async (e) => {
         e.preventDefault();
 
         const skill = e.target.name;
@@ -36,6 +38,12 @@ const SkillsForm = ({ skillProficiencies }) => {
                 } 
             });
             e.target.style.backgroundColor = 'red';
+            try{
+                let skillInfo = (await dndApi.getMoreInfo(skillUrl)).data;
+                setDetails(skillInfo)
+            } catch (err) {
+                console.error(err)
+            }
         }
     };
 
