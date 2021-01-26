@@ -12,17 +12,8 @@ const FormContainer = ({ sectionIdxState }) => {
     return (
         <section>
             <h3>{constants.CREATION_SECTIONS[currentSectionIdx].title}</h3>
-            <article>
-                <CharacterCreationForm currentSectionIdx={currentSectionIdx} />
-            </article>
-
-            <article>
-                <h3>Details</h3>
-                <section>
-                    {/*populate with details later*/}
-                    <Details />
-                </section>
-            </article>
+            <CharacterCreationForm currentSectionIdx={currentSectionIdx} />
+            <Details />
         </section>
     );
 };

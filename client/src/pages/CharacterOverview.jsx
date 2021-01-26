@@ -8,47 +8,47 @@ import dndApi from '../utils/dnd5eApi';
 const CharacterOverview = () => {
     const { character } = useCharacter();
 
+    // This is necessary to grab additional spell data from API
     const [spellData, setSpellData] = useState([]);
+    // This is necessary because the skills are stored as an array objects, not as strings
+    const [proficientSkills, setProficientSkills] = useState([]);
 
     // Pull spells data to render to details screen
-    useEffect(() => {
+    useEffect(async () => {
+        window.scrollTo(0, 0);
+
         let mounted = true;
-        let spellsArray = [];
 
         if (mounted) {
-            try {
-                //   character.proficiencies.spells.map((spell) => {
-                //     // console.log((await dndApi.getMoreInfo(spell.url)).data);
-                //     dndApi.getMoreInfo(spell.url).then((s) => {
-                //         spellsArray.push(s.data);
-                //     });
-                // });
-                character.proficiencies.spells.map(async (spell) => {
-                    // console.log((await dndApi.getMoreInfo(spell.url)).data);
-                    spellsArray.push((await dndApi.getMoreInfo(spell.url)).data);
-                });
-                setSpellData(spellsArray);
-            } catch (err) {
-                console.error(err);
+            // Format proficient skills to use in component
+            setProficientSkills(Object.values(character.proficiencies.skills).map((skill) => skill.name));
+
+            // Grab spell data
+            if (character.proficiencies.spells.length !== 0) {
+                try {
+                    let spells = await Promise.all(
+                        character.proficiencies.spells.map(async (spell) => {
+                            return (await dndApi.getMoreInfo(spell.url)).data;
+                        })
+                    );
+                    setSpellData(spells);
+                } catch (err) {
+                    console.error(err);
+                }
             }
         }
-        console.log(spellsArray.length);
         return () => {
             mounted = false;
         };
     }, []);
 
-    useEffect(() => {
-        console.log(spellData);
-        // This does not work
-        // console.log(spellData.length); // returns 0
-        // spellData.map((spell) => console.log(spell));
-    }, [spellData]);
-
     return (
         <>
-            <h2 className="stat__title">{character.background.characterName}</h2>
-            <hr />
+            {/* Character Name */}
+            <section>
+                <h2 className="stat__title">{character.background.characterName}</h2>
+                <hr />
+            </section>
 
             {/* Race */}
             <section>
@@ -93,7 +93,9 @@ const CharacterOverview = () => {
 
                     return (
                         <React.Fragment key={idx}>
-                            <h4 className="stat__name">{ability.charAt(0).toUpperCase() + ability.slice(1)}: </h4>
+                            <h4 className="stat__name">
+                                {ability.charAt(0).toUpperCase() + ability.slice(1)}:{character.proficiencies.savingThrows.includes(ability) && ' *'}
+                            </h4>
                             <p className="stat__modifier">
                                 {modifier > 0 && '+'}
                                 {modifier}
@@ -112,13 +114,15 @@ const CharacterOverview = () => {
                     let skillModifier = Math.floor((character.abilities[ability] - 10) / 2);
 
                     // add +2 proficiency bonus if in the proficiencies.skills array
-                    Object.values(character.proficiencies.skills).map((proficientSkill) => {
-                        if (skill === proficientSkill.name) skillModifier += 2;
-                    });
+                    let skillProficiency = proficientSkills.includes(skill);
+                    if (skillProficiency) skillModifier += 2;
 
                     return (
                         <React.Fragment key={idx}>
-                            <h4 className="stat__name">{skill}</h4>
+                            <h4 className="stat__name">
+                                {skill}
+                                {skillProficiency && ' *'}
+                            </h4>
                             <p className="stat__modifier">
                                 {skillModifier > 0 && '+'}
                                 {skillModifier}
@@ -129,28 +133,66 @@ const CharacterOverview = () => {
                 <hr />
             </section>
 
-            {/* Spells */}
+            {/* Spells - Only render if there are spells in the object! */}
+            {character.proficiencies.spells.length !== 0 && spellData ? (
+                <section>
+                    <h3 className="stat__title">Spells</h3>
+                    {spellData.map((spell, idx) => {
+                        return (
+                            <article key={idx}>
+                                <h4 className="stat__text">{spell.name}</h4>
+                                {/* I'm imagining this as a drop down menu that expands and reveals this additional data */}
+                                <aside>
+                                    <p className="stat__text">School: {spell.school.name}</p>
+                                    <p className="stat__text">Level: {spell.level}</p>
+                                    {spell.concentration && (
+                                        <p className="stat__text">
+                                            <em>Concentration</em>
+                                        </p>
+                                    )}
+                                    {spell.ritual && (
+                                        <p className="stat__text">
+                                            <em>Ritual</em>
+                                        </p>
+                                    )}
+                                    {spell.components && (
+                                        <p className="stat__text">Components:{Object.values(spell.components).map((component) => ' ' + component)}</p>
+                                    )}
+                                    {spell.material && <p className="stat__text">Material: {spell.material}</p>}
+                                    {spell.range && <p className="stat__text">Range: {spell.range}</p>}
+                                    {spell.casting_time && <p className="stat__text">Casting Time: {spell.casting_time}</p>}
+                                    {spell.duration && <p className="stat__text">Duration: {spell.duration}</p>}
+                                    {spell.desc.map((desc, idx) => (
+                                        <p className="stat__text" key={idx}>
+                                            {desc}
+                                        </p>
+                                    ))}
+                                </aside>
+                            </article>
+                        );
+                    })}
+                    <hr />
+                </section>
+            ) : (
+                <p>LOADING</p>
+            )}
+
+            {/* Equipment */}
             <section>
-                <h3 className="stat__title">Spells</h3>
-                {spellData.map((spell, idx) => {
-                    console.log(spell);
+                <h3 className="stat__title">Equipment</h3>
+                {character.equipment.total.map((item, idx) => {
                     return (
-                        <aside key={idx}>
-                            <h4 className="stat__text">{spell.name}</h4>
-                            <p className="stat_text">School: {spell.school.name}</p>
-                            <p className="stat_text">Casting Time: {spell.casting_time}</p>
-                            <p className="stat_text">Components: {Object.values(spell.components).map((component) => `${component} `)}</p>
-                            <p className="stat_text">{spell.concentration ? 'Required' : 'Not Required'}</p>
-                        </aside>
+                        <p className="stat__text" key={idx}>
+                            {item.name}
+                        </p>
                     );
                 })}
                 <hr />
             </section>
 
-            {/* Equipment */}
-
             {/* Background */}
             <section>
+                <h3 className="stat__title">Character Details</h3>
                 <aside>
                     <h4 className="stat__title">Age</h4>
                     <p className="stat__text">{character.background.age}</p>
