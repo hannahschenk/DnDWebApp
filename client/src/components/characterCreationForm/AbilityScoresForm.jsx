@@ -151,4 +151,4 @@ const AbilityScoresForm = ({ formDetailsState }) => {
     );
 };
 
-export default AbilityScoresFor
+export default AbilityScoresForm;
