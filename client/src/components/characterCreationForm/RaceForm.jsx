@@ -42,18 +42,6 @@ const RaceForm = () => {
             const raceInfo = (await dndApi.getMoreInfo(chosenRace.url)).data;
             setSubRaceChoices(raceInfo.subraces);
 
-<<<<<<< HEAD
-    const pickRace = (chosenRaceInfo) => {
-        dndApi.getMoreInfo(chosenRaceInfo.url)
-        .then((response) => {
-            /*
-                TODO: this is a good spot to format the data and send what ever we need to the global state
-            */
-            setSubRaceChoices(response.data.subraces)
-        })
-        .catch(err => console.log(err))
-    }
-=======
             //setCharacter({ type: ACTION.CLEAR_RACE }); // Clear race and subrace before selecting a new race
             setCharacter({
                 type: ACTION.UPDATE_RACE,
@@ -64,7 +52,6 @@ const RaceForm = () => {
                     speed: raceInfo.speed 
                 },
             });
->>>>>>> 81149a80e997d95cfb5b910ad72ddd9ffce54b23
 
             //setDetails(chosenRace);
         } catch (err) {
