@@ -6,6 +6,7 @@ import CONSTANTS from '../../utils/constants';
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 import constants from '../../utils/constants';
+
 import FormControlContext from './../../state/formControlManager';
 
 const CharacterDetailsForm = () => {
@@ -14,6 +15,7 @@ const CharacterDetailsForm = () => {
     const { formControlState, setFormControlState } = useContext(FormControlContext);
     const [backgroundChoices, setBackgroundChoices] = useState([]);
     const [languageChoices, setLanguageChoices] = useState([]);
+
     // length of array = # choices based on background; value is index offset to add/remove
     const [languageChoicesOffset, setLanguageChoicesOffset] = useState([]);
     const [raceLanguages, setRaceLanguages] = useState([]);
@@ -89,7 +91,6 @@ const CharacterDetailsForm = () => {
             mounted = false;
         };
     }, []);
-
     /*
      * Signature: useEffect(func, [character,  abilityScoreIdxMatch, abilityScoreChoices])
      * Description: watch for character changes on background to determine if the

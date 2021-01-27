@@ -5,6 +5,7 @@ import * as ACTION from './../../../state/actions';
 import CONSTANTS from '../../../utils/constants';
 
 const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
+  
     const { character, setCharacter } = useCharacter();
     const { skillsFormDone, setSkillsFormDone } = skillsFormDoneState;
 

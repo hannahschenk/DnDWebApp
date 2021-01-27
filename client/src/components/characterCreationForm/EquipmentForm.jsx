@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { characterReducer } from '../../state/logic';
+
 import dndApi from './../../utils/dnd5eApi';
 
-import * as ACTION from '../../state/actions';
+import { characterReducer } from '../../state/logic';
 import { useCharacter } from '../../state/logic';
+import * as ACTION from '../../state/actions';
+
 import axios from 'axios';
+
 import FormControlContext from './../../state/formControlManager';
+
 const EquipmentForm = () => {
     const [initialEquipment, setInitialEquipment] = useState([]);
     const [totalChoices, setChoices] = useState({ wrap: [] });

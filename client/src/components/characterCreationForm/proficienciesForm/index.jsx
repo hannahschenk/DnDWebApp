@@ -7,13 +7,14 @@ import SpellsForm from './SpellsForm';
 import { useCharacter } from './../../../state/logic';
 import * as ACTION from './../../../state/actions';
 import constants from '../../../utils/constants';
+        
 import FormControlContext from './../../../state/formControlManager';
 
 const ProficienciesForm = () => {
+    
     const { character, setCharacter, setDetails } = useCharacter();
 
     const [skillProficiencies, setSkillProficiencies] = useState([]);
-
     const [spellCasting, setSpellCasting] = useState(undefined);
     const [availableSpells, setAvailableSpells] = useState([]);
 

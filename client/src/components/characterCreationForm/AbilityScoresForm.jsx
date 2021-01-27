@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
+
 import constants from './../../utils/constants';
 import dndApi from './../../utils/dnd5eApi';
+
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
+
 import axios from 'axios';
+
 import FormControlContext from './../../state/formControlManager';
+
 const AbilityScoresForm = ({ formDetailsState }) => {
     const { character, setCharacter, setDetails } = useCharacter();
     const [abilityScoreChoices, setAbilityScoreChoices] = useState([]);
@@ -16,6 +21,7 @@ const AbilityScoresForm = ({ formDetailsState }) => {
         wisdom: -1,
         charisma: -1,
     });
+
     const [forceRemount, setForceRemount] = useState(false);
     const { formControlState, setFormControlState } = useContext(FormControlContext);
 
@@ -214,3 +220,4 @@ const AbilityScoresForm = ({ formDetailsState }) => {
 };
 
 export default AbilityScoresForm;
+

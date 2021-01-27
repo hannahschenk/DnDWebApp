@@ -1,15 +1,15 @@
+
 import React, { useState, useEffect, useContext } from 'react';
-import FormContainer from './FormContainer';
-import CreationTimeline from './CreationTimeline';
-import constants from './../../utils/constants';
-import FormControlContext from "./../../state/formControlManager";
 import { useHistory } from 'react-router-dom';
 
- //TESTING STATE UPDATERS:
- import { useCharacter } from './../../state/logic';
- //end state tester
+import FormContainer from './FormContainer';
+import CreationTimeline from './CreationTimeline';
+import FormControlContext from "./../../state/formControlManager";
+
+import constants from './../../utils/constants';
 
 const CharacterCreationPage = () => {
+  
     const {formControlState, setFormControlState} = useContext(FormControlContext);
     const history = useHistory();
 

@@ -3,10 +3,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import dndApi from './../../utils/dnd5eApi';
 
 import FormControlContext from './../../state/formControlManager';
+
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
 const RaceForm = () => {
+
     const [raceChoices, setRaceChoices] = useState([]);
     const [subRaceChoices, setSubRaceChoices] = useState([]);
     const { formControlState, setFormControlState } = useContext(FormControlContext);

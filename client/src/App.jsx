@@ -7,10 +7,12 @@ import { CharacterContext, characterReducer } from './state/logic';
 import CharacterCreationPage from './pages/characterCreationPage';
 import FormControlContext from './state/formControlManager';
 import CharacterOverview from './pages/characterOverview';
+
 import HomePage from './pages/homePage';
 import DashboardPage from './pages/dashboardPage';
 import Footer from './components/footer';
 import NavBar from './components/NavBar';
+
 const App = () => {
     // Grab initial character state and assign the CharacterReducer to the setCharacter function
     const [character, setCharacter] = useReducer(characterReducer, INITIAL_CHARACTER_STATE, () => {

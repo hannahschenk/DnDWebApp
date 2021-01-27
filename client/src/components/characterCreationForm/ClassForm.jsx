@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
+
 import dndApi from '../../utils/dnd5eApi';
+
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
+
 import FormControlContext from './../../state/formControlManager';
 
 const ClassForm = () => {
     const { character, setCharacter, setDetails } = useCharacter();
     const [classChoices, setClassChoices] = useState([]);
+
     const { formControlState, setFormControlState } = useContext(FormControlContext);
 
     /*

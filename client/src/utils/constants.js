@@ -44,7 +44,7 @@ module.exports = {
         'Chaotic Neutral',
         'Chaotic Evil'
     ],
-    ABILITY_KEY_MAP: {
+    ABILITY_KEY_MAP:{
         "str": "strength",
         "dex": "dexterity",
         "con": "constitution",
