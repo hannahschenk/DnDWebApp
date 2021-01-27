@@ -8,7 +8,7 @@ router.get("/login", (req, res) => {
 
 router.get("/userCheck", requiresAuth(), (req, res) => {
     userController.create(req.oidc.user)
-    .then((user) => res.redirect("/api"))
+    .then((user) => res.json(user))
     .catch((error) => res.status(500).json({error}))
 })
 

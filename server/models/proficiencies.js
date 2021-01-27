@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         type: {
             type: DataTypes.ENUM("skill", "saving throws"),
-            AllowNull: false
+            allowNull: false
         },
         dnd5eEndpoint: {
             type: DataTypes.STRING,
