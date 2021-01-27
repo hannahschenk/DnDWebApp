@@ -7,4 +7,5 @@ const {requiresAuth, auth} = require('express-openid-connect');
 router.use("/authenticate", authenticateRoutes);
 router.use("/api", apiRoutes)
 
+
 module.exports = router; 

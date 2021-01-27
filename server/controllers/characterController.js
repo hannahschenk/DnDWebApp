@@ -61,5 +61,12 @@ module.exports = {
                 }
 
             })
-    }
+    },
+    findAll: (req, res) => {
+        CharacterSheet.findAll({
+          include: [Class, Race, AbilityScores, Background, Languages, Proficiencies, Spells, Equipment]
+        })
+            .then((characterInfo) => res.json(characterInfo))
+            .catch((err) => res.status(500).json(err));
+    },
 }

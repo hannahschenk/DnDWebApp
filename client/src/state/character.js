@@ -75,5 +75,5 @@ const INITIAL_CHARACTER_STATE = {
     ]
   }
 };
-​
+
 export default INITIAL_CHARACTER_STATE;
