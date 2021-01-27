@@ -220,4 +220,3 @@ const AbilityScoresForm = ({ formDetailsState }) => {
 };
 
 export default AbilityScoresForm;
-
