@@ -1,60 +1,65 @@
-import React, {useState} from 'react';
-import FormContainer from "./FormContainer";
-import CreationTimeline from "./CreationTimeline";
-import constants from "./../../utils/constants";
+
+import React, { useState, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+
+import FormContainer from './FormContainer';
+import CreationTimeline from './CreationTimeline';
+import FormControlContext from "./../../state/formControlManager";
+
+import constants from './../../utils/constants';
 
 const CharacterCreationPage = () => {
+  
+    const {formControlState, setFormControlState} = useContext(FormControlContext);
+    const history = useHistory();
 
-    /*NOTE: local state; might push to global state later:*/
-    const [currentSectionIdx, setCurrentSectionIdx] = useState(-1);
-    
-    //I placed in reducer format for the sake of consistency
-    const currentSectionIdxReducer = (actionType, newIndex=1) => {
-        switch(actionType){
-            case "PREVIOUS_SECTION": 
-                setCurrentSectionIdx(currentSectionIdx - 1);
-                break;
-            case "NEXT_SECTION": 
-                setCurrentSectionIdx(currentSectionIdx + 1)
-                break;
-            case "SWITCH_SECTION":
-                if(newIndex <= currentSectionIdx + 1){
-                    setCurrentSectionIdx(newIndex)
-                }    
-                break;
+    const setSectionIndex = (offset) => {
+        let newIndex = formControlState.sectionIndex + offset;
+        if(offset == 1){
+            setFormControlState({currentFormDone: false, sectionIndex: newIndex})
+        }
+        else{
+            setFormControlState({...formControlState, sectionIndex: newIndex})
         }
     }
-    /* END NOTE*/
 
+    const isPreviousDisabled = () => {
+        return formControlState.sectionIndex == 0
+    }    
+    const isNextDisabled = () => {
+        return (formControlState.sectionIndex == constants.CREATION_SECTIONS.length - 1 ||
+                !formControlState.currentFormDone)
+    }
 
     return (
         <>
-            {
-                (currentSectionIdx == -1) ? 
-                    <section>
-                        This is the guided character Creation process. 
-                        Please fill out each section before clicking next.
+            {formControlState.sectionIndex == -1 ? //if block
+                <section>
+                    This is the guided character Creation process. Please fill out each section before clicking next.
+                    <button onClick={() => setFormControlState({...formControlState, sectionIndex: 0})}>
+                        Start Character Creation
+                    </button>
+                </section>
+            : //else block
+                <section>
+                    <CreationTimeline/>
+                    <FormContainer/>
 
-                        <button onClick={() => setCurrentSectionIdx(0)}>Start Character Creation</button>
-                    </section> :
+                    <button onClick={() => setSectionIndex(-1)} disabled={isPreviousDisabled()}>
+                        Previous
+                    </button>
 
-                    <section>
-                        <CreationTimeline sectionIdxState={{currentSectionIdx, currentSectionIdxReducer}}/>
-                        <FormContainer sectionIdxState={{currentSectionIdx, currentSectionIdxReducer}}/>
-    
-                        <button 
-                            onClick={() => currentSectionIdxReducer("PREVIOUS_SECTION")} 
-                            disabled={(currentSectionIdx == 0)}>
-                            Previous
+                    <button onClick={() => setSectionIndex(1)} disabled={isNextDisabled()}>
+                        Next
+                    </button>
+
+                    {
+                        formControlState.sectionIndex === 5 && 
+                        <button onClick={() => history.push('/overview')} disabled={!formControlState.currentFormDone}>
+                            View Character Sheet
                         </button>
-                        <button 
-                            onClick={() => currentSectionIdxReducer("NEXT_SECTION")}
-                            disabled={(currentSectionIdx == constants.CREATION_SECTIONS.length - 1)}
-                            >
-                            Next
-                        </button>
-                    </section>
-                    
+                    }
+                </section>
             }
         </>
     );

@@ -1,92 +1,226 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import dndApi from '../../utils/dnd5eApi';
 import CONSTANTS from '../../utils/constants';
 
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
+import constants from '../../utils/constants';
+
+import FormControlContext from './../../state/formControlManager';
 
 const CharacterDetailsForm = () => {
-    const { character, setCharacter } = useCharacter();
+    const { character, setCharacter, setDetails } = useCharacter();
 
+    const { formControlState, setFormControlState } = useContext(FormControlContext);
     const [backgroundChoices, setBackgroundChoices] = useState([]);
     const [languageChoices, setLanguageChoices] = useState([]);
-    const [numLanguageChoices, setNumLanguageChoices] = useState(0);
 
-    useEffect(() => {
+    // length of array = # choices based on background; value is index offset to add/remove
+    const [languageChoicesOffset, setLanguageChoicesOffset] = useState([]);
+    const [raceLanguages, setRaceLanguages] = useState([]);
+
+    /*
+     * Signature: useEffect(func, [])
+     * Description: populates the background choices that users can
+     *               pick from; populates the raceLanguage state and the
+     *               global state languages for languages that the user
+     *               already has; populates languageChoices
+     */
+    useEffect(async () => {
+        // Reset details component
+        setDetails({});
+
         let mounted = true;
-
         if (mounted) {
             try {
-                dndApi.getBackgrounds().then((response) => setBackgroundChoices(response.data));
-                dndApi.getLanguages().then((response) => setLanguageChoices(response.data.results.map((language) => language.name)));
+                const backgroundList = (await dndApi.getBackgrounds()).data;
+                setBackgroundChoices(backgroundList);
+                setLanguageChoices(
+                    (await dndApi.getLanguages()).data.results.map((lang) => {
+                        return {
+                            name: lang.name,
+                            origin: 'background',
+                            url: lang.url,
+                        };
+                    })
+                );
+
+                // If there is a background already selected, pass selected object and render in details component
+                /*if (character.background.name !== '') {
+                    const backgroundDetails = backgroundList.filter((background) => background.name === character.background.name);
+                    setDetails(...backgroundDetails);
+                }*/
+
+                const raceLanguagesArr = (await dndApi.getMoreInfo(character.race.url[0])).data.languages;
+
+                const newCharacter = character.background.languages.length == 0;
+                raceLanguagesArr.map((content) => {
+                    let languageObj = {
+                        name: content.name,
+                        url: content.url,
+                        origin: 'race',
+                    };
+                    raceLanguages.push(languageObj);
+                    setRaceLanguages([...raceLanguages]);
+                    if (newCharacter) {
+                        character.background.languages.push(languageObj);
+                        setCharacter({
+                            type: ACTION.UPDATE_BACKGROUND,
+                            payload: {
+                                ...character.background,
+                                languages: [...character.background.languages],
+                            },
+                        });
+                    }
+                });
+
+                if (character.background.name != '') {
+                    let arrOffset = [];
+                    let chosenBackground = (await dndApi.getBackground(character.background.url)).data;
+                    for (let i = 0; i < chosenBackground['language-choices']; i++) {
+                        arrOffset.push(i);
+                    }
+                    setLanguageChoicesOffset(arrOffset);
+                }
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         }
         return () => {
             mounted = false;
         };
     }, []);
+    /*
+     * Signature: useEffect(func, [character,  abilityScoreIdxMatch, abilityScoreChoices])
+     * Description: watch for character changes on background to determine if the
+     *              user can move on to the next section via the formControlState
+     */
+    useEffect(() => {
+        let formDone = true;
+        for (const key in character.background) {
+            let backgroundProp = character.background[key];
 
-    const pickBackground = (chosenBackgroundInfo) => {
-        setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { name: chosenBackgroundInfo.name } });
-        setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
+            console.log(Array.isArray(backgroundProp) && backgroundProp.length != raceLanguages.length + languageChoicesOffset.length);
+            if (Array.isArray(backgroundProp) && backgroundProp.length != raceLanguages.length + languageChoicesOffset.length) {
+                console.log(backgroundProp);
+                console.log(backgroundProp.length);
+                console.log(raceLanguages.length);
+                console.log(languageChoicesOffset.length);
+            }
+            if (
+                (typeof backgroundProp == 'string' && backgroundProp == '') ||
+                (typeof backgroundProp == 'number' && backgroundProp == 0) ||
+                (Array.isArray(backgroundProp) && backgroundProp.length != raceLanguages.length + languageChoicesOffset.length)
+            ) {
+                formDone = false;
+                break;
+            }
+        }
+        setFormControlState({ ...formControlState, currentFormDone: formDone });
+    }, [character, raceLanguages, languageChoicesOffset]);
 
-        // setDetailComponentData(chosenBackgroundInfo)
+    // ====================================================================================================================
+    /*
+     * Signature: pickBackground(chosenBackground)
+     * input: chosenBackground - the background object that the user picked
+     * Description: set character State background
+     */
+    const pickBackground = (chosenBackground) => {
+        if (chosenBackground.name != character.background.name) {
+            let maxIndexOfBkLang = character.background.languages.length - raceLanguages.length;
+            character.background.languages.splice(raceLanguages.length, maxIndexOfBkLang);
+        }
+        setCharacter({
+            type: ACTION.UPDATE_BACKGROUND,
+            payload: {
+                ...character.background,
+                name: chosenBackground.name,
+                url: `/${chosenBackground.id}.json`,
+            },
+        });
+        setDetails(chosenBackground);
 
-        setNumLanguageChoices(chosenBackgroundInfo['language-choices']);
-
-        // TODO The code to pull the background description can be easily pulled from the backgroundChoices object
-        // TODO I was unable to pull the data from the link by id, this does not work!
-
-        // TODO This is something that should be passed to the DETAILS component
-        // https://dnd-backgrounds-default-rtdb.firebaseio.com/backgrounds.json/1
-        // dndApi
-        //     .getMoreBackgroundInfo(chosenBackgroundInfo.name)
-        //     .then((data) => {
-        //         console.log(data.response);
-        //         /*
-        //         TODO: this is a good spot to format the data and send what ever we need to the global state
-        //     */
-        //     })
-        //     .catch((err) => console.log(err));
+        // Erase background languages, NOT race languages
+        //setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: raceLanguages } });
+        let arrOffset = [];
+        for (let i = 0; i < chosenBackground['language-choices']; i++) {
+            arrOffset.push(i);
+        }
+        setLanguageChoicesOffset(arrOffset);
     };
 
-    const pickLanguage = (chosenLanguage, chooseTwo) => {
-        console.log(chosenLanguage);
-        if (chooseTwo) {
-            // TODO Logic that puts languages in state, not yet working
-            // let languagesToUpdate = character.background.languages;
-            // character.background.languages.length === 2 && languagesToUpdate.shift();
-            // languagesToUpdate.push(chosenLanguage);
-            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
-            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: languagesToUpdate } });
+    // ===========================================================================================================================
+    /*
+     * Signature: pickLanguage(chosenLanguage, index)
+     * input: chosenLanguage - the language object that is chosen by the user
+     *        index - the index where we have to add/ change it in the character state
+     * Description: format the language object and add it in state; if a chocie was
+     *              previously made, change the object at the index given
+     */
+    const pickLanguage = async (chosenLanguage, index) => {
+        let indexToEdit = raceLanguages.length + parseInt(index);
+        if (character.background.languages.length == indexToEdit) {
+            character.background.languages.push(
+                /*{
+                name: chosenLanguage.name,
+                origin: 'background',
+                url: chosenLanguage.url,
+            }*/ chosenLanguage
+            );
         } else {
-            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [] } });
-            // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [chosenLanguage] } });
+            character.background.languages[
+                indexToEdit
+            ] = chosenLanguage /*{
+                name: chosenLanguage.name,
+                origin: 'background',
+                url: chosenLanguage.url,
+            }*/;
+        }
+        setCharacter({
+            type: ACTION.UPDATE_BACKGROUND,
+            payload: {
+                ...character.background,
+                languages: [...character.background.languages],
+            },
+        });
+
+        try {
+            // setDetails((await dndApi.getMoreInfo(chosenLanguage.url)).data);
+        } catch (err) {
+            console.log(err);
         }
     };
 
-    const setAlignment = (e) => {
-        e.preventDefault();
-        console.log(e.target.name);
-        // Maybe include a setTimeout to limit the number of hits to update state?
-        // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { alignment: e.target.name } });
-    };
-
+    // ===========================================================================================================================
+    /*
+     * Signature: setStat(e, stat)
+     * input: e - the event causing input change
+     *        stat - the property from the background object that we want to update
+     * Description: set the character state based off of the value
+     *               of the event target
+     */
     const setStat = (e, stat) => {
         e.preventDefault();
-        console.log(stat, e.target.value);
-        // Maybe include a setTimeout to limit the number of hits to update state?
-        // setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { [stat]: e.target.value } });
+        setCharacter({
+            type: ACTION.UPDATE_BACKGROUND,
+            payload: {
+                ...character.background,
+                [stat]: e.target.value,
+            },
+        });
     };
+
+    // ===========================================================================================================================
 
     return (
         <>
             <form>
-                {/* BACKGROUND */}
+                {/* BACKGROUND====================================================================== */}
                 <section>
+                    <h3>Character Name</h3>
+                    <input name="characterName" type="text" defaultValue={character.background.characterName} onChange={(e) => setStat(e, 'characterName')} />
+
                     <h3>Pick a Background: </h3>
                     {backgroundChoices.map((backgroundContent, idx) => (
                         <React.Fragment key={idx}>
@@ -94,7 +228,8 @@ const CharacterDetailsForm = () => {
                                 type="radio"
                                 name="background"
                                 id={backgroundContent.name}
-                                value={backgroundContent.index}
+                                value={backgroundContent.name}
+                                defaultChecked={backgroundContent.name == character.background.name}
                                 onClick={() => pickBackground(backgroundContent)}
                             />
                             <label htmlFor={backgroundContent.name}>{backgroundContent.name}</label>
@@ -102,81 +237,114 @@ const CharacterDetailsForm = () => {
                         </React.Fragment>
                     ))}
                     <br />
+
+                    {/* appearance */}
+                    <textarea
+                        maxLength="255"
+                        name="appearance"
+                        style={{ resize: 'none', width: '100%' }}
+                        rows="8"
+                        value={character.background.appearance}
+                        placeholder="Enter a description for your character's appearance."
+                        onChange={(e) => setStat(e, 'appearance')}
+                    ></textarea>
+
+                    {/* personality */}
                     <textarea
                         maxLength="255"
                         name="personality"
                         style={{ resize: 'none', width: '100%' }}
                         rows="8"
-                        placeholder="Enter a description for your character's personality and appearance."
+                        value={character.background.personality}
+                        placeholder="Enter a description for your character's personality."
+                        onChange={(e) => setStat(e, 'personality')}
                     ></textarea>
                 </section>
-                {/* LANGUAGES */}
+
+                {/* LANGUAGES=============================================================================== */}
                 <section>
                     <h3>Select your Languages:</h3>
                     <p>Your current proficient languages determined by your race:</p>
-                    {character.race.languages.map((raceLanguage, idx) => (
-                        <p key={idx}>{raceLanguage}</p>
-                    ))}
+                    {
+                        // render languages users already have based on their race
+                        raceLanguages && raceLanguages.map((language, idx) => <p key={idx}>{language.name}</p>)
+                    }
 
-                    {/* I was getting strange bugs here, I had to separate these two lines of code that check the same condition */}
-                    {numLanguageChoices !== 0 && (
+                    {languageChoicesOffset.length !== 0 && (
                         <p>
-                            Pick {numLanguageChoices === 1 ? 'one bonus language' : numLanguageChoices === 2 ? 'two bonus languages' : ''} granted by your
-                            <strong> {character.background.name} </strong>background.
+                            Pick {languageChoicesOffset.length === 1 ? 'one bonus language' : languageChoicesOffset.length === 2 ? 'two bonus languages' : ''}
+                            granted by your <strong> {character.background.name} </strong>background.
                         </p>
                     )}
-                    {numLanguageChoices !== 0 &&
-                        // Creates an array that is either: [1] or [1, 2]. Enables one or two <select> objects to render
-                        [...Array(numLanguageChoices)].map((e, idx) => (
+
+                    {
+                        //render total options for each language choice; disable languages that are already picked
+                        languageChoicesOffset.map((index, idx) => (
                             <React.Fragment key={idx}>
-                                <select name="languages" onChange={(e) => pickLanguage(e.target.value, false)} required>
+                                <select
+                                    defaultValue={
+                                        character.background.languages.length >= raceLanguages.length + idx + 1
+                                            ? JSON.stringify(character.background.languages[raceLanguages.length + idx])
+                                            : -1
+                                    }
+                                    name="languages"
+                                    id={idx}
+                                    onChange={(e) => pickLanguage(JSON.parse(e.target.value), e.target.id)}
+                                    required
+                                >
+                                    <option value={-1} disabled>
+                                        {' '}
+                                        no assignment{' '}
+                                    </option>
                                     {languageChoices.map((language, idxx) => (
                                         <option
                                             key={idxx}
-                                            value={language}
-                                            disabled={
-                                                !(
-                                                    language !== character.race.languages[0] &&
-                                                    language !== character.race.languages[1] &&
-                                                    language !== character.background.languages[0] &&
-                                                    language !== character.background.languages[1]
-                                                )
-                                            }
+                                            value={JSON.stringify(language)}
+                                            disabled={character.background.languages
+                                                .map((lang) => (lang.hasOwnProperty('name') ? lang.name : ''))
+                                                .includes(language.name)}
                                         >
-                                            {language}
+                                            {language.name}
                                         </option>
                                     ))}
                                 </select>
                                 <br />
                             </React.Fragment>
-                        ))}
+                        ))
+                    }
                 </section>
-                {/* AGE, HEIGHT, WEIGHT */}
+                {/* AGE, HEIGHT, WEIGHT ===============================================================================================*/}
                 <section>
-                    {/* TODO - Implement logic / checks based on race */}
                     <h3>Determine your Age, Height, and Weight.</h3>
                     <label htmlFor="age">Age: </label>
-                    <input type="number" placeholder="18" id="age" name="age" onChange={(e) => setStat(e, 'age')} />
+                    <input type="number" placeholder="18" id="age" name="age" defaultValue={character.background.age} onChange={(e) => setStat(e, 'age')} />
                     <br />
                     <label htmlFor="height">Height: </label>
-                    <input type="text" id="height" name="height" onChange={(e) => setStat(e, 'height')} />
+                    <input type="text" id="height" name="height" defaultValue={character.background.height} onChange={(e) => setStat(e, 'height')} />
                     <br />
                     <label htmlFor="weight">Weight: </label>
-                    <input type="text" id="weight" name="weight" onChange={(e) => setStat(e, 'weight')} />
+                    <input type="text" id="weight" name="weight" defaultValue={character.background.weight} onChange={(e) => setStat(e, 'weight')} />
                     <br />
                 </section>
-                {/* ALIGNMENT */}
+                {/* ALIGNMENT ==========================================================================================================*/}
                 <section>
                     <h3>Choose your Alignment</h3>
-                    {/* Render details of each alignment in DETAILS component. */}
-                    {CONSTANTS.ALIGNMENTS.map((alignment, idx) => (
-                        <React.Fragment key={idx}>
-                            <button key={idx} name={alignment} onClick={(e) => setAlignment(e)} style={{ width: 200 }}>
-                                {alignment}
-                            </button>
-                            <br />
-                        </React.Fragment>
-                    ))}
+                    {
+                        // render buttons for each alignment
+                        CONSTANTS.ALIGNMENTS.map((alignmentStr, idx) => (
+                            <React.Fragment key={idx}>
+                                <button
+                                    key={idx}
+                                    value={alignmentStr}
+                                    onClick={(e) => setStat(e, 'alignment')}
+                                    style={{ width: 200, backgroundColor: alignmentStr === character.background.alignment ? 'red' : '' }}
+                                >
+                                    {alignmentStr}
+                                </button>
+                                <br />
+                            </React.Fragment>
+                        ))
+                    }
                 </section>
             </form>
         </>

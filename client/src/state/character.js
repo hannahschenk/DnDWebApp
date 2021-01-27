@@ -51,7 +51,6 @@ const INITIAL_CHARACTER_STATE = {
     spells: [
       //   {
       //     name: "",
-      //     index: "",
       //     url: "",
       //   }
     ],
@@ -63,9 +62,9 @@ const INITIAL_CHARACTER_STATE = {
     ],
     savingThrows: [],
     // Contains the names of the abilities (not an object, an array of strings)
-​
+
   },
-​
+
   equipment: {
     total: [
       //   {
