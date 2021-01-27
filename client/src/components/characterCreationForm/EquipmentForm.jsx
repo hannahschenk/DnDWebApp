@@ -43,7 +43,7 @@ const EquipmentForm = () => {
         setBackgroundEquipment(bkEquipmentsRaw);
 
         //getting initial equipment from class-------------------------------------------------------
-        let equipmentEndPoint = (await dndApi.getMoreInfo(character.class.url)).data.starting_equipment;
+        let equipmentEndPoint = (await dndApi.getMoreInfo(character.character_class.url)).data.starting_equipment;
         const equipmentObj = (await dndApi.getMoreInfo(equipmentEndPoint)).data;
 
         setInitialEquipment(equipmentObj.starting_equipment);
