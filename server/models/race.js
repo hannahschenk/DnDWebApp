@@ -14,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       subRaceUrl:{
         type: DataTypes.STRING,
+      },
+      speed: {
+        type: DataTypes.INTEGER,
+      },
+      size: {
+        type: DataTypes.ENUM("Small", "Medium", "Large"),
       }
     }
   );

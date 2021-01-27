@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
         //attributes
         name: {
             type: DataTypes.STRING,
+            allowNull: false
         },
         tableDep: {
             type: DataTypes.STRING,

@@ -3,12 +3,11 @@ module.exports = (sequelize, DataTypes) => {
         //attributes
         name: {
             type: DataTypes.STRING,
-        },
-        index: {
-            type: DataTypes.STRING,
+            allowNull: false
         },
         type: {
             type: DataTypes.ENUM("armor", "weapons", "tools", "misc"),
+            allowNull: false
         },
         dnd5eEndpoint: {
             type: DataTypes.STRING,
