@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
         classUrl:{
             type: DataTypes.STRING,
             allowNull: false
+        },
+        hitDie:{
+          type: DataTypes.INTEGER,
+        },
+        totalHP:{
+          type: DataTypes.INTEGER,
         }
       }
     );

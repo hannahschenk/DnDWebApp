@@ -1,23 +1,29 @@
 module.exports = (sequelize, DataTypes) => {
     const Background = sequelize.define('Background',{
         //attributes
-        name: {
+        characterName: {
             type: DataTypes.STRING,
+            allowNull: false
         },
-        background_feature: {
-            type: DataTypes.STRING,
+        name: {
+            type: DataTypes.STRING, //"Acolyte", "Criminal/ Spy", "Folk Hero", "Noble", "Sage", "Soldier"
+            allowNull: false
         },
         api_endpoint: {
             type: DataTypes.STRING,
+            allowNull: false
         },
         appearance: {
             type: DataTypes.TEXT,
+            allowNull: false
         },
         personality: {
             type: DataTypes.TEXT,
+            allowNull: false
         },
         alignment: {
             type: DataTypes.STRING,
+            allowNull: false
         },
         age: {
             type: DataTypes.STRING,
@@ -33,12 +39,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         size: {
             type: DataTypes.ENUM("Small", "Medium", "Large"),
-        },
-        type: {
-            type: DataTypes.ENUM("Acolyte", "Criminal/ Spy", "Folk Hero", "Noble", "Sage", "Soldier"),
-        },
-        api_endpoint: {
-            type: DataTypes.STRING,
         }
     },
     {
