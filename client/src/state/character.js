@@ -7,11 +7,11 @@ const INITIAL_CHARACTER_STATE = {
     speed: "",
     size: ""
   },
-  class: {
+  character_class: {
     name: "",
     url: "",
     hitDie: 0,
-    totalHP: 0,
+    totalHP: 0
   },
   abilities: {
     strength: 0,
@@ -40,60 +40,39 @@ const INITIAL_CHARACTER_STATE = {
     weight: "",
   },
   proficiencies: {
-    skills: [],
-    //   {
-    //     name: "",
-    //     origin: "", // Either class or background
-    //     ability: "", // One of the six ability scores
-    //     url: ""
-    //   }
-    // ],
-    spells: [],
-    //   {
-    //     name: "",
-    //     url: ""
-    //   }
-    // ],
+    skills: [
+      //   {
+      //     name: "",
+      //     origin: "", // Either class or background
+      //     ability: "", // One of the six ability scores
+      //     url: ""
+      //   }
+    ],
+    spells: [
+      //   {
+      //     name: "",
+      //     url: ""
+      //   }
+    ],
+    items: [
+      //   {
+      //     name: "",
+      //     url: ""
+      //   }
+    ],
     savingThrows: [],
-    // name of the abilities key (not an object, an array of strings)
+    // Contains the names of the abilities (not an object, an array of strings)
 
   },
 
-  //   {
-  //     name: "",
-  //     type: "", type of equipment
-  //     url: ""
-  //   }
-  // ],
-
   equipment: {
-    total: []
-    /*armor: [
-      {
-        name: "",
-        url: ""
-      }
-    ],
-    weapons: [
-      {
-        name: "",
-        url: ""
-      }
-    ],
-    tools: [
-      {
-        name: "",
-        url: ""
-      }
-    ],
-    misc: [
-      {
-        name: "",
-        url: ""
-      }
-    ]*/
-
-
+    total: [
+      //   {
+      //     name: "",
+      //     type: "",
+      //     url: ""
+      //   }
+    ]
   }
 };
 

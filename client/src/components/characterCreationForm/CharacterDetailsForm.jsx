@@ -6,15 +6,16 @@ import CONSTANTS from '../../utils/constants';
 import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 import constants from '../../utils/constants';
-import FormControlContext from "./../../state/formControlManager";
+import FormControlContext from './../../state/formControlManager';
+
 const CharacterDetailsForm = () => {
     const { character, setCharacter, setDetails } = useCharacter();
 
-    const {formControlState, setFormControlState} = useContext(FormControlContext);
+    const { formControlState, setFormControlState } = useContext(FormControlContext);
     const [backgroundChoices, setBackgroundChoices] = useState([]);
     const [languageChoices, setLanguageChoices] = useState([]);
-    // length of array = # choices based on background; value is index offset to add/remove 
-    const [languageChoicesOffset, setLanguageChoicesOffset] = useState([]); 
+    // length of array = # choices based on background; value is index offset to add/remove
+    const [languageChoicesOffset, setLanguageChoicesOffset] = useState([]);
     const [raceLanguages, setRaceLanguages] = useState([]);
 
     /*
@@ -25,18 +26,23 @@ const CharacterDetailsForm = () => {
      *               already has; populates languageChoices
      */
     useEffect(async () => {
+        // Reset details component
+        setDetails({});
+
         let mounted = true;
         if (mounted) {
             try {
                 const backgroundList = (await dndApi.getBackgrounds()).data;
                 setBackgroundChoices(backgroundList);
-                setLanguageChoices((await dndApi.getLanguages()).data.results.map((lang) => {
-                    return {
-                        name: lang.name,
-                        origin: 'background',
-                        url: lang.url,
-                    }
-                }));
+                setLanguageChoices(
+                    (await dndApi.getLanguages()).data.results.map((lang) => {
+                        return {
+                            name: lang.name,
+                            origin: 'background',
+                            url: lang.url,
+                        };
+                    })
+                );
 
                 // If there is a background already selected, pass selected object and render in details component
                 /*if (character.background.name !== '') {
@@ -45,37 +51,36 @@ const CharacterDetailsForm = () => {
                 }*/
 
                 const raceLanguagesArr = (await dndApi.getMoreInfo(character.race.url[0])).data.languages;
-   
-                const newCharacter = character.background.languages.length == 0
+
+                const newCharacter = character.background.languages.length == 0;
                 raceLanguagesArr.map((content) => {
                     let languageObj = {
                         name: content.name,
                         url: content.url,
                         origin: 'race',
                     };
-                    raceLanguages.push(languageObj)
-                    setRaceLanguages([...raceLanguages])
-                    if(newCharacter){
-                        character.background.languages.push(languageObj)
-                        setCharacter({ 
-                            type: ACTION.UPDATE_BACKGROUND, 
-                            payload: { 
-                                ...character.background, 
-                                languages: [...character.background.languages]
-                            } 
-                        });  
+                    raceLanguages.push(languageObj);
+                    setRaceLanguages([...raceLanguages]);
+                    if (newCharacter) {
+                        character.background.languages.push(languageObj);
+                        setCharacter({
+                            type: ACTION.UPDATE_BACKGROUND,
+                            payload: {
+                                ...character.background,
+                                languages: [...character.background.languages],
+                            },
+                        });
                     }
                 });
 
-                if(character.background.name != ""){
+                if (character.background.name != '') {
                     let arrOffset = [];
-                    let chosenBackground = (await dndApi.getBackground(character.background.url)).data
+                    let chosenBackground = (await dndApi.getBackground(character.background.url)).data;
                     for (let i = 0; i < chosenBackground['language-choices']; i++) {
                         arrOffset.push(i);
                     }
                     setLanguageChoicesOffset(arrOffset);
                 }
-
             } catch (err) {
                 console.error(err);
             }
@@ -86,31 +91,33 @@ const CharacterDetailsForm = () => {
     }, []);
 
     /*
-    * Signature: useEffect(func, [character,  abilityScoreIdxMatch, abilityScoreChoices])
-    * Description: watch for character changes on background to determine if the 
-    *              user can move on to the next section via the formControlState
-    */
+     * Signature: useEffect(func, [character,  abilityScoreIdxMatch, abilityScoreChoices])
+     * Description: watch for character changes on background to determine if the
+     *              user can move on to the next section via the formControlState
+     */
     useEffect(() => {
         let formDone = true;
-        for(const key in character.background){
+        for (const key in character.background) {
             let backgroundProp = character.background[key];
 
-            console.log((Array.isArray(backgroundProp) && backgroundProp.length != raceLanguages.length + languageChoicesOffset.length))
-            if((Array.isArray(backgroundProp) && backgroundProp.length != raceLanguages.length + languageChoicesOffset.length)){
-                console.log(backgroundProp)
-                console.log(backgroundProp.length)
-                console.log(raceLanguages.length)
-                console.log(languageChoicesOffset.length)
+            console.log(Array.isArray(backgroundProp) && backgroundProp.length != raceLanguages.length + languageChoicesOffset.length);
+            if (Array.isArray(backgroundProp) && backgroundProp.length != raceLanguages.length + languageChoicesOffset.length) {
+                console.log(backgroundProp);
+                console.log(backgroundProp.length);
+                console.log(raceLanguages.length);
+                console.log(languageChoicesOffset.length);
             }
-            if( (typeof(backgroundProp) == "string" && backgroundProp == "") ||
-                (typeof(backgroundProp) == "number" && backgroundProp == 0) || 
-                (Array.isArray(backgroundProp) && backgroundProp.length != raceLanguages.length + languageChoicesOffset.length)){
+            if (
+                (typeof backgroundProp == 'string' && backgroundProp == '') ||
+                (typeof backgroundProp == 'number' && backgroundProp == 0) ||
+                (Array.isArray(backgroundProp) && backgroundProp.length != raceLanguages.length + languageChoicesOffset.length)
+            ) {
                 formDone = false;
                 break;
             }
         }
-        setFormControlState({...formControlState, currentFormDone: formDone})
-    }, [character, raceLanguages, languageChoicesOffset])
+        setFormControlState({ ...formControlState, currentFormDone: formDone });
+    }, [character, raceLanguages, languageChoicesOffset]);
 
     // ====================================================================================================================
     /*
@@ -119,17 +126,17 @@ const CharacterDetailsForm = () => {
      * Description: set character State background
      */
     const pickBackground = (chosenBackground) => {
-        if(chosenBackground.name != character.background.name){
-            let maxIndexOfBkLang = character.background.languages.length - raceLanguages.length
-            character.background.languages.splice(raceLanguages.length, maxIndexOfBkLang)
-        }     
-        setCharacter({ 
-            type: ACTION.UPDATE_BACKGROUND, 
-            payload: { 
-                ...character.background, 
-                name: chosenBackground.name, 
-                url: `/${chosenBackground.id}.json`
-            } 
+        if (chosenBackground.name != character.background.name) {
+            let maxIndexOfBkLang = character.background.languages.length - raceLanguages.length;
+            character.background.languages.splice(raceLanguages.length, maxIndexOfBkLang);
+        }
+        setCharacter({
+            type: ACTION.UPDATE_BACKGROUND,
+            payload: {
+                ...character.background,
+                name: chosenBackground.name,
+                url: `/${chosenBackground.id}.json`,
+            },
         });
         setDetails(chosenBackground);
 
@@ -153,13 +160,17 @@ const CharacterDetailsForm = () => {
     const pickLanguage = async (chosenLanguage, index) => {
         let indexToEdit = raceLanguages.length + parseInt(index);
         if (character.background.languages.length == indexToEdit) {
-            character.background.languages.push(/*{
+            character.background.languages.push(
+                /*{
                 name: chosenLanguage.name,
                 origin: 'background',
                 url: chosenLanguage.url,
-            }*/chosenLanguage);
+            }*/ chosenLanguage
+            );
         } else {
-            character.background.languages[indexToEdit] = chosenLanguage/*{
+            character.background.languages[
+                indexToEdit
+            ] = chosenLanguage /*{
                 name: chosenLanguage.name,
                 origin: 'background',
                 url: chosenLanguage.url,
@@ -168,14 +179,13 @@ const CharacterDetailsForm = () => {
         setCharacter({
             type: ACTION.UPDATE_BACKGROUND,
             payload: {
-                ...character.background, 
+                ...character.background,
                 languages: [...character.background.languages],
             },
         });
-        //setDetails();
+
         try {
-            let languageInfo = (await dndApi.getMoreInfo(chosenLanguage.url)).data
-            //setDetails(languageInfo); there is a bug here
+            // setDetails((await dndApi.getMoreInfo(chosenLanguage.url)).data);
         } catch (err) {
             console.log(err);
         }
@@ -194,7 +204,7 @@ const CharacterDetailsForm = () => {
         setCharacter({
             type: ACTION.UPDATE_BACKGROUND,
             payload: {
-                ...character.background, 
+                ...character.background,
                 [stat]: e.target.value,
             },
         });
@@ -271,8 +281,11 @@ const CharacterDetailsForm = () => {
                         languageChoicesOffset.map((index, idx) => (
                             <React.Fragment key={idx}>
                                 <select
-                                    defaultValue={character.background.languages.length >= raceLanguages.length + idx + 1 ? 
-                                                JSON.stringify(character.background.languages[raceLanguages.length + idx]): -1}
+                                    defaultValue={
+                                        character.background.languages.length >= raceLanguages.length + idx + 1
+                                            ? JSON.stringify(character.background.languages[raceLanguages.length + idx])
+                                            : -1
+                                    }
                                     name="languages"
                                     id={idx}
                                     onChange={(e) => pickLanguage(JSON.parse(e.target.value), e.target.id)}
@@ -286,7 +299,9 @@ const CharacterDetailsForm = () => {
                                         <option
                                             key={idxx}
                                             value={JSON.stringify(language)}
-                                            disabled={character.background.languages.map((lang) => (lang.hasOwnProperty("name")) ? lang.name : "").includes(language.name)}
+                                            disabled={character.background.languages
+                                                .map((lang) => (lang.hasOwnProperty('name') ? lang.name : ''))
+                                                .includes(language.name)}
                                         >
                                             {language.name}
                                         </option>
