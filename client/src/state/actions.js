@@ -1,7 +1,7 @@
 // Update actions
 
 export const UPDATE_RACE = 'UPDATE_RACE';
-export const UPDATE_CLASS = 'UPDATE_CLASS';
+export const UPDATE_CHARACTER_CLASS = 'UPDATE_CHARACTER_CLASS';
 export const UPDATE_ABILITIES = 'UPDATE_ABILITIES';
 
 export const UPDATE_BACKGROUND = 'UPDATE_BACKGROUND';
@@ -11,7 +11,7 @@ export const UPDATE_EQUIPMENT = 'UPDATE_EQUIPMENT';
 // Reset / clear actions
 
 export const CLEAR_RACE = 'CLEAR_RACE';
-export const CLEAR_CLASS = 'CLEAR_CLASS';
+export const CLEAR_CHARACTER_CLASS = 'CLEAR_CHARACTER_CLASS';
 export const CLEAR_ABILITIES = 'CLEAR_ABILITIES';
 
 export const CLEAR_BACKGROUND = 'CLEAR_BACKGROUND';

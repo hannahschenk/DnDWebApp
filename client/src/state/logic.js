@@ -16,15 +16,21 @@ export const CharacterContext = React.createContext(undefined);
 export const useCharacter = () => React.useContext(CharacterContext);
 
 export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) => {
-  const [ACTION, TYPE] = action.type.split('_');
+  // console.log(action);
+
+  // Removes UPDATE_ or CLEAR_ from action.type
+  const TYPE = action.type.match(/^(?:[A-Z]+_)(.+)/)[1]
   const stat = TYPE.toLowerCase();
+
   // ACTION is: UPDATE or CLEAR
-  // TYPE is: the key for the character state: 'abilities', 'alignment', 'background', 'class', 'languages', 'proficiencies', 'race', 'spells'
+  // TYPE is: the key for the character state: 'abilities', 'alignment', 'background', 'character_class', 'languages', 'proficiencies', 'race', 'spells'
   // console.log(ACTION, TYPE);
 
   switch (action.type) {
     case `UPDATE_${TYPE}`: {
       if (action.payload) {
+        // cleanUp()
+        clearPropAfter(character, stat)
         return (character = {
           ...character,
           [stat]: { ...character[stat], ...action.payload },
@@ -36,10 +42,34 @@ export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) =>
         ...character,
         [stat]: INITIAL_CHARACTER_STATE[stat],
       });
+    case 'CLEAR_CHARACTER':
+      return (character = INITIAL_CHARACTER_STATE)
     default:
       return character;
   }
 };
+
+const clearPropAfter = (character, stat) => {
+  // took out abilities because it does not affect anything
+  const propOrder = ["race", "character_class", "abilities", "background", "proficiencies", "equipment"]
+  if (stat == "abilities" || stat == "proficiencies") { //changes here should not affect anything
+    return;
+  }
+  let startIndex = propOrder.indexOf(stat)
+  for (let i = startIndex + 1; i < propOrder.length; i++) {
+    for (const key in character[propOrder[i]]) {
+      if (typeof (character[propOrder[i]][key]) == "string") {
+        character[propOrder[i]][key] = ""
+      }
+      else if (typeof (character[propOrder[i]][key]) == "number") {
+        character[propOrder[i]][key] = 0
+      }
+      else {
+        character[propOrder[i]][key] = []
+      }
+    }
+  }
+}
 
 // CODE TO IMPLEMENT REDUCER
   // Grab initial character state and assign the CharacterReducer to the setCharacter function
