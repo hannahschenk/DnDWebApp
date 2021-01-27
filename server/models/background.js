@@ -27,18 +27,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         age: {
             type: DataTypes.STRING,
+            allowNull: false
         },
         height: {
             type: DataTypes.STRING,
+            allowNull: false
         },
         weight: {
             type: DataTypes.STRING,
-        },
-        speed: {
-            type: DataTypes.INTEGER,
-        },
-        size: {
-            type: DataTypes.ENUM("Small", "Medium", "Large"),
+            allowNull: false
         }
     },
     {
