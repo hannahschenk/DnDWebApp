@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The AbilityScoresForm Component... will match snapshot 1`] = `
+Array [
+  <p>
+    Pick a method to generate ability score choices:
+  </p>,
+  <button
+    onClick={[Function]}
+  >
+    Use Standard Array
+  </button>,
+  <button
+    onClick={[Function]}
+  >
+    Generate Random Scores
+  </button>,
+]
+`;

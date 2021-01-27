@@ -3,6 +3,10 @@ module.exports = {
     RACES_URL: `https://www.dnd5eapi.co/api/races`,
     CLASSES_URL: `https://www.dnd5eapi.co/api/classes`,
     BACKGROUNDS_URL: `https://dnd-backgrounds-default-rtdb.firebaseio.com/backgrounds.json`,
+<<<<<<< HEAD
+=======
+    BACKGROUNDS_BASE_URL: `https://dnd-backgrounds-default-rtdb.firebaseio.com/backgrounds`,
+>>>>>>> 81149a80e997d95cfb5b910ad72ddd9ffce54b23
     LANGUAGES_URL: `http://www.dnd5eapi.co/api/languages/`,
     CREATION_SECTIONS:
         [
@@ -41,5 +45,18 @@ module.exports = {
         'Neutral Evil',
         'Chaotic Good',
         'Chaotic Neutral',
+<<<<<<< HEAD
         'Chaotic Evil']
+=======
+        'Chaotic Evil'
+    ],
+    ABILITY_KEY_MAP:{
+        "str": "strength",
+        "dex": "dexterity",
+        "con": "constitution",
+        "int": "intelligence",
+        "wis": "wisdom",
+        "cha": "charisma"
+    }
+>>>>>>> 81149a80e997d95cfb5b910ad72ddd9ffce54b23
 }

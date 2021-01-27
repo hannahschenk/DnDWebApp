@@ -20,4 +20,13 @@ module.exports = {
     getMoreInfo: (endPoint) => {
         return axios.get(constants.API_BASE_URL + endPoint);
     },
+<<<<<<< HEAD
+=======
+    getStartingEquipment:(chosenClass) => {
+        return axios.get(constants.API_BASE_URL + '/api/starting-equipment/'+ chosenClass);
+    },
+    getBackground:(endPoint) => {
+        return axios.get(constants.BACKGROUNDS_BASE_URL +  endPoint);
+    }
+>>>>>>> 81149a80e997d95cfb5b910ad72ddd9ffce54b23
 }
