@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans&family=PT+Serif&display=swap');
+
+@mixin sans($size: false, $color: false, $weight: false,  $lh: false) {
+    font-family: 'PT Sans', sans-serif;
+    @if $size { font-size: $size; }
+    @if $color { color: $color; }
+    @if $weight { font-weight: $weight; }
+    @if $lh { line-height: $lh; }
+}
+
+@mixin serif($size: false, $color: false, $weight: false,  $lh: false) {
+    font-family: 'PT Serif', serif;
+    @if $size { font-size: $size; }
+    @if $color { color: $color; }
+    @if $weight { font-weight: $weight !important; }
+    @if $lh { line-height: $lh; }
+}
