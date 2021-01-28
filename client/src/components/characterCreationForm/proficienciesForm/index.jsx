@@ -7,11 +7,10 @@ import SpellsForm from './SpellsForm';
 import { useCharacter } from './../../../state/logic';
 import * as ACTION from './../../../state/actions';
 import constants from '../../../utils/constants';
-        
+
 import FormControlContext from './../../../state/formControlManager';
 
 const ProficienciesForm = () => {
-    
     const { character, setCharacter, setDetails } = useCharacter();
 
     const [skillProficiencies, setSkillProficiencies] = useState([]);
@@ -65,6 +64,10 @@ const ProficienciesForm = () => {
         };
     }, []);
 
+    // useEffect(() => {
+    //     console.log(availableSpells);
+    // }, [availableSpells]);
+
     /*
      * Signature: useEffect(func, [character])
      * Description: watch for character changes on class name to
@@ -90,7 +93,7 @@ const ProficienciesForm = () => {
                 <SkillsForm skillProficiencies={skillProficiencies[1]} field="items" skillsFormDoneState={{ skillsFormDone, setSkillsFormDone }} />
             )}
             {/* Render spells form only if user's class is: 'bard', 'cleric', 'druid', 'paladin', 'ranger', 'sorcerer', 'warlock', 'wizard' */}
-            {spellCasting && <SpellsForm availableSpells={availableSpells} />}
+            {spellCasting && availableSpells.length != 0 && <SpellsForm availableSpells={availableSpells} />}
         </>
     );
 };

@@ -289,7 +289,7 @@ const CharacterDetailsForm = () => {
                                     key={idx}
                                     value={alignmentStr}
                                     onClick={(e) => setStat(e, 'alignment')}
-                                    style={{ width: 200, backgroundColor: alignmentStr === character.background.alignment ? 'red' : '' }}
+                                    style={{ width: 200, color: alignmentStr === character.background.alignment ? '#dc2626' : '' }}
                                 >
                                     {alignmentStr}
                                 </button>
