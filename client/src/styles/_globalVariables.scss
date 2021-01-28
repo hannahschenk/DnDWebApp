@@ -1,0 +1,21 @@
+/*Media Query Breakpoints*/
+$mobileBreakPoint: 800px;
+
+/*Colors*/
+$backgroundLight: #e8e5d7;
+$textLight: #e8e5d7;
+$backgroundDark: #202e32;
+$textDark: #202e32;
+$accentBasic: #90a9a2;
+$accentImportant: #9b7f30;
+$mainThemeLight:#eb5b43;
+$mainTheme: #dc2626;
+$mainThemeDark: #a3313b;
+$darkContrast: #080b0c;
+
+/*standard*/
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
