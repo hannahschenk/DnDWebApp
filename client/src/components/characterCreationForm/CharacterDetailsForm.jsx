@@ -15,11 +15,14 @@ const CharacterDetailsForm = () => {
     const [backgroundChoices, setBackgroundChoices] = useState([]);
 
     const [raceLanguages, setRaceLanguages] = useState([]);
+    const [raceLanguagesDesc, setRaceLanguagesDesc] = useState();
     const [languageChoices, setLanguageChoices] = useState();
     const [numLanguageChoices, setNumLanguageChoices] = useState(0);
+    // const [bonusRaceLanguage, setBonusRaceLanguage] = useState();
 
     const firstLanguageChoiceRef = useRef(null);
     const secondLanguageChoiceRef = useRef(null);
+    const bonusRaceLanguageRef = useRef(null);
 
     /*
      * Signature: useEffect(func, [])
@@ -40,14 +43,16 @@ const CharacterDetailsForm = () => {
                 const backgroundList = (await dndApi.getBackgrounds()).data;
                 setBackgroundChoices(backgroundList);
 
-                // If there is a background already selected, pass selected object and render in details component
+                // If there is a background already selected, click the element to render the details
                 if (character.background.name !== '') {
-                    const backgroundDetails = backgroundList.filter((background) => background.name === character.background.name);
-                    setDetails(...backgroundDetails);
+                    // *: Resets language in <option> field on component render
+                    document.getElementById(character.background.name).click();
+                    // const backgroundDetails = backgroundList.filter((background) => background.name === character.background.name);
+                    // setDetails(...backgroundDetails);
                 }
 
                 // Stores the character's race language, used in case a new background is selected
-                const raceLanguagesData = (await dndApi.getMoreInfo(character.race.url[0])).data.languages;
+                const raceLanguagesData = (await dndApi.getMoreInfo(character.race.raceUrl)).data.languages;
                 const raceLanguagesArray = raceLanguagesData.map((language) => {
                     return {
                         name: language.name,
@@ -56,6 +61,7 @@ const CharacterDetailsForm = () => {
                     };
                 });
                 setRaceLanguages(raceLanguagesArray);
+                setRaceLanguagesDesc((await dndApi.getMoreInfo(character.race.raceUrl)).data.language_desc);
                 setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [...raceLanguagesArray] } });
 
                 // Stores all possible languages, formats data to have name, origin, and url fields
@@ -119,28 +125,31 @@ const CharacterDetailsForm = () => {
         setDetails(chosenBackground);
 
         setNumLanguageChoices(chosenBackground['language-choices']);
+        // Reset languages if background is changed
+        if (bonusRaceLanguageRef.current) bonusRaceLanguageRef.current.value = 'Choose a language';
+        if (firstLanguageChoiceRef.current) firstLanguageChoiceRef.current.value = 'Choose a language';
+        if (secondLanguageChoiceRef.current) secondLanguageChoiceRef.current.value = 'Choose a language';
     };
 
     // ===========================================================================================================================
     /*
-     * Signature: pickLanguage(chosenLanguage, index)
-     * input: chosenLanguage - the language object that is chosen by the user
-     *        index - the index where we have to add/ change it in the character state
-     * Description: format the language object and add it in state; if a choice was
-     *              previously made, change the object at the index given
+     * Signature: pickLanguage()
+     * Description: Adds languages to state by reading from all fields every time
      */
-    const pickLanguage = async () => {
-        // If the user has one available selection, but already has chosen a language, override their selection
-        if (numLanguageChoices === 1) {
-            const firstLanguage = JSON.parse(firstLanguageChoiceRef.current.value);
-            setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [...raceLanguages, firstLanguage] } });
+    const pickLanguage = () => {
+        let newLanguages = [];
+
+        if (bonusRaceLanguageRef.current && bonusRaceLanguageRef.current.value !== 'Choose a language') {
+            newLanguages.push(JSON.parse(bonusRaceLanguageRef.current.value));
         }
-        // Otherwise simply add both languages from form into state using React Refs
-        else if (numLanguageChoices === 2) {
-            const firstLanguage = JSON.parse(firstLanguageChoiceRef.current.value);
-            const secondLanguage = JSON.parse(secondLanguageChoiceRef.current.value);
-            setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [...raceLanguages, firstLanguage, secondLanguage] } });
+        if (firstLanguageChoiceRef.current && firstLanguageChoiceRef.current.value !== 'Choose a language') {
+            newLanguages.push(JSON.parse(firstLanguageChoiceRef.current.value));
         }
+        if (secondLanguageChoiceRef.current && secondLanguageChoiceRef.current.value !== 'Choose a language') {
+            newLanguages.push(JSON.parse(secondLanguageChoiceRef.current.value));
+        }
+
+        setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [...raceLanguages, ...newLanguages] } });
     };
 
     // ===========================================================================================================================
@@ -211,41 +220,64 @@ const CharacterDetailsForm = () => {
                         onChange={(e) => setStat(e, 'personality')}
                     ></textarea>
                 </section>
-
-                {/* LANGUAGES=============================================================================== */}
+                {/* LANGUAGES======================================================================= */}
                 <section>
                     <h3>Select your Languages:</h3>
-                    <p>Your current proficient languages determined by your race:</p>
-                    {
-                        // render languages users already have based on their race
-                        raceLanguages && raceLanguages.map((language, idx) => <p key={idx}>{language.name}</p>)
-                    }
+                    <p>{raceLanguagesDesc}</p>
 
+                    {(character.race.name === 'Human' || character.race.name === 'Half-Elf') && (
+                        <>
+                            <p>Pick one bonus language granted by your race.</p>
+                            <select
+                                // defaultValue={lang.length !== 0 && JSON.stringify(lang[idx])}
+                                name="languages"
+                                onChange={(e) => pickLanguage()}
+                                ref={bonusRaceLanguageRef}
+                                required
+                            >
+                                <option value="Choose a language">Choose a language</option>
+                                {languageChoices &&
+                                    languageChoices.map((language, idx) => (
+                                        <option
+                                            key={idx}
+                                            value={JSON.stringify(language)}
+                                            disabled={character.background.languages
+                                                .map((lang) => (lang.hasOwnProperty('name') ? lang.name : ''))
+                                                .includes(language.name)}
+                                        >
+                                            {language.name}
+                                        </option>
+                                    ))}
+                            </select>
+                            <br />
+                        </>
+                    )}
                     {numLanguageChoices !== 0 && (
-                        <p>
-                            Pick {numLanguageChoices === 1 ? 'one bonus language ' : numLanguageChoices === 2 ? 'two bonus languages ' : ''}
-                            granted by your <strong>{character.background.name}</strong> background.
-                        </p>
+                        <>
+                            <p>
+                                Pick {numLanguageChoices === 1 ? 'one bonus language ' : numLanguageChoices === 2 ? 'two bonus languages ' : ''}
+                                granted by your <strong>{character.background.name}</strong> background.
+                            </p>
+                        </>
                     )}
 
                     {
                         // Render total options for each language choice; disable languages that are already picked
                         [...Array(numLanguageChoices)].map((e, idx) => {
                             const lang = character.background.languages.filter((language) => language.origin === 'background');
-                            // console.log(lang);
+
                             return (
                                 <React.Fragment key={idx}>
                                     <select
                                         defaultValue={lang.length !== 0 && JSON.stringify(lang[idx])}
-                                        //     character.background.languages.length >= raceLanguages.length + idx + 1
-                                        //         ? JSON.stringify(character.background.languages[raceLanguages.length + idx])
-                                        //         : -1
-                                        // }
                                         name="languages"
                                         ref={idx === 0 ? firstLanguageChoiceRef : idx === 1 ? secondLanguageChoiceRef : ''}
                                         onChange={(e) => pickLanguage()}
                                         required
                                     >
+                                        <option key={idx + 1} value="Choose a language">
+                                            Choose a language
+                                        </option>
                                         {languageChoices &&
                                             languageChoices.map((language, idxx) => (
                                                 <option
@@ -265,7 +297,7 @@ const CharacterDetailsForm = () => {
                         })
                     }
                 </section>
-                {/* AGE, HEIGHT, WEIGHT ===============================================================================================*/}
+                {/* AGE, HEIGHT, WEIGHT ============================================================ */}
                 <section>
                     <h3>Determine your Age, Height, and Weight.</h3>
                     <label htmlFor="age">Age: </label>
@@ -278,7 +310,7 @@ const CharacterDetailsForm = () => {
                     <input type="text" id="weight" name="weight" defaultValue={character.background.weight} onChange={(e) => setStat(e, 'weight')} />
                     <br />
                 </section>
-                {/* ALIGNMENT ==========================================================================================================*/}
+                {/* ALIGNMENT ====================================================================== */}
                 <section>
                     <h3>Choose your Alignment</h3>
                     {
