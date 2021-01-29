@@ -24,6 +24,7 @@
 
 
 .navContainer{
+    display: flex;
     justify-content: flex-end;
     &__link{ // navlink el
         text-decoration: none;
