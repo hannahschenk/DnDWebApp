@@ -1,8 +1,15 @@
 .dashboardMain{
     background-color: $backgroundLight;
-    padding: 2% 10% 2% 10%;
     width: 100vw;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+    @media (min-width: 0px){
+        padding: 2% 10% 2% 10%;
+    }
+    @media (min-width: $mobileBreakPoint){  
+        padding: 2% 15% 2% 15%;
+    }
 }
 
 .dashBoard__profile{
@@ -12,21 +19,73 @@
 }
 
 .profile__image{
-    width: 15%;
-    border-radius: 10rem;
-    margin-right: 3%;
+    @media (min-width: 0px){
+        display: none;
+    }
+    @media (min-width: $mobileBreakPoint){
+        display: initial;
+        width: 15%;
+        border-radius: 10rem;
+        margin-right: 5%;   
+    }
 }
 
+//the everything on the gray container
 .profile__details{
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2% 4% 2% 4%;
-    width: 80%;
+    padding: 0% 4% 2% 4%;
     border-radius: 2rem;
     background-color: $backgroundDark;
     color: $textLight;
+    @media (min-width: 0){
+        width: 100%;
+    }
+    @media (min-width: $mobileBreakPoint){
+        width: 80%;
+    }
     &__title{
         font-size: xx-large;
     }
+}
+
+.profile__details__title{
+    padding: 3%;
+}
+
+// the container of user details
+.profile__details__listContainer{
+    width: 100%;
+    display: flex;
+    @media (min-width: 0){
+        flex-direction: column;
+    }
+    @media (min-width: $mobileBreakPoint){
+        flex-direction: row;
+    }
+}
+
+.listItem{
+    list-style-type: none;
+    width: 100%;
+    padding: 0 0 2% 0;
+    &--label{
+        color: $mainThemeLight;
+    }
+    @media (min-width: 0){
+        text-align:center;
+    }
+    @media (min-width: $mobileBreakPoint){
+        text-align:left;
+    }
+}
+
+.characterCardContainer{
+    width: 100%;
+    border-radius: 2rem;
+    margin-top: 2%;
+    background-color: $mainThemeLight;
+    border: 0.2px solid $backgroundDark;
+    overflow-y: auto;
 }

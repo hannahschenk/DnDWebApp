@@ -7,6 +7,7 @@ import axios from "axios";
 const NavBar = () => {
     const {isAuthenticated, logout, loginWithRedirect} = useAuth0();
     const [navContent, setNavContent] = useState([]);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         (isAuthenticated) ? 
@@ -15,6 +16,9 @@ const NavBar = () => {
 
     }, [isAuthenticated])
 
+    useEffect(() => {
+        console.log(menuOpen)
+    }, [menuOpen])
     /* Sample and test; will refactor later*/
     const anonNav = [
         {
@@ -59,7 +63,9 @@ const NavBar = () => {
     return (
         <section className="navBar">
 
-            {/*<label className="header__navTriggerIcon" htmlFor="burgerNav">
+            <h1 className="logo">DnD Character Creator</h1>
+            
+            <label className="header__navTriggerIcon" htmlFor="burgerNav">
                 <i className="fas fa-bars fa-2x"></i>
             </label>
             <input className="header__navTrigger" 
@@ -67,7 +73,7 @@ const NavBar = () => {
                 id="burgerNav" 
                 onChange={() => setMenuOpen(!menuOpen)} 
                 checked={menuOpen}
-            />*/}
+            />
 
             <ul className="navContainer">
                 {
@@ -76,6 +82,7 @@ const NavBar = () => {
                             key={content.name}
                             to={content.link}
                             className="navContainer__link"
+                            onClick={()=>setMenuOpen(!menuOpen)}
                         >
                             <li 
                                 className="navContainer__listItem"
