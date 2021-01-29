@@ -1,9 +1,22 @@
-import React, {useState} from 'react';
-import {NavLink} from "react-router-dom";
-
+import React, {useState, useEffect} from 'react';
+import {NavLink, useHistory} from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+import {testBackEnd} from "./../utils/api"; 
+import constants from "./../utils/constants"
+import axios from "axios";
 const NavBar = () => {
+    const {isAuthenticated} = useAuth0();
+    const [navContent, setNavContent, logout] = useState([]);
+
+    useEffect(() => {
+        (isAuthenticated) ? 
+            setNavContent(authenticatedNav) :
+            setNavContent(anonNav)
+
+    }, [isAuthenticated])
+
     /* Sample and test; will refactor later*/
-    const anon = [
+    const anonNav = [
         {
             name: "Home",
             link: "/" //replace with id
@@ -18,19 +31,14 @@ const NavBar = () => {
         }
     ]
 
-    const authenticated = [
+    const authenticatedNav = [
         {
             name: "Dashboard",
             link: "/dashboard" //replace with id
         },
         {
-            /*
-                technically, this link will change 
-                to the route to sign out and that 
-                sign out will lead to /; this is only for testing purposes
-            */
-            name: "Sign Out", 
-            link: "/"
+            name: "Create Character",
+            link: "/create-character" //replace with id
         }
     ]
 
@@ -39,15 +47,27 @@ const NavBar = () => {
 
     return (
         <section>
-            
+            {/*
+            <button onClick={loginWithRedirect}> LOG IN </button>
+            <button onClick={logout}> LOG OUT </button>
+
+            <button onClick={testAuth}> test Auth </button>
+            */}
             <ul>
                 {
-                    anon.map((content) => 
+                    navContent.map((content) => 
                         <NavLink key={content.name} to={content.link}>
                             <li>{content.name}</li>
                         </NavLink>
                     )
                 }
+                {
+                    isAuthenticated && 
+                    <button onClick={logout}>
+                        Sign Out
+                    </button>
+                }
+                
             </ul>
         </section>
     );
