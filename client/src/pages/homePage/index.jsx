@@ -15,12 +15,12 @@ const homePage = () => {
                         able to save your character sheet for later use, but you can still use it immediately after creation.
                     </p>
                 </div> 
-                <i class='fab fa-d-and-d'></i>
+                <i className='fab fa-d-and-d'></i>
                 <Link to="/create-character" className = "character__button button button--red">Create Character</Link>
             </section>
             <section className = "login">
                 <div className = "login__container">
-                    <i class="fas fa-dice-d20"></i>
+                    <i className="fas fa-dice-d20"></i>
                     <div className = "container__signin">
                         <div className = "signin__google">
                             <img src = "" className = "google__image"></img>

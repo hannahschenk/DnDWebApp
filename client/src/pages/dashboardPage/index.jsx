@@ -4,19 +4,22 @@ const DashboardPage = () => {
     /* dummy character sheet data*/
     let characterSheets = [
         {
-            name: "name1",
-            race: "race1",
-            class: "class1"
+            id: 1,
+            name: "Lionel",
+            race: "Dwarf",
+            class: "Bard"
         },
         {
-            name: "name2",
-            race: "race2",
-            class: "class2"
+            id: 2,
+            name: "Drew",
+            race: "Half-Elf",
+            class: "Rouge"
         },
         {
-            name: "name3",
-            race: "race3",
-            class: "class3"
+            id: 3,
+            name: "Gart",
+            race: "Giant",
+            class: "Bard"
         },
 
     ]
@@ -29,11 +32,13 @@ const DashboardPage = () => {
             </section>
             <section>
                 {/*this is where character sheet cards will be */}
+                <div className="card-container">
             {   
                 characterSheets.map((characterSheet) => (
-                    <CharacterSheetCard characterSheet={characterSheet}/>
+                    <CharacterSheetCard key={characterSheet.id} characterSheet={characterSheet}/>
                 ))
             }
+                </div>
             </section>
 
         </>

@@ -10,9 +10,9 @@ const CharacterSheetCard = ({characterSheet}) => {
     /*end note */
 
     return (
-        <Link to="#">
-            <article>
-                <h4>{characterName}</h4>
+        <Link to="#" className="card-link" >
+            <article className="character-card card-link">
+                <h2>{characterName}</h2>
                 <p>{characterRace}</p>
                 <p>{characterClass}</p>
             </article>
