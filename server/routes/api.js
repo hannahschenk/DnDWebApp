@@ -24,15 +24,26 @@ router.get("/", (req, res) => {
 //     res.send(req.oidc.user.sub) // this is the user id saved in db
 // })
 
-router.route("/character")
-    .get(characterController.findAll);
 
-router.get("/character/:id", requiresAuth(), (req, res) => {})
+//comment these out if you want to use authentication.
 router.route("/character")
+    .get(characterController.findAll)
     .post(characterController.create);
+
+router.route("/character/:id")
+    .put(characterController.update)
+    .get(characterController.findById)
+    .delete(characterController.delete);
+
+
+//uncomment these if you are using the authentication.
+
+//router.get("/character/:id", requiresAuth(), (req, res) => {})
+    
 //router.post("/character", requiresAuth(), (req, res) => {})
-router.put("/character/:id", requiresAuth(), (req, res) => {})
-router.delete("/character/:id", requiresAuth(), (req, res) => {})
+
+//router.put("/character/:id", requiresAuth(), (req, res) => {})
+//router.delete("/character/:id", requiresAuth(), (req, res) => {})
 /* End test code */
 
 

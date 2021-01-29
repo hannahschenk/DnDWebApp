@@ -1,37 +1,37 @@
 const { CharacterSheet, Class, Race, AbilityScores, Background, Languages, Proficiencies, Spells, Equipment} = require('../models');
 const { op } = require('sequelize');
 
-const makeLanguages = (languages, newCharacter) => {
+const makeLanguages = (languages, id) => {
     let lang = [];
     for(let i = 0; i < languages.length; i++) {
         lang.push(
-            {CharacterSheetId: newCharacter.id, name: languages[i].name, tableDep: languages[i].origin, dnd5eEndpoint: languages[i].url}
+            {CharacterSheetId: id, name: languages[i].name, tableDep: languages[i].origin, dnd5eEndpoint: languages[i].url}
         )
     }
     return lang;
 }
 
-const makeEqipment = (equipment, newCharacter) => {
+const makeEqipment = (equipment, id) => {
     let equip = [];
     for(let i = 0; i < equipment.length; i++) {
         equip.push(
-            {CharacterSheetId: newCharacter.id, name: equipment[i].name, type: equipment[i].type, dnd5eEndpoint: equipment[i].url }
+            {CharacterSheetId: id, name: equipment[i].name, type: equipment[i].type, dnd5eEndpoint: equipment[i].url }
         )
     }
     return equip;
 }
 
-const makeSpells = (spells, newCharacter) => {
+const makeSpells = (spells, id) => {
     let selectedSpells = [];
     for(let i = 0; i < spells.length; i++) {
         selectedSpells.push(
-            {CharacterSheetId: newCharacter.id, name: spells[i].name, type: spells[i].type, dnd5eEndpoint: spells[i].url }
+            {CharacterSheetId: id, name: spells[i].name, type: spells[i].type, dnd5eEndpoint: spells[i].url }
         )
     }
     return selectedSpells;
 }
 
-const makeProficiencies = (proficiencies, newCharacter) => {
+const makeProficiencies = (proficiencies, id) => {
     let prof = [];
 
     const makeSkills = (skills, id) => {
@@ -60,17 +60,17 @@ const makeProficiencies = (proficiencies, newCharacter) => {
 
     for(const profi in proficiencies) {
         if(profi === 'skills') {
-            makeSkills(proficiencies[profi], newCharacter.id);
+            makeSkills(proficiencies[profi], id);
         } else if(profi === 'items') {
-            makeItems(proficiencies[profi], newCharacter.id);
+            makeItems(proficiencies[profi], id);
         } else if(profi === 'savingThrows') {
-            makeSavingThrows(proficiencies[profi], newCharacter.id);
+            makeSavingThrows(proficiencies[profi], id);
         }
     }
 
     return prof;
 }
-
+//need to change the create and find all to be able to use the logged in users userid
 module.exports = {
     create: (req, res) => {
         const { race, character_class, abilities, proficiencies, background, equipment } = req.body;
@@ -119,12 +119,90 @@ module.exports = {
 
             })
     },
+    update: (req, res) => {
+        const { race, character_class, abilities, proficiencies, background, equipment } = req.body;
+        //const userId = {UserId: 1};
+        const id = req.params.id;
+        const { languages, characterName, name, url, appearance, personality, alignment, age, height, weight } = background;
+                try {
+                    Race.update({CharacterSheetId: id, ...race}, {
+                        where: {CharacterSheetId: id},
+                    })
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    Class.update({CharacterSheetId: id, ...character_class}, {
+                        where: {CharacterSheetId: id},
+                    })
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    AbilityScores.update({CharacterSheetId: id, ...abilities}, {
+                        where: {CharacterSheetId: id},
+                    })
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    Proficiencies.bulkupdate(makeProficiencies(proficiencies, id), {
+                        where: {CharacterSheetId: id},
+                    })
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    Background.update({
+                        CharacterSheetId: id,
+                        characterName: characterName,
+                        name: name, api_endpoint: url,
+                        appearance: appearance,
+                        personality: personality,
+                        alignment: alignment,
+                        age: age,
+                        height: height,
+                        weight: weight
+                    }, {
+                        where: {CharacterSheetId: id},
+                    })
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    Spells.bulkupdate(makeSpells(proficiencies.spells, id), {
+                        where: {CharacterSheetId: id},
+                    })
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    Equipment.bulkupdate( makeEqipment(equipment.total, id), {
+                        where: {CharacterSheetId: id},
+                    })
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    Languages.bulkupdate( makeLanguages(languages, id), {
+                        where: {CharacterSheetId: id},
+                    })
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                } catch(err) { 
+                    console.log(err)
+                }
+    },
     findAll: (req, res) => {
         CharacterSheet.findAll({
-        //include: [Class, Race, AbilityScores, Background, Languages, Proficiencies, Spells, Equipment],
-        include:[{model: Class}, {model: Race}, {model: AbilityScores}, {model: Background}, {model: Languages}, {model: Proficiencies}, {model: Spells}, {model: Equipment}, ]
+            include: [Class, Race, AbilityScores, Background, Languages, Proficiencies, Spells, Equipment],
+        }, {
+            where: {UserId: 1}
         })
             .then((characterInfo) => res.json(characterInfo))
             .catch((err) => console.log(err));
     },
+    findById: (req, res) => {
+        const id = req.params.id
+
+        CharacterSheet.findByPk(id, {
+            include: [Class, Race, AbilityScores, Background, Languages, Proficiencies, Spells, Equipment],
+        })
+            .then((characterInfo) => res.json(characterInfo))
+            .catch((err) => console.log(err));
+
+    },
+    delete: (req, res) => {
+        CharacterSheet.destroy({
+            where: { id: req.params.id },
+        })
+            .then(() => res.end())
+            .catch((err) => console.log(err));
+    }
 }
