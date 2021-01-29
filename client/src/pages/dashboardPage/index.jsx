@@ -6,7 +6,7 @@ const DashboardPage = () => {
 
     const {isAuthenticated, user} = useAuth0();
 
-    useEffect(() => {console.log(user)}, [user])
+    useEffect(() => {console.log(user)}, [])
 
     /* dummy character sheet data*/
     let characterSheets = [
@@ -34,17 +34,22 @@ const DashboardPage = () => {
             <section className="dashBoard__profile">
                 {/* I'll leave this section if we want to render anything about the user*/}
                 <img className="profile__image" src={user.picture}/>
-                <article>
-                    <label htmlFor="userName"> Name </label> 
-                    <input type="text" id="userName" value={user.name} readOnly/>
-                    <label  htmlFor="userEmail"> Email </label> 
-                    <input type="text" id="userEmail" value={user.email} readOnly/>
-                </article>
-                <article>
-                    <b> Name </b> 
-                    <p>{user.name}</p>
-                    <b>Email </b> 
-                    <p>{user.email}</p>
+                <article className = "profile__details">
+                    <h4 className="profile__details__title">User Profile</h4>
+                    <ul className="profile__details__listContainer">
+                        <li>
+                            <label htmlFor="userName"> Name </label> 
+                            <input type="text" id="userName" value={user.name} readOnly/>
+                        </li>
+                        <li>
+                            <label  htmlFor="userEmail"> Email </label> 
+                            <input type="text" id="userEmail" value={user.email} readOnly/>
+                        </li>
+                        <li>
+                            <label htmlFor="numOfCharSheets"> Number of Characters: </label> 
+                            <input type="text" id="numOfCharSheets" value="3 characters" readOnly/>
+                        </li>
+                    </ul>
                 </article>
             </section>
             <section>
