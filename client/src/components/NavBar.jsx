@@ -5,8 +5,8 @@ import {testBackEnd} from "./../utils/api";
 import constants from "./../utils/constants"
 import axios from "axios";
 const NavBar = () => {
-    const {isAuthenticated} = useAuth0();
-    const [navContent, setNavContent, logout] = useState([]);
+    const {isAuthenticated, logout, loginWithRedirect} = useAuth0();
+    const [navContent, setNavContent] = useState([]);
 
     useEffect(() => {
         (isAuthenticated) ? 
@@ -19,53 +19,67 @@ const NavBar = () => {
     const anonNav = [
         {
             name: "Home",
-            link: "/" //replace with id
+            link: "/", //replace with id
+            clickHandler: () => {},
         },
         {
             name: "Sign In",
-            link: "#" //replace with id of section
+            link: "#",
+            clickHandler: () => loginWithRedirect(),
         },
         {
             name: "About Us",
-            link: "#"
+            link: "#", 
+            clickHandler: () => {},
         }
     ]
 
     const authenticatedNav = [
         {
             name: "Dashboard",
-            link: "/dashboard" //replace with id
+            link: "/dashboard", 
+            clickHandler: () => {},
         },
         {
             name: "Create Character",
-            link: "/create-character" //replace with id
+            link: "/create-character",
+            clickHandler: () => {},
+        },
+        {
+            name: "Sign Out",
+            link: "#",
+            clickHandler: () => logout()
         }
+
     ]
 
     const [authenticateTest, setAuthenticateTest] = useState(true);
     /* End Sample and test */
 
     return (
-        <section>
+        <section className="navBar">
             {/*
             <button onClick={loginWithRedirect}> LOG IN </button>
             <button onClick={logout}> LOG OUT </button>
 
             <button onClick={testAuth}> test Auth </button>
             */}
-            <ul>
+            <ul className="navContainer">
                 {
                     navContent.map((content) => 
-                        <NavLink key={content.name} to={content.link}>
-                            <li>{content.name}</li>
+                        <NavLink 
+                            key={content.name}
+                            to={content.link}
+                            className="navContainer__link"
+                        >
+                            <li 
+                                className="navContainer__listItem"
+                                onClick={content.clickHandler}
+                            >
+                                {content.name}
+                            </li>
                         </NavLink>
                     )
-                }
-                {
-                    isAuthenticated && 
-                    <button onClick={logout}>
-                        Sign Out
-                    </button>
                 }
                 
             </ul>

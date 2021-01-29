@@ -1,0 +1,32 @@
+.navBar{
+    /*sticky*/
+    position: sticky;
+    top: 0;
+    left:0;
+    /*end sticky*/
+    
+    background-color: $mainTheme;
+    width: 100%;
+    padding: 1%;
+}
+
+.navContainer{
+    display: flex;
+    justify-content: flex-end;
+    &__link{ // navlink el
+        text-decoration: none;
+        // I'm not sure about this one
+        color: rgba($backgroundLight, 0.6); 
+        margin: 1%;
+        &:hover, &--active{
+            color: $backgroundLight;
+        }
+    }
+    &__listItem{ // list item
+        list-style-type: none;
+        font-size: 1.2rem;
+        font-weight: 600;
+        
+        color: rgba($backgroundLight, 0.6); 
+    }
+}

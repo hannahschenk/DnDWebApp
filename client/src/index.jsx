@@ -4,8 +4,9 @@ import App from './App';
 import ErrorBoundary from './ErrorBoundary';
 import constants from "./utils/constants"
 import { Auth0Provider } from "@auth0/auth0-react";
-render(
+import "./styles/index.scss";
 
+render(
     <ErrorBoundary>
         <Auth0Provider
             domain="dnd-capstone.us.auth0.com"
