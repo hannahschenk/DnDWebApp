@@ -36,7 +36,7 @@ const App = () => {
     }, [character]);
 
     useEffect(() => {
-        console.log('App.jsx: Object sent to details component: ', details);
+        // console.log('App.jsx: Object sent to details component: ', details);
     }, [details]);
 
     return (
