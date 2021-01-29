@@ -1,0 +1,94 @@
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans&family=PT+Serif&display=swap");
+/*Media Query Breakpoints*/
+/*Colors*/
+/*standard*/
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans&family=PT+Serif&display=swap");
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.character {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #202e32;
+}
+.character .character__container {
+  background-color: #e8e5d7;
+}
+.character .character__container .container__header {
+  font-family: "PT Serif", serif;
+  font-size: 20pt;
+  color: #202e32;
+  font-weight: 500 !important;
+}
+.character .character__container .container__text {
+  font-family: "PT Sans", sans-serif;
+  font-size: 16pt;
+  color: #202e32;
+  font-weight: 500;
+}
+.character .fa-d-and-d {
+  color: #a3313b;
+  transform: rotate(-20deg);
+  font-size: 200px;
+}
+.login .login__container {
+  background-color: #dc2626;
+}
+.login .login__container .fa-dice-d20 {
+  background: #90a9a2;
+  background: linear-gradient(0deg, rgba(144, 169, 162, 0.2) 0%, rgba(108, 130, 126, 0.7) 53%, #202e32 100%);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 200px;
+  transform: rotate(-20deg);
+}
+.login .login__container .container__signin {
+  background-color: #9b7f30;
+}
+.login .login__container .container__signin .signin__google {
+  background-color: #e8e5d7;
+  width: 200px;
+}
+.login .login__container .container__signin .signin__google .google__text {
+  color: #202e32;
+}
+.login .login__container2 {
+  background-color: #90a9a2;
+}
+.login .login__container2 .container2__textContainer {
+  background-color: #202e32;
+}
+.login .login__container2 .container2__textContainer .textContainer__header {
+  color: #e8e5d7;
+}
+.login .login__container2 .container2__textContainer .textContainer__text {
+  color: #e8e5d7;
+}
+
+.about {
+  background-color: #202e32;
+}
+.about .about__container {
+  background-color: #e8e5d7;
+}
+.about .about__container .container__header {
+  color: #202e32;
+}
+.about .about__container .container__text {
+  color: #202e32;
+}
+/*Media Query Breakpoints*/
+/*Colors*/
+/*standard*/
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/*# sourceMappingURL=index.css.map */

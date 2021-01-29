@@ -38,8 +38,10 @@ const AbilityScoresForm = ({ formDetailsState }) => {
         if (mounted) {
             try {
                 if (Object.values(character.abilities).includes(0)) {
-                    // reintialize based on race
-                    let apiRaceEndpoints = character.race.url;
+                    // Reinitialize based on race
+                    let apiRaceEndpoints = [character.race.raceUrl];
+                    if (character.race.subraceUrl !== '') apiRaceEndpoints.push(character.race.subraceUrl);
+
                     for (let i = 0; i < apiRaceEndpoints.length; i++) {
                         let raceObj = (await dndApi.getMoreInfo(apiRaceEndpoints[i])).data;
 
@@ -220,4 +222,3 @@ const AbilityScoresForm = ({ formDetailsState }) => {
 };
 
 export default AbilityScoresForm;
-

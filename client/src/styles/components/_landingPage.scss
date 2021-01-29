@@ -1,0 +1,84 @@
+@use '../abstracts/globalVariables' as variables;
+@use '../abstracts/typography' as typography;
+
+.landingContainer {
+
+}
+
+.character {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: variables.$backgroundDark;
+    .character__container {
+        background-color: variables.$backgroundLight;
+        .container__header {
+            @include typography.serif(20pt, variables.$backgroundDark, 500);
+        }
+        .container__text {
+            @include typography.sans(16pt, variables.$backgroundDark, 500);
+        }
+    }
+    .fa-d-and-d {
+        color: variables.$mainThemeDark;
+        transform: rotate(-20deg);
+        font-size: 200px;
+    }
+    &__button {
+
+    }
+}
+.login {
+    .login__container {
+        background-color: variables.$mainTheme;
+        .fa-dice-d20 {
+            background: rgb(144,169,162);
+            background: linear-gradient(0deg, rgba(144,169,162,0.2) 0%, rgba(108,130,126,.7) 53%, rgba(32,46,50,1) 100%);
+            -webkit-background-clip: text;
+            -moz-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color:transparent;
+            font-size: 200px;
+            transform: rotate(-20deg);
+        }
+        .container__signin {
+            background-color: variables.$accentImportant;
+            .signin__google {
+                background-color: variables.$backgroundLight;
+                width: 200px;
+                .google__image {
+                }
+                .google__text {
+                    color: variables.$backgroundDark;
+                }
+            }
+        }
+    }
+    .login__container2 {
+        background-color: variables.$accentBasic;
+        .container2__textContainer {
+            background-color: variables.$backgroundDark;
+            .textContainer__header {
+                color: variables.$backgroundLight;
+            }
+            .textContainer__text {
+                color: variables.$backgroundLight;
+            }
+        }
+    }
+}
+.about {
+    background-color: variables.$backgroundDark;
+    .about__container {
+        background-color: variables.$backgroundLight;
+        .container__header {
+            color: variables.$backgroundDark;
+        }
+        .container__text {
+            color: variables.$backgroundDark;
+        }
+    }
+    &__image1 {
+    }
+    &__image2 {
+    }
+}
