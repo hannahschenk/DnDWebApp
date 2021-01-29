@@ -1,11 +1,23 @@
 .dashboardMain{
     background-color: $backgroundLight;
+    padding: 2% 10% 2% 10%;
     width: 100vw;
     height: 100vh;
 }
 
-.dashBoard__profileContainer{
+.dashBoard__profile{
     background-color: $backgroundDark;
+    color: $textLight;
+    border-radius: 0.5rem;
     width: 100%;
-    height: 50%;
+    display: flex;
+    padding: 4% 0 4% 0;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.profile{
+    &__image{
+        border-radius: 5rem;
+    }
 }
