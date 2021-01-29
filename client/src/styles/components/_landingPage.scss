@@ -1,72 +1,134 @@
 @use '../abstracts/globalVariables' as variables;
 @use '../abstracts/typography' as typography;
+@use '../abstracts/mixins' as mixins;
 
 .landingContainer {
-
+display: grid;
+padding-top: 5rem;
 }
-
 .character {
-    display: flex;
-    flex-wrap: wrap;
     background-color: variables.$backgroundDark;
-    .character__container {
-        background-color: variables.$backgroundLight;
-        .container__header {
-            @include typography.serif(20pt, variables.$backgroundDark, 500);
+    padding: 10px;
+    flex-grow: 1;
+    &__container1 {
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto 460px 119px 5px 300px 50px auto;
+        grid-template-rows: 490px auto;
+        padding-bottom: 20px;
+        .container1__container {
+            grid-column: 2/ 4;
+            grid-row: 1/span 2;
+            background-color: variables.$backgroundLight;
+            margin: 20px 20px 0px 20px;
+            padding: 30px;
+            max-width: 800px;
+            .container__header {
+                @include typography.serif(20pt, variables.$backgroundDark, 700);
+                padding-bottom: 20px;
+            }
+            .container__text {
+                @include typography.sans(16pt, variables.$backgroundDark, 500);
+                padding: 0px 40px 0px 40px;
+            }
         }
-        .container__text {
-            @include typography.sans(16pt, variables.$backgroundDark, 500);
+        .fa-d-and-d {
+            grid-column: 3/ 4;
+            grid-row: 1/span 1;
+            color: variables.$mainThemeDark;
+            z-index: 10;
+            font-size: 540px;
+            transform: rotate(-20deg) translateY(-20px) translateX(2px);
         }
-    }
-    .fa-d-and-d {
-        color: variables.$mainThemeDark;
-        transform: rotate(-20deg);
-        font-size: 200px;
-    }
-    &__button {
-
+        .container1__buttonContainer {
+            grid-column: 4/span 2;
+            grid-row: 2/ span 1;
+            z-index: 20;
+            .button {
+                @include mixins.button(variables.$backgroundLight, variables.$mainTheme);
+            }
+        }
     }
 }
+
 .login {
+    flex-grow: 1;
     .login__container {
-        background-color: variables.$mainTheme;
-        .fa-dice-d20 {
-            background: rgb(144,169,162);
-            background: linear-gradient(0deg, rgba(144,169,162,0.2) 0%, rgba(108,130,126,.7) 53%, rgba(32,46,50,1) 100%);
-            -webkit-background-clip: text;
-            -moz-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color:transparent;
-            font-size: 200px;
-            transform: rotate(-20deg);
+        display: grid;
+        grid-template-columns: auto 400px 600px auto;
+        grid-template-rows: 490px auto;
+        .filler1 {
+            background-color: variables.$mainTheme;
+            grid-column: 1/ span 1;
+            z-index: -2;
         }
-        .container__signin {
-            background-color: variables.$accentImportant;
-            .signin__google {
-                background-color: variables.$backgroundLight;
-                width: 200px;
-                .google__image {
-                }
-                .google__text {
-                    color: variables.$backgroundDark;
+        .container__container1 {
+            padding-top: 5rem;
+            grid-column: 2/ span 1;
+            position: relative;
+            background-color: variables.$mainTheme;
+            z-index: -2;
+            .fa-dice-d20 {
+                position: absolute;
+                background: rgb(144,169,162);
+                background: linear-gradient(0deg, rgba(144,169,162,0.2) 0%, rgba(108,130,126,.7) 53%, rgba(32,46,50,1) 100%);
+                -webkit-background-clip: text;
+                -moz-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color:transparent;
+                font-size: 570px;
+                transform: rotate(-15deg) translateY(-190px) translateX(-100px);
+                z-index: -1;
+            }
+            .container1__signin {
+                z-index: 2;
+                width: 300px;
+                height: 100px;
+                background-color: variables.$accentImportant;
+                margin-top: 20px;
+                border-radius: 7px;
+                box-shadow: 0 0 30px black;
+                text-align: center;
+                .signin__google {
+                    background-color: variables.$backgroundLight;
+                    width: 200px;
+                    margin: 0 auto;
+                    display: inline-block;
+                    .google__image {
+                    }
+                    .google__text {
+                        color: variables.$backgroundDark;
+                    }
                 }
             }
         }
-    }
-    .login__container2 {
-        background-color: variables.$accentBasic;
-        .container2__textContainer {
-            background-color: variables.$backgroundDark;
-            .textContainer__header {
-                color: variables.$backgroundLight;
+        .container__container2 {
+            padding-top: 5rem;
+            grid-column: 3/ span 1;
+            background-color: variables.$accentBasic;
+            .container2__textContainer {
+                margin: 20px 20px 0px 20px;
+                padding: 30px;
+                max-width: 800px;
+                background-color: variables.$backgroundDark;
+                .textContainer__header {
+                    @include typography.serif(20pt, variables.$backgroundLight, 700);
+                    padding-bottom: 20px;
+                }
+                .textContainer__text {
+                    @include typography.sans(16pt, variables.$backgroundLight, 500);
+                    padding: 0px 40px 0px 40px;
+                }
             }
-            .textContainer__text {
-                color: variables.$backgroundLight;
-            }
+        }
+        .filler2{
+            background-color: variables.$accentBasic;
+            grid-column: 4/ span 1;
         }
     }
 }
 .about {
+    flex-grow: 1;
     background-color: variables.$backgroundDark;
     .about__container {
         background-color: variables.$backgroundLight;
@@ -80,5 +142,20 @@
     &__image1 {
     }
     &__image2 {
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .character__container1 {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        .container1__container {
+            margin-bottom: 20px;
+        }
+        .fa-d-and-d {
+            visibility: hidden;
+            font-size: 1px;
+        }
     }
 }
