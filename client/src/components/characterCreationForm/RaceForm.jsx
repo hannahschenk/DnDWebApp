@@ -8,7 +8,6 @@ import { useCharacter } from '../../state/logic';
 import * as ACTION from '../../state/actions';
 
 const RaceForm = () => {
-
     const [raceChoices, setRaceChoices] = useState([]);
     const [subRaceChoices, setSubRaceChoices] = useState([]);
     const { formControlState, setFormControlState } = useContext(FormControlContext);
@@ -30,7 +29,7 @@ const RaceForm = () => {
                 setRaceChoices((await dndApi.getRaces()).data.results);
                 if (character.race.name !== '') {
                     // a race is already picked
-                    const raceInfo = (await dndApi.getMoreInfo(character.race.url[0])).data;
+                    const raceInfo = (await dndApi.getMoreInfo(character.race.raceUrl)).data;
                     setSubRaceChoices(raceInfo.subraces);
                 }
             } catch (err) {
@@ -78,7 +77,8 @@ const RaceForm = () => {
                 type: ACTION.UPDATE_RACE,
                 payload: {
                     name: chosenRace.name,
-                    url: [chosenRace.url],
+                    // url: [chosenRace.url],
+                    raceUrl: chosenRace.url,
                     size: raceInfo.size,
                     speed: raceInfo.speed,
                 },
@@ -101,7 +101,8 @@ const RaceForm = () => {
             type: ACTION.UPDATE_RACE,
             payload: {
                 subrace: chosenSubRace.name,
-                url: [...character.race.url, chosenSubRace.url],
+                // url: [...character.race.url, chosenSubRace.url],
+                subraceUrl: chosenSubRace.url,
             },
         });
 
