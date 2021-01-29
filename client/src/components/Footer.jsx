@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 const Footer = () => {
     return (
         <section className="footer">
-            <p className="footer-content">By <i>School of 5 Rats</i></p>
+            <p className="copyright">copyright 2020</p>
         </section>
     );
 };

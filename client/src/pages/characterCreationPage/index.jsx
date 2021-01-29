@@ -32,7 +32,7 @@ const CharacterCreationPage = () => {
     }
 
     return (
-        <>
+        <div className="footer-grow">
             {formControlState.sectionIndex == -1 ? //if block
                 <section>
                     This is the guided character Creation process. Please fill out each section before clicking next.
@@ -61,7 +61,7 @@ const CharacterCreationPage = () => {
                     }
                 </section>
             }
-        </>
+        </div>
     );
 };
 

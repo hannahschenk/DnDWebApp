@@ -43,6 +43,7 @@ const App = () => {
         <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
             <FormControlContext.Provider value={{ formControlState, setFormControlState }}>
                 <Router>
+                    <div className="pageWrap">
                     <NavBar />
                     <Switch>
                         <Route exact path="/">
@@ -60,6 +61,7 @@ const App = () => {
                         </Route>
                     </Switch>
                     <Footer />
+                    </div>
                 </Router>
             </FormControlContext.Provider>
         </CharacterContext.Provider>

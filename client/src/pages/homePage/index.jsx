@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const homePage = () => {
 
     return(
-        <>
+        <div className="footer-grow">
             <section>
                 <h2>Anonymous Character Creation</h2>
                 <p>Creating a character has never been easier with the help of DndCC. This character creation has been
@@ -27,7 +27,7 @@ const homePage = () => {
                 Hannah Schenk and Tre Silknitter. 
                 </p>
             </section>
-        </>
+        </div>
     )
 };
 

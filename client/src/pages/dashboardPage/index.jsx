@@ -23,7 +23,7 @@ const DashboardPage = () => {
     /* end dummy character sheet data*/
 
     return (
-        <>
+        <div className="footer-grow">
             <section>
                 {/* I'll leave this section if we want to render anything about the user*/}
             </section>
@@ -36,7 +36,7 @@ const DashboardPage = () => {
             }
             </section>
 
-        </>
+        </div>
     );
 };
 

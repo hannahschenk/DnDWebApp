@@ -50,7 +50,7 @@ const CharacterOverview = () => {
     }, []);
 
     return (
-        <main>
+        <main className="footer-grow">
             {/* Character Name */}
             <section>
                 <h2 className="stat__title">{character.background.characterName}</h2>
