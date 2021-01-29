@@ -1,6 +1,11 @@
 import React, {useState} from 'react';
 import CharacterSheetCard from "./../../components/characterSheetCard";
+import {useAuth0, withAuthenticationRequired} from "@auth0/auth0-react";
+
 const DashboardPage = () => {
+
+    const {isAuthenticated, user} = useAuth0();
+
     /* dummy character sheet data*/
     let characterSheets = [
         {
@@ -23,8 +28,8 @@ const DashboardPage = () => {
     /* end dummy character sheet data*/
 
     return (
-        <>
-            <section>
+        <main className="dashboardMain">
+            <section className="dashBoard__profileContainer">
                 {/* I'll leave this section if we want to render anything about the user*/}
             </section>
             <section>
@@ -36,8 +41,8 @@ const DashboardPage = () => {
             }
             </section>
 
-        </>
+        </main>
     );
 };
 
-export default DashboardPage;
+export default withAuthenticationRequired(DashboardPage);
