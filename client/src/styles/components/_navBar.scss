@@ -18,6 +18,26 @@
     width: 50%;
 }
 
+.header__navTrigger{
+    display: none;
+    align-self: right;
+    &:checked + .navContainer{
+        display: flex;
+    }
+    &Icon{  
+        justify-self: end;   
+        padding: 0 5% 0 5%;
+        height: 100%;
+        @media (min-width: 0){
+            display:flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        @media (min-width: $mobileBreakPoint){
+            display: none;
+        }
+    }
+}
 
 .navContainer{
     &__link{ // navlink el
@@ -26,10 +46,6 @@
         color: rgba($backgroundLight, 0.6); 
         //margin: 1%;
         padding: 1%;
-        @media (min-width: 0){
-        }
-        @media (min-width: $mobileBreakPoint){
-        }
         &:hover, &--active{
             color: $backgroundLight;
         }
@@ -75,24 +91,3 @@
     }
 }
 
-
-.header__navTrigger{
-    display: none;
-    align-self: right;
-    &:checked + .navContainer{
-        display: grid;
-    }
-    &Icon{  
-        justify-self: end;   
-        padding: 0 5% 0 5%;
-        height: 100%;
-        @media (min-width: 0){
-            display:flex;
-            justify-content: flex-end;
-            align-items: center;
-        }
-        @media (min-width: $mobileBreakPoint){
-            display: none;
-        }
-    }
-}

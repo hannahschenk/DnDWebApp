@@ -2,13 +2,9 @@ import React from 'react';
 import { render } from 'react-dom';
 import App from './App';
 import ErrorBoundary from './ErrorBoundary';
-<<<<<<< HEAD
 import constants from "./utils/constants"
 import { Auth0Provider } from "@auth0/auth0-react";
 import "./styles/index.scss";
-=======
-import './styles/index.scss';
->>>>>>> a9c667983fb46d94f68a1924dfe5f6ef26944703
 
 render(
     <ErrorBoundary>

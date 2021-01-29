@@ -57,9 +57,11 @@ const NavBar = () => {
 
     ]
 
-    const [authenticateTest, setAuthenticateTest] = useState(true);
-    /* End Sample and test */
-
+    const clickNavHandler =(content) => {
+        setMenuOpen(!menuOpen);
+        content.clickHandler();
+    }
+    
     return (
         <section className="navBar">
 
@@ -82,11 +84,10 @@ const NavBar = () => {
                             key={content.name}
                             to={content.link}
                             className="navContainer__link"
-                            onClick={()=>setMenuOpen(!menuOpen)}
                         >
                             <li 
                                 className="navContainer__listItem"
-                                onClick={content.clickHandler}
+                                onClick={() => clickNavHandler(content)}
                             >
                                 {content.name}
                             </li>
