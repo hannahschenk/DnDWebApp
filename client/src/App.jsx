@@ -13,6 +13,11 @@ import DashboardPage from './pages/dashboardPage';
 import Footer from './components/footer';
 import NavBar from './components/NavBar';
 
+import constants from "./utils/constants"
+import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
+import {createUser} from "./utils/api";
+
 const App = () => {
     // Grab initial character state and assign the CharacterReducer to the setCharacter function
     const [character, setCharacter] = useReducer(characterReducer, INITIAL_CHARACTER_STATE, () => {
@@ -38,6 +43,26 @@ const App = () => {
     useEffect(() => {
         // console.log('App.jsx: Object sent to details component: ', details);
     }, [details]);
+
+
+    /*AUTH0*/
+    const {getAccessTokenSilently, user, isAuthenticated} = useAuth0();
+    useEffect(async () => {
+        try{
+            if(isAuthenticated){
+                const token = await getAccessTokenSilently();
+                let postBody = {
+                    name : user.name,
+                    email: user.email
+                }
+                console.log(postBody)
+                createUser(postBody, token)
+            }
+        } catch (e){
+            console.error(e);
+        }
+    }, [getAccessTokenSilently])
+    /*END AUTH */
 
     return (
         <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>

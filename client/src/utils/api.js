@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useCharacter } from '../state/logic';
-
+import constants from './constants';
 /*
 * Signature: postCharacter(character)
 * Description: Sends the character state to the back end server
@@ -37,4 +37,14 @@ export const deleteCharacter = async (id) => {
   setCharacter({ type: "CLEAR_CHARACTER" });
 
   return await axios.delete('/api/character/' + id);
+}
+
+export const createUser = async (userObj, token) => {
+  return await axios.post(`${constants.BACKEND_BASE_URL}/api/user`, 
+  JSON.stringify(userObj), {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    }
+  });
 }

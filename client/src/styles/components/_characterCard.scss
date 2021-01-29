@@ -15,7 +15,8 @@
     background-color: variables.$backgroundLight;
     height: auto;
     // border: 2px solid variables.$textDark;
-    margin: .5rem 8rem .5rem 8rem;
+    border-radius: .5rem;
+    margin: .5rem 2rem .5rem 2rem;
     color: variables.$textDark;
 }
 

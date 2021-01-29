@@ -1,0 +1,93 @@
+.navBar{
+    /*sticky*/
+    position: sticky;
+    top: 0;
+    left:0;
+    /*end sticky*/
+    background-color: $mainTheme;
+    width: 100%;
+    height: 5rem;
+    padding: 1%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.logo{
+    width: 50%;
+}
+
+.header__navTrigger{
+    display: none;
+    align-self: right;
+    &:checked + .navContainer{
+        display: flex;
+    }
+    &Icon{  
+        justify-self: end;   
+        padding: 0 5% 0 5%;
+        height: 100%;
+        @media (min-width: 0){
+            display:flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        @media (min-width: $mobileBreakPoint){
+            display: none;
+        }
+    }
+}
+
+.navContainer{
+    &__link{ // navlink el
+        text-decoration: none;
+        // I'm not sure about this one
+        color: rgba($backgroundLight, 0.6); 
+        //margin: 1%;
+        padding: 1%;
+        &:hover, &--active{
+            color: $backgroundLight;
+        }
+    }
+    &__listItem{ // list item
+        list-style-type: none;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: rgba($backgroundLight, 0.6); 
+        @media (min-width: 0){
+            width: 100vw;
+            text-align: center;
+        }
+        @media (min-width: $mobileBreakPoint){
+            width: auto;
+            text-align: initial;
+        }
+    }
+
+    align-items: center;
+    @media (min-width: 0){
+        display: none;
+        background-color: $mainThemeDark;
+        position: absolute;
+        top: 5rem;
+        left: 0;
+        width: 100%;
+        height: 10rem;
+        flex-direction: column;
+        justify-content: center;
+    }
+    @media (min-width: $mobileBreakPoint){
+        display: flex;
+        background-color: $mainTheme;
+        position: relative;
+        top: initial;
+        left: initial;
+        width: 50%;
+        height: 100%;
+        padding: 0;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+}
+
