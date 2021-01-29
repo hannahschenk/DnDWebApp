@@ -4,14 +4,26 @@
     top: 0;
     left:0;
     /*end sticky*/
-    
     background-color: $mainTheme;
     width: 100%;
     padding: 1%;
 }
 
+/*
+&__navTrigger{
+    display: none;
+    &:checked + .header__navGroup{
+        display: grid;
+    }
+    &Icon{  
+        justify-self: end;   
+        margin: 5%;
+        @include smMdDisplay(block, none)
+    }
+}*/
+
+
 .navContainer{
-    display: flex;
     justify-content: flex-end;
     &__link{ // navlink el
         text-decoration: none;

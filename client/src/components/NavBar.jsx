@@ -25,7 +25,7 @@ const NavBar = () => {
         {
             name: "Sign In",
             link: "#",
-            clickHandler: () => loginWithRedirect(),
+            clickHandler: () => loginWithRedirect()
         },
         {
             name: "About Us",
@@ -58,12 +58,17 @@ const NavBar = () => {
 
     return (
         <section className="navBar">
-            {/*
-            <button onClick={loginWithRedirect}> LOG IN </button>
-            <button onClick={logout}> LOG OUT </button>
 
-            <button onClick={testAuth}> test Auth </button>
-            */}
+            {/*<label className="header__navTriggerIcon" htmlFor="burgerNav">
+                <i className="fas fa-bars fa-2x"></i>
+            </label>
+            <input className="header__navTrigger" 
+                type="checkbox" 
+                id="burgerNav" 
+                onChange={() => setMenuOpen(!menuOpen)} 
+                checked={menuOpen}
+            />*/}
+
             <ul className="navContainer">
                 {
                     navContent.map((content) => 
