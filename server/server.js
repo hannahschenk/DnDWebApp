@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use("/", routeManager);
 
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync().then(() => {
   app.listen(PORT, () => {
     console.log(`API server listening on http://localhost:${PORT}!`);
   });

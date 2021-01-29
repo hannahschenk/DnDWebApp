@@ -3,14 +3,14 @@ module.exports = (sequelize, DataTypes) => {
     {
       parentRace:{
         type: DataTypes.STRING,
-        allowNull: false
+        //allowNull: false
       },
       subRace:{
         type: DataTypes.STRING,
       },
       raceUrl:{
         type: DataTypes.STRING,
-        allowNull: false,
+        //allowNull: false,
       },
       subRaceUrl:{
         type: DataTypes.STRING,

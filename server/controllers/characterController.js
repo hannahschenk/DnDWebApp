@@ -5,7 +5,7 @@ const makeLanguages = (languages, newCharacter) => {
     let lang = [];
     for(let i = 0; i < languages.length; i++) {
         lang.push(
-            {characterSheet_id: newCharacter.id, name: languages[i].name, tableDep: languages[i].origin, dnd5eEndpoint: languages[i].url}
+            {CharacterSheetId: newCharacter.id, name: languages[i].name, tableDep: languages[i].origin, dnd5eEndpoint: languages[i].url}
         )
     }
     return lang;
@@ -15,7 +15,7 @@ const makeEqipment = (equipment, newCharacter) => {
     let equip = [];
     for(let i = 0; i < equipment.length; i++) {
         equip.push(
-            {characterSheet_id: newCharacter.id, name: equipment[i].name, type: equipment[i].type, dnd5eEndpoint: equipment[i].dnd5eEndpoint }
+            {CharacterSheetId: newCharacter.id, name: equipment[i].name, type: equipment[i].type, dnd5eEndpoint: equipment[i].url }
         )
     }
     return equip;
@@ -25,7 +25,7 @@ const makeSpells = (spells, newCharacter) => {
     let selectedSpells = [];
     for(let i = 0; i < spells.length; i++) {
         selectedSpells.push(
-            {characterSheet_id: newCharacter.id, name: spells[i].name, type: spells[i].type, dnd5eEndpoint: spells[i].url }
+            {CharacterSheetId: newCharacter.id, name: spells[i].name, type: spells[i].type, dnd5eEndpoint: spells[i].url }
         )
     }
     return selectedSpells;
@@ -33,29 +33,86 @@ const makeSpells = (spells, newCharacter) => {
 
 const makeProficiencies = (proficiencies, newCharacter) => {
     let prof = [];
-    for(let i = 0; i < proficiencies.length; i++) {
-        prof.push(
-            {characterSheet_id: newCharacter.id, name: proficiencies[i].name, type: proficiencies[i].type, dnd5eEndpoint: proficiencies[i].url }
-        )
+
+    const makeSkills = (skills, id) => {
+        for(let i = 0; i < skills.length; i++) {
+            prof.push(
+                {CharacterSheetId: id, name: skills[i].name, origin: skills[i].origin, ability: skills[i].ability, type: 'skill', dnd5eEndpoint: skills[i].url }
+            )
+        }
     }
+
+    const makeItems = (items, id) => {
+        for(let i = 0; i < items.length; i++) {
+            prof.push(
+                {CharacterSheetId: id, name: items[i].name, type: 'items', dnd5eEndpoint: items[i].url }
+            )
+        }
+    }
+
+    const makeSavingThrows = (savingThrows, id) => {
+        for(let i = 0; i < savingThrows.length; i++) {
+            prof.push(
+                {CharacterSheetId: id, name: savingThrows[i].name, type: 'saving throws', dnd5eEndpoint: savingThrows[i].url }
+            )
+        }
+    }
+
+    for(const profi in proficiencies) {
+        if(profi === 'skills') {
+            makeSkills(proficiencies[profi], newCharacter.id);
+        } else if(profi === 'items') {
+            makeItems(proficiencies[profi], newCharacter.id);
+        } else if(profi === 'savingThrows') {
+            makeSavingThrows(proficiencies[profi], newCharacter.id);
+        }
+    }
+
     return prof;
 }
 
 module.exports = {
     create: (req, res) => {
         const { race, character_class, abilities, proficiencies, background, equipment } = req.body;
-        const { languages, ...back } = background;
-        CharacterSheet.create({ userId })
+        //const userId = {UserId: 1};
+        const { languages, characterName, name, url, appearance, personality, alignment, age, height, weight } = background;
+        CharacterSheet.create({ UserId: 1 })
             .then((newCharacter) => {
                 try {
-                    Race.create({characterSheet_id: newCharacter.id, race})
-                    Class.create({characterSheet_id: newCharacter.id, character_class})
-                    AbilityScores.create({characterSheet_id: newCharacter.id, abilities})
-                    Proficiencies.create(makeProficiencies(proficiencies, newCharacter))
-                    Background.create({characterSheet_id: newCharacter.id, ...back})
+                    Race.create({CharacterSheetId: newCharacter.id, ...race})
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    Class.create({CharacterSheetId: newCharacter.id, ...character_class})
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    AbilityScores.create({CharacterSheetId: newCharacter.id, ...abilities})
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    Proficiencies.bulkCreate(makeProficiencies(proficiencies, newCharacter))
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    Background.create({
+                        CharacterSheetId: newCharacter.id,
+                        characterName: characterName,
+                        name: name, api_endpoint: url,
+                        appearance: appearance,
+                        personality: personality,
+                        alignment: alignment,
+                        age: age,
+                        height: height,
+                        weight: weight
+                    })
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
                     Spells.bulkCreate(makeSpells(proficiencies.spells, newCharacter))
-                    Equipment.bulkCreate( makeEqipment(equipment, newCharacter))
-                    Languages.bulkCreate( makeLanguages(languages, newCharacter) );
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    Equipment.bulkCreate( makeEqipment(equipment.total, newCharacter))
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
+                    Languages.bulkCreate( makeLanguages(languages, newCharacter) )
+                        .then(() => res.end())
+                        .catch((err) => console.log(err));
                 } catch(err) { 
                     console.log(err)
                 }
@@ -64,9 +121,10 @@ module.exports = {
     },
     findAll: (req, res) => {
         CharacterSheet.findAll({
-          include: [Class, Race, AbilityScores, Background, Languages, Proficiencies, Spells, Equipment]
+        //include: [Class, Race, AbilityScores, Background, Languages, Proficiencies, Spells, Equipment],
+        include:[{model: Class}, {model: Race}, {model: AbilityScores}, {model: Background}, {model: Languages}, {model: Proficiencies}, {model: Spells}, {model: Equipment}, ]
         })
             .then((characterInfo) => res.json(characterInfo))
-            .catch((err) => res.status(500).json(err));
+            .catch((err) => console.log(err));
     },
 }
