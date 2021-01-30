@@ -1,0 +1,162 @@
+@import '../abstracts/globalVariables';
+@import '../abstracts/typography';
+
+// Mobile view
+
+.ov {
+    display: grid;
+
+    & > section {
+        margin: 1rem 1rem 0 1rem;
+        padding: 1rem;
+    }
+}
+
+.character {
+    &--loading {
+        height: 100vh;
+
+        & > section {
+            margin: 1rem;
+        }
+    }
+}
+
+.container {
+    &__subheader {
+        font-weight: bold;
+    }
+    &--collapsible {
+        max-height: 0px;
+        overflow: hidden;
+        // transition: max-height 0.25s ease-in-out;
+    }
+}
+.ov {
+    &--overview {
+        display: grid;
+    }
+    &--abilityNames {
+        display: grid;
+        grid-template-columns: 160px 60px 60px 60px;
+        align-items: center;
+    }
+    &--abilities {
+        display: grid;
+        grid-auto-flow: column;
+        grid-template: 1fr / 160px 70px 70px 60px;
+    }
+    &--race {
+        display: grid;
+        grid-template-columns: 150px 100px 1fr;
+    }
+    &--class {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+    }
+    &--backgrounds {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: 250px 1fr;
+        margin-top: 1rem;
+    }
+    &--details {
+        display: grid;
+        grid-template: 30px 30px 30px / 80px 1fr;
+    }
+    &--skills {
+        display: grid;
+        grid-template-columns: 200px 40px;
+    }
+}
+
+.label__toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    // transition: all 0.25s ease-out;
+    background-color: $accentBasic;
+    padding: 0.5rem;
+}
+.fa-chevron-down {
+    padding: 0.3rem 0.5rem 0 0;
+    transition: transform 0.2s ease-out;
+}
+.toggleInfo:checked + .label__toggle + .container--collapsible {
+    max-height: 100%;
+}
+.toggleInfo:checked + .label__toggle > .fa-chevron-down {
+    transform: rotate(180deg) translate(6px);
+}
+
+@media screen and (min-width: 800px) {
+    .ov {
+        grid-template-areas:
+            'charName charName'
+            'race race'
+            'class class'
+            'abilities skills'
+            'equipment skills'
+            'spells spells'
+            'backgrounds backgrounds'
+            'buttons buttons';
+        &__name {
+            grid-area: charName;
+        }
+        &__race {
+            grid-area: race;
+        }
+        &__class {
+            grid-area: class;
+        }
+        &__abilities {
+            grid-area: abilities;
+        }
+        &__skills {
+            grid-area: skills;
+        }
+        &__spells {
+            grid-area: spells;
+        }
+        &__equipment {
+            grid-area: equipment;
+        }
+        &__backgrounds {
+            grid-area: backgrounds;
+        }
+        &__buttons {
+            grid-area: buttons;
+        }
+
+        &__stats {
+            display: flex;
+            flex-direction: row;
+
+            div {
+                flex: 1;
+            }
+        }
+
+        &--race {
+            grid-template-columns: 150px 100px 150px 1fr;
+        }
+        &--backgrounds {
+            grid-column: auto;
+            margin: 0;
+            grid-template-columns: 220px 1fr;
+        }
+        // containers
+        // &--spells {
+        //     display: grid;
+        //     grid-template-columns: 1fr 1fr;
+
+        //     article {
+        //         grid-column: 1 / -1;
+        //     }
+        // }
+    }
+    .label__toggle {
+        width: 300px;
+    }
+}

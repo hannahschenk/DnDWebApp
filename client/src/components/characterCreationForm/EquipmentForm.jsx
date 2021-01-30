@@ -212,6 +212,7 @@ const EquipmentForm = () => {
                             </option>
                         ))}
                     </select>
+                    <br />
                 </React.Fragment>
             ))}
         </form>

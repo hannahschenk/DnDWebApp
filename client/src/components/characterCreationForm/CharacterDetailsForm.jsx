@@ -97,7 +97,7 @@ const CharacterDetailsForm = () => {
             if (
                 (typeof backgroundProp == 'string' && backgroundProp == '') ||
                 (typeof backgroundProp == 'number' && backgroundProp == 0) ||
-                (Array.isArray(backgroundProp) && backgroundProp.length !== raceLanguages.length + numLanguageChoices + (bonusRaceLanguageRef ? 1 : 0))
+                (Array.isArray(backgroundProp) && backgroundProp.length !== raceLanguages.length + numLanguageChoices + (bonusRaceLanguageRef.current ? 1 : 0))
             ) {
                 formDone = false;
                 break;

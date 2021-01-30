@@ -10,12 +10,29 @@ import dndApi from '../utils/dnd5eApi';
 const CharacterOverview = () => {
     const { character } = useCharacter();
 
+    const [raceData, setRaceData] = useState([]);
+    const [classData, setClassData] = useState([]);
+    const [backgroundData, setBackgroundData] = useState();
+
     // This is necessary to grab additional spell data from API
     const [spellData, setSpellData] = useState([]);
     // This is necessary because the skills are stored as an array objects, not as strings
     const [proficientSkills, setProficientSkills] = useState([]);
 
     const history = useHistory();
+
+    /*
+     * Signature: expandSpell(event)
+     * Description: Enables user to open the collapsible with the space bar or enter key
+     */
+    const expandSpell = (e) => {
+        // 32 === spacebar
+        // 13 === enter
+        if (e.which === 32 || e.which === 13) {
+            e.preventDefault();
+            label.click();
+        }
+    };
 
     /*
      * Signature: useEffect(func, [])
@@ -30,223 +47,387 @@ const CharacterOverview = () => {
             // Format proficient skills to use in component
             setProficientSkills(Object.values(character.proficiencies.skills).map((skill) => skill.name));
 
-            // Grab spell data
-            if (character.proficiencies.spells.length !== 0) {
-                try {
-                    let spells = await Promise.all(
-                        character.proficiencies.spells.map(async (spell) => {
-                            return (await dndApi.getMoreInfo(spell.url)).data;
-                        })
-                    );
-                    setSpellData(spells);
-                } catch (err) {
-                    console.error(err);
+            try {
+                // Grab racial traits data
+                const traitsData = (await dndApi.getMoreInfo(character.race.raceUrl)).data.traits;
+                if (traitsData.length !== 0) {
+                    let traits = await Promise.all(traitsData.map(async (trait) => (await dndApi.getMoreInfo(trait.url)).data));
+                    setRaceData(traits);
                 }
+
+                // Grab level 1 data for class
+                const level1Data = (await dndApi.getMoreInfo(`${character.character_class.url}/levels/1`)).data;
+                if (level1Data.features.length !== 0) {
+                    let features = await Promise.all(level1Data.features.map(async (feature) => (await dndApi.getMoreInfo(feature.url)).data));
+                    setClassData(features);
+                }
+
+                // Grab spell data
+                if (character.proficiencies.spells.length !== 0) {
+                    let spells = await Promise.all(character.proficiencies.spells.map(async (spell) => (await dndApi.getMoreInfo(spell.url)).data));
+                    setSpellData(spells);
+                }
+
+                // Grab background data
+                setBackgroundData((await dndApi.getBackground(character.background.url)).data);
+
+                // Enable user to press enter or space bar to open collapsible menus
+                let collapsibleCheckboxes = document.querySelectorAll('.toggleInfo');
+                Array.from(collapsibleCheckboxes).forEach((label) => {
+                    label.addEventListener('keydown', (e) => expandSpell(e));
+                });
+
+                // setClassData((await dndApi.getMoreInfo(character.character_class.url)).data);
+                setBackgroundData((await dndApi.getBackground(character.background.url)).data);
+            } catch (err) {
+                console.error(err);
             }
         }
         return () => {
+            let spellCheckboxes = document.querySelectorAll('.toggleInfo');
+            Array.from(spellCheckboxes).forEach((label) => {
+                label.removeEventListener('keydown', (e) => expandSpell(e));
+            });
             mounted = false;
         };
     }, []);
 
-    return (
-        <main>
+    return raceData && classData && backgroundData && spellData ? (
+        <main className="character ov">
             {/* Character Name */}
-            <section>
-                <h2 className="stat__title">{character.background.characterName}</h2>
-                <hr />
+            <section className="character__container ov__name">
+                <h2 className="container__header">{character.background.characterName}</h2>
             </section>
 
             {/* Race */}
-            <section>
-                <h3 className="stat__title">Race</h3>
-                <h4 className="stat__name">
-                    {character.race.name}
-                    {character.race.subrace !== '' && `: ${character.race.subrace}`}
-                </h4>
-                <p className="stat__text">Base Speed: {character.race.speed} ft.</p>
-                <p className="stat__text">Size: {character.race.size}</p>
-                <hr />
+            <section className="character__container ov--overview ov__race">
+                <h3 className="container__header">Race</h3>
+                <br />
+
+                <CollapsibleData feature={character.race.subrace !== '' ? character.race.subrace : character.race.name} data={raceData} />
+
+                <br />
+                <div className="ov--race">
+                    <div>
+                        <h4 className="container__subheader">Base Speed</h4>
+                        <p className="container__text">{character.race.speed} ft.</p>
+                    </div>
+
+                    <div>
+                        <h4 className="container__subheader">Size</h4>
+                        <p className="container__text">{character.race.size}</p>
+                    </div>
+
+                    <div>
+                        <h3 className="container__subheader">Alignment</h3>
+                        <p className="container__text">{character.background.alignment}</p>
+                    </div>
+
+                    <div className="ov--backgrounds">
+                        <div className="ov--details">
+                            <h4 className="container__subheader">Age</h4>
+                            <p className="container__text">{character.background.age}</p>
+                            <h4 className="container__subheader">Height</h4>
+                            <p className="container__text">{character.background.height}</p>
+                            <h4 className="container__subheader">Weight</h4>
+                            <p className="container__text">{character.background.weight}</p>
+                            <br />
+                        </div>
+
+                        {/* Languages */}
+                        <div>
+                            <h3 className="container__subheader">Languages</h3>
+                            {Object.values(character.background.languages).map((language, idx) => (
+                                <p className="container__text" key={idx}>
+                                    {language.name}
+                                </p>
+                            ))}
+                            <br />
+                        </div>
+                    </div>
+                </div>
             </section>
 
             {/* Class and HP */}
-            <section>
-                <h3 className="stat__title">Class</h3>
-                <h4 className="stat__text">{character.character_class.name}</h4>
-                <h3 className="stat__title">Hit Points</h3>
-                <h4 className="stat__text">{character.character_class.hitDie + Math.floor((character.abilities.constitution - 10) / 2)}</h4>
+            <section className="character__container ov--overview ov__class">
+                <h3 className="container__header">Class</h3>
+                <br />
+
+                <CollapsibleData feature={character.character_class.name} data={classData} />
+
+                <br />
+                <div className="ov--class">
+                    <h4 className="container__subheader">Hit Points</h4>
+                    <p className="container__text">{character.character_class.hitDie + Math.floor((character.abilities.constitution - 10) / 2)}</p>
+                    <h4 className="container__subheader">Hit Die</h4>
+                    <p className="container__text">1d{character.character_class.hitDie}</p>
+                </div>
                 {/* Render class details / features here? */}
-                <hr />
             </section>
 
             {/* Abilities and Saving Throws */}
-            <section>
-                <h3 className="stat__title">Abilities</h3>
-                {Object.entries(character.abilities).map(([ability, score], idx) => {
-                    const modifier = Math.floor((score - 10) / 2);
-                    return (
-                        <React.Fragment key={idx}>
-                            <h4 className="stat__name">{ability.charAt(0).toUpperCase() + ability.slice(1)}: </h4>
-                            <p className="stat__score">{score}</p>
-                            <p className="stat__modifier">
-                                {modifier > 0 && '+'}
-                                {modifier}
-                            </p>
-                        </React.Fragment>
-                    );
-                })}
-                <h3 className="stat__title">Saving Throws</h3>
-                {Object.entries(character.abilities).map(([ability, score], idx) => {
-                    let modifier = Math.floor((score - 10) / 2);
+            <section className="character__container ov--overview ov__abilities">
+                <div>
+                    <div className="ov--abilityNames">
+                        <h3 className="container__header">Abilities</h3>
+                        <h4 className="container__subheader" style={{ fontSize: '14px' }}>
+                            Score
+                        </h4>
+                        <h4 className="container__subheader" style={{ fontSize: '14px' }}>
+                            Modifier
+                        </h4>
+                        <h4 className="container__subheader" style={{ fontSize: '14px', textAlign: 'center' }}>
+                            <p>Saving</p>
+                            <p>Throw</p>
+                            <p>Bonus</p>
+                        </h4>
+                    </div>
+                    <div>
+                        {Object.entries(character.abilities).map(([ability, score], idx) => {
+                            let modifier = Math.floor((score - 10) / 2);
+                            let save = modifier;
+                            if (character.proficiencies.savingThrows.includes(ability)) save += 2;
 
-                    if (character.proficiencies.savingThrows.includes(ability)) modifier += 2;
-
-                    return (
-                        <React.Fragment key={idx}>
-                            <h4 className="stat__name">
-                                {ability.charAt(0).toUpperCase() + ability.slice(1)}:{character.proficiencies.savingThrows.includes(ability) && ' *'}
-                            </h4>
-                            <p className="stat__modifier">
-                                {modifier > 0 && '+'}
-                                {modifier}
-                            </p>
-                        </React.Fragment>
-                    );
-                })}
-                <hr />
+                            return (
+                                <div className="ov--abilities" key={idx}>
+                                    <h4 className="container__subheader">
+                                        {ability.charAt(0).toUpperCase() + ability.slice(1)}
+                                        {character.proficiencies.savingThrows.includes(ability) && ' *'}
+                                    </h4>
+                                    <p className="container__text">{score}</p>
+                                    <p className="container__text">
+                                        {modifier >= 0 && '+'}
+                                        {modifier}
+                                    </p>
+                                    <p className="container__text">
+                                        {save >= 0 && '+'}
+                                        {save}
+                                    </p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
             </section>
 
             {/* Skills */}
-            <section>
-                <h3 className="stat__title">Skills</h3>
-                {Object.entries(CONSTANTS.SKILLS).map(([skill, ability], idx) => {
-                    // read ability from object, find matching stat in character.abilities, determine modifier
-                    let skillModifier = Math.floor((character.abilities[ability] - 10) / 2);
+            <section className="character__container ov--overview ov__skills">
+                <h3 className="container__header">Skills</h3>
+                <br />
+                <div className="ov--skills">
+                    {Object.entries(CONSTANTS.SKILLS).map(([skill, ability], idx) => {
+                        // read ability from object, find matching stat in character.abilities, determine modifier
+                        let skillModifier = Math.floor((character.abilities[ability] - 10) / 2);
 
-                    // add +2 proficiency bonus if in the proficiencies.skills array
-                    let skillProficiency = proficientSkills.includes(skill);
-                    if (skillProficiency) skillModifier += 2;
+                        // add +2 proficiency bonus if in the proficiencies.skills array
+                        let skillProficiency = proficientSkills.includes(skill);
+                        if (skillProficiency) skillModifier += 2;
 
-                    return (
-                        <React.Fragment key={idx}>
-                            <h4 className="stat__name">
-                                {skill}
-                                {skillProficiency && ' *'}
-                            </h4>
-                            <p className="stat__modifier">
-                                {skillModifier > 0 && '+'}
-                                {skillModifier}
-                            </p>
-                        </React.Fragment>
-                    );
-                })}
-                <hr />
+                        return (
+                            <React.Fragment key={idx}>
+                                <h4 className="container__subheader">
+                                    {skill}
+                                    {skillProficiency && ' *'}
+                                </h4>
+                                <p className="container__text">
+                                    {skillModifier > 0 && '+'}
+                                    {skillModifier}
+                                </p>
+                            </React.Fragment>
+                        );
+                    })}
+                </div>
             </section>
 
             {/* Spells - Only render if there are spells in the object! */}
             {character.proficiencies.spells.length !== 0 && spellData ? (
-                <section>
-                    <h3 className="stat__title">Spells</h3>
-                    {spellData.map((spell, idx) => {
-                        return (
-                            <article key={idx}>
-                                <h4 className="stat__text">{spell.name}</h4>
-                                {/* I'm imagining this as a drop down menu that expands and reveals this additional data */}
-                                <aside>
-                                    <p className="stat__text">School: {spell.school.name}</p>
-                                    <p className="stat__text">Level: {spell.level}</p>
-                                    {spell.concentration && (
-                                        <p className="stat__text">
-                                            <em>Concentration</em>
+                <section className="character__container ov--overview ov__spells">
+                    <h3 className="container__header">Spells</h3>
+
+                    <br />
+                    <div className="ov--spells">
+                        {spellData.map((spell, idx) => {
+                            return (
+                                <article key={idx}>
+                                    <input id={`collapsible--${idx}`} className="toggleInfo" type="checkbox" tabIndex="0" style={{ display: 'none' }} />
+                                    <label htmlFor={`collapsible--${idx}`} className="container__subheader label__toggle">
+                                        {spell.name}
+                                        <i className="fa fa-chevron-down"></i>
+                                    </label>
+                                    {/* I'm imagining this as a drop down menu that expands and reveals this additional data */}
+                                    <aside className="container--collapsible">
+                                        <br />
+                                        <p className="container__text">
+                                            <strong>School: </strong>
+                                            {spell.school.name}
                                         </p>
-                                    )}
-                                    {spell.ritual && (
-                                        <p className="stat__text">
-                                            <em>Ritual</em>
+                                        <p className="container__text">
+                                            <strong>Level: </strong>
+                                            {spell.level}
                                         </p>
-                                    )}
-                                    {spell.components && (
-                                        <p className="stat__text">Components:{Object.values(spell.components).map((component) => ' ' + component)}</p>
-                                    )}
-                                    {spell.material && <p className="stat__text">Material: {spell.material}</p>}
-                                    {spell.range && <p className="stat__text">Range: {spell.range}</p>}
-                                    {spell.casting_time && <p className="stat__text">Casting Time: {spell.casting_time}</p>}
-                                    {spell.duration && <p className="stat__text">Duration: {spell.duration}</p>}
-                                    {spell.desc.map((desc, idx) => (
-                                        <p className="stat__text" key={idx}>
-                                            {desc}
-                                        </p>
-                                    ))}
-                                </aside>
-                            </article>
-                        );
-                    })}
-                    <hr />
+                                        {spell.concentration && (
+                                            <p className="container__text">
+                                                <em>Concentration</em>
+                                            </p>
+                                        )}
+                                        {spell.ritual && (
+                                            <p className="container__text">
+                                                <em>Ritual</em>
+                                            </p>
+                                        )}
+                                        {spell.components && (
+                                            <p className="container__text">
+                                                <strong>Components: </strong>
+                                                {Object.values(spell.components).map((component) => ' ' + component)}
+                                            </p>
+                                        )}
+                                        {spell.material && (
+                                            <p className="container__text">
+                                                <strong>Material: </strong>
+                                                {spell.material}
+                                            </p>
+                                        )}
+                                        {spell.range && (
+                                            <p className="container__text">
+                                                <strong>Range: </strong>
+                                                {spell.range}
+                                            </p>
+                                        )}
+                                        {spell.casting_time && (
+                                            <p className="container__text">
+                                                <strong>Casting Time: </strong>
+                                                {spell.casting_time}
+                                            </p>
+                                        )}
+                                        {spell.duration && (
+                                            <p className="container__text">
+                                                <strong>Duration: </strong>
+                                                {spell.duration}
+                                            </p>
+                                        )}
+                                        {spell.desc.map((desc, idx) => (
+                                            <p className="container__text" key={idx}>
+                                                {desc}
+                                            </p>
+                                        ))}
+                                    </aside>
+                                    <br />
+                                </article>
+                            );
+                        })}
+                    </div>
                 </section>
             ) : null}
 
             {/* Equipment */}
-            <section>
-                <h3 className="stat__title">Proficient Items</h3>
+            <section className="character__container ov--overview ov__equipment">
+                {character.proficiencies.items.length !== 0 && (
+                    <>
+                        <h3 className="container__header">Proficient Items</h3>
+                        <br />
+                    </>
+                )}
                 {character.proficiencies.items.map((item, idx) => {
                     return (
-                        <p className="stat__text" key={idx}>
+                        <p className="container__text" key={idx}>
                             {item.name}
                         </p>
                     );
                 })}
-                <h3 className="stat__title">Equipment</h3>
+                {character.equipment.total.length !== 0 && <h3 className="container__header">Equipment</h3>}
                 {character.equipment.total.map((item, idx) => {
                     return (
-                        <p className="stat__text" key={idx}>
-                            {item.name}
+                        <p className="container__text" key={idx}>
+                            {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
                         </p>
                     );
                 })}
-                <hr />
             </section>
 
             {/* Background */}
-            <section>
-                <h3 className="stat__title">Character Details</h3>
-                <aside>
-                    <h4 className="stat__title">Age</h4>
-                    <p className="stat__text">{character.background.age}</p>
-                    <h4 className="stat__title">Height</h4>
-                    <p className="stat__text">{character.background.height}</p>
-                    <h4 className="stat__title">Weight</h4>
-                    <p className="stat__text">{character.background.weight}</p>
-                </aside>
+            <section className="character__container ov--overview ov__backgrounds">
+                <h3 className="container__header">Character Details</h3>
+                <br />
+                <h3 className="container__header">Background</h3>
+                <br />
 
-                {/* Languages */}
-                <h3 className="stat__title">Languages</h3>
-                {Object.values(character.background.languages).map((language, idx) => (
-                    <p className="stat__text" key={idx}>
-                        {language.name}
-                    </p>
-                ))}
+                <input id="collapsible__background" className="toggleInfo" type="checkbox" tabIndex="0" style={{ display: 'none' }} />
+                <label htmlFor="collapsible__background" className="container__subheader label__toggle">
+                    <h4 className="container__subheader">{character.background.name}</h4>
+                    <i className="fa fa-chevron-down"></i>
+                </label>
+                <article className="container--collapsible">
+                    {backgroundData && (
+                        <>
+                            <br />
+                            <p className="container__text">{backgroundData.description}</p>
+                            <br />
+                            <p className="container__text">
+                                <em>{backgroundData.feature.name}</em>
+                            </p>
+                            <br />
+                            <p className="container__text">{backgroundData.feature.description}</p>
+                            <br />
+                        </>
+                    )}
+                </article>
 
-                <h3 className="stat__title">Alignment: {character.background.alignment}</h3>
+                <br />
+                <h3 className="container__header">Appearance</h3>
+                <p className="container__text">{character.background.appearance}</p>
+                <br />
 
-                <h3 className="stat__title">Background</h3>
-                <p className="stat__text">{character.background.name}</p>
-                {/* Render background details here? */}
-
-                <h3 className="stat__title">Appearance</h3>
-                <p className="stat__text">{character.background.appearance}</p>
-
-                <h3 className="stat__title">Personality</h3>
-                <p className="stat__text">{character.background.personality}</p>
+                <h3 className="container__header">Personality</h3>
+                <p className="container__text">{character.background.personality}</p>
+                <br />
             </section>
 
             {/* Buttons */}
-            <section>
+            <section className="ov__buttons">
                 <button onClick={() => postCharacter(character)}>Save</button>
                 <button onClick={() => history.push('/')}>Edit</button>
                 <button onClick={() => deleteCharacter(character, id)}>Delete</button>
+            </section>
+        </main>
+    ) : (
+        <main className="character ov--overview character--loading">
+            <section className="character__container">
+                <h2 className="container__header">Loading character sheet for {character.background.characterName}...</h2>
             </section>
         </main>
     );
 };
 
 export default CharacterOverview;
+
+// A reusable component for race and class!
+const CollapsibleData = ({ feature, data }) => {
+    if (data && data.length !== 0) {
+        return (
+            <>
+                <input id={`collapsible__${feature}`} className="toggleInfo" type="checkbox" tabIndex="0" style={{ display: 'none' }} />
+                <label htmlFor={`collapsible__${feature}`} className="container__subheader label__toggle">
+                    <h4 className="container__subheader">{feature}</h4>
+                    <i className="fa fa-chevron-down"></i>
+                </label>
+                <article className="container--collapsible">
+                    {data.map((feature, idx) => (
+                        <React.Fragment key={idx}>
+                            <br />
+                            <h4 className="container__text">
+                                <em>{feature.name}</em>
+                            </h4>
+                            {feature.desc.map((p, idxx) => (
+                                <p key={idxx} className="container__text">
+                                    {p}
+                                </p>
+                            ))}
+                        </React.Fragment>
+                    ))}
+                </article>
+            </>
+        );
+    } else {
+        return <h4 className="container__subheader">{feature}</h4>;
+    }
+};

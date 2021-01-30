@@ -2,17 +2,21 @@
 @use '../abstracts/typography' as typography;
 
 .landingContainer {
-
 }
 
 .character {
     display: flex;
     flex-wrap: wrap;
     background-color: variables.$backgroundDark;
+
     .character__container {
         background-color: variables.$backgroundLight;
+
         .container__header {
             @include typography.serif(20pt, variables.$backgroundDark, 500);
+        }
+        .container__subheader {
+            @include typography.serif(17pt, variables.$backgroundDark, 500);
         }
         .container__text {
             @include typography.sans(16pt, variables.$backgroundDark, 500);
@@ -24,19 +28,18 @@
         font-size: 200px;
     }
     &__button {
-
     }
 }
 .login {
     .login__container {
         background-color: variables.$mainTheme;
         .fa-dice-d20 {
-            background: rgb(144,169,162);
-            background: linear-gradient(0deg, rgba(144,169,162,0.2) 0%, rgba(108,130,126,.7) 53%, rgba(32,46,50,1) 100%);
+            background: rgb(144, 169, 162);
+            background: linear-gradient(0deg, rgba(144, 169, 162, 0.2) 0%, rgba(108, 130, 126, 0.7) 53%, rgba(32, 46, 50, 1) 100%);
             -webkit-background-clip: text;
             -moz-background-clip: text;
             background-clip: text;
-            -webkit-text-fill-color:transparent;
+            -webkit-text-fill-color: transparent;
             font-size: 200px;
             transform: rotate(-20deg);
         }
