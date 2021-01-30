@@ -1,123 +1,58 @@
-const { CharacterSheet, Class, Race, AbilityScores, Background, Languages, Proficiencies, Spells, Equipment} = require('../models');
+const { User, CharacterSheet, Class, Race, AbilityScores, Background, 
+    Languages, Proficiencies, Spells, Skills, Equipment, SavingThrows, Items} = require('../models');
 const { op } = require('sequelize');
+const skills = require('../models/skills');
+const savingThrows = require('../models/savingThrows');
 
-const makeLanguages = (languages, id) => {
-    let lang = [];
-    for(let i = 0; i < languages.length; i++) {
-        lang.push(
-            {CharacterSheetId: id, name: languages[i].name, tableDep: languages[i].origin, dnd5eEndpoint: languages[i].url}
+const makeObjArray = (objArray, id) => {
+    let selectedObj = [];
+    for(let i = 0; i < objArray.length; i++) {
+        selectedObj.push(
+            {CharacterSheetId: id, ...objArray[i] }
         )
     }
-    return lang;
+    return selectedObj;
 }
-
-const makeEqipment = (equipment, id) => {
-    let equip = [];
-    for(let i = 0; i < equipment.length; i++) {
-        equip.push(
-            {CharacterSheetId: id, name: equipment[i].name, type: equipment[i].type, dnd5eEndpoint: equipment[i].url }
+const makeSavingThrows = (objArray, id) => {
+    let selectedObj = [];
+    for(let i = 0; i < objArray.length; i++) {
+        selectedObj.push(
+            {CharacterSheetId: id, name: objArray[i] }
         )
     }
-    return equip;
-}
-
-const makeSpells = (spells, id) => {
-    let selectedSpells = [];
-    for(let i = 0; i < spells.length; i++) {
-        selectedSpells.push(
-            {CharacterSheetId: id, name: spells[i].name, type: spells[i].type, dnd5eEndpoint: spells[i].url }
-        )
-    }
-    return selectedSpells;
-}
-
-const makeProficiencies = (proficiencies, id) => {
-    let prof = [];
-
-    const makeSkills = (skills, id) => {
-        for(let i = 0; i < skills.length; i++) {
-            prof.push(
-                {CharacterSheetId: id, name: skills[i].name, origin: skills[i].origin, ability: skills[i].ability, type: 'skill', dnd5eEndpoint: skills[i].url }
-            )
-        }
-    }
-
-    const makeItems = (items, id) => {
-        for(let i = 0; i < items.length; i++) {
-            prof.push(
-                {CharacterSheetId: id, name: items[i].name, type: 'items', dnd5eEndpoint: items[i].url }
-            )
-        }
-    }
-
-    const makeSavingThrows = (savingThrows, id) => {
-        for(let i = 0; i < savingThrows.length; i++) {
-            prof.push(
-                {CharacterSheetId: id, name: savingThrows[i].name, type: 'saving throws', dnd5eEndpoint: savingThrows[i].url }
-            )
-        }
-    }
-
-    for(const profi in proficiencies) {
-        if(profi === 'skills') {
-            makeSkills(proficiencies[profi], id);
-        } else if(profi === 'items') {
-            makeItems(proficiencies[profi], id);
-        } else if(profi === 'savingThrows') {
-            makeSavingThrows(proficiencies[profi], id);
-        }
-    }
-
-    return prof;
+    return selectedObj;
 }
 //need to change the create and find all to be able to use the logged in users userid
 module.exports = {
-    create: (req, res) => {
+    create: async (req, res) => {
         const { race, character_class, abilities, proficiencies, background, equipment } = req.body;
         //const userId = {UserId: 1};
         const { languages, characterName, name, url, appearance, personality, alignment, age, height, weight } = background;
-        CharacterSheet.create({ UserId: 1 })
-            .then((newCharacter) => {
-                try {
-                    Race.create({CharacterSheetId: newCharacter.id, ...race})
-                        .then(() => res.end())
-                        .catch((err) => console.log(err));
-                    Class.create({CharacterSheetId: newCharacter.id, ...character_class})
-                        .then(() => res.end())
-                        .catch((err) => console.log(err));
-                    AbilityScores.create({CharacterSheetId: newCharacter.id, ...abilities})
-                        .then(() => res.end())
-                        .catch((err) => console.log(err));
-                    Proficiencies.bulkCreate(makeProficiencies(proficiencies, newCharacter))
-                        .then(() => res.end())
-                        .catch((err) => console.log(err));
-                    Background.create({
-                        CharacterSheetId: newCharacter.id,
-                        characterName: characterName,
-                        name: name, api_endpoint: url,
-                        appearance: appearance,
-                        personality: personality,
-                        alignment: alignment,
-                        age: age,
-                        height: height,
-                        weight: weight
-                    })
-                        .then(() => res.end())
-                        .catch((err) => console.log(err));
-                    Spells.bulkCreate(makeSpells(proficiencies.spells, newCharacter))
-                        .then(() => res.end())
-                        .catch((err) => console.log(err));
-                    Equipment.bulkCreate( makeEqipment(equipment.total, newCharacter))
-                        .then(() => res.end())
-                        .catch((err) => console.log(err));
-                    Languages.bulkCreate( makeLanguages(languages, newCharacter) )
-                        .then(() => res.end())
-                        .catch((err) => console.log(err));
-                } catch(err) { 
-                    console.log(err)
-                }
+    
+        try {
+            let idOfUser = (await User.findOne({ 
+                where: { 
+                    authId: req.user.sub
+                } 
+            })).dataValues.id;
+            let newCharacter = (await CharacterSheet.create({ 
+                UserId: idOfUser 
+            })).dataValues;
+            let raceCheck = await Race.create({CharacterSheetId: newCharacter.id, ...race})
+            let classCheck = await Class.create({CharacterSheetId: newCharacter.id, ...character_class})
+            let abilityScoreCheck = await AbilityScores.create({CharacterSheetId: newCharacter.id, ...abilities})
+            let backgroundCheck = await Background.create({CharacterSheetId: newCharacter.id, ...background})
+            let languageCheck = await Languages.bulkCreate( makeObjArray(languages, newCharacter.id) )
+            let equipmentCheck = await Equipment.bulkCreate( makeObjArray(equipment.total, newCharacter.id))
+            let spellCheck = await Spells.bulkCreate(makeObjArray(proficiencies.spells, newCharacter.id))
+            let skillCheck = await Skills.bulkCreate(makeObjArray(proficiencies.skills, newCharacter.id))
+            let savingThrowCheck = await SavingThrows.bulkCreate(makeSavingThrows(proficiencies.savingThrows, newCharacter.id))
+            let itemCheck = await Items.bulkCreate(makeObjArray(proficiencies.items, newCharacter.id))
+            
 
-            })
+        } catch(err) { 
+            //console.log(err)
+        }
     },
     update: (req, res) => {
         const { race, character_class, abilities, proficiencies, background, equipment } = req.body;

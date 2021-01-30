@@ -18,7 +18,7 @@ router.route("/character/:id")
     .delete(characterController.delete);
 
 
-router.post("/user", jwtCheck, (req, res) => {
+router.post("/user", (req, res) => {
     let userObj = {
         sub: req.user.sub,
         name: req.body.name, 

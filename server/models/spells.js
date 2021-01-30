@@ -4,13 +4,7 @@ module.exports = (sequelize, DataTypes) => {
         name: {
             type: DataTypes.STRING,
         },
-        index: {
-            type: DataTypes.STRING,
-        },
-        type: {
-            type: DataTypes.ENUM("cantrip", "spell"),
-        },
-        dnd5eEndpoint: {
+        url: {
             type: DataTypes.STRING,
         }
     },
