@@ -1,10 +1,11 @@
 {
   "development": {
-    "username": "admin",
-    "password": "adminpwd",
-    "database": "capstoneDev",
-    "host": "capstone-dev.chdlyjrt31wl.us-west-1.rds.amazonaws.com",
-    "dialect": "mysql"
+    "username": "root",
+    "password": "Lime6830!",
+    "database": "dnd",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "port": 3306
   },
   "test": {
     "username": "root",

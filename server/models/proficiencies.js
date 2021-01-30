@@ -5,6 +5,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
+        origin: {
+            type: DataTypes.STRING,
+        },
+        ability: {
+            type: DataTypes.STRING,
+        },
         type: {
             type: DataTypes.ENUM("skill", "saving throws", "items"),
             allowNull: false
