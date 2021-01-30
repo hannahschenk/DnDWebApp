@@ -180,44 +180,46 @@ const AbilityScoresForm = ({ formDetailsState }) => {
     };
 
     return (
-        <>
-            <p>{abilityScoreChoices.length == 0 ? 'Pick a method to generate ability score choices:' : 'Distribute Ability Scores'}</p>
+        <main>
+            <section>
+                <p>{abilityScoreChoices.length == 0 ? 'Pick a method to generate ability score choices:' : 'Distribute Ability Scores'}</p>
 
-            {!scoresAreInitial() && (!Object.values(abilityScoreIdxMatch).includes(-1) || abilityScoreChoices.length == 0) ? (
-                <>
-                    <button onClick={resetComponent}>Reset Scores</button>
-                    {Object.entries(character.abilities).map(([abilityName, score]) => (
-                        <p key={abilityName}>
-                            current score for {abilityName}: {character.abilities[abilityName]}
-                        </p>
-                    ))}
-                </>
-            ) : abilityScoreChoices.length == 0 ? ( //if block
-                <>
-                    <button onClick={() => generateAbilityScoreChoices('STANDARD_ARRAY')}>Use Standard Array</button>
-                    <button onClick={() => generateAbilityScoreChoices('RANDOM_ARRAY')}>Generate Random Scores</button>
-                </>
-            ) : (
-                Object.entries(character.abilities).map(([abilityName, score]) => {
-                    return (
-                        <React.Fragment key={abilityName}>
-                            <label htmlFor={abilityName}>{abilityName}</label>
-                            <select defaultValue={-1} name={abilityName} id={abilityName} onChange={assignScore}>
-                                <option value={-1}> no assignment </option>
-                                {abilityScoreChoices.map((scoreObj, scoreIdx) => (
-                                    <option key={scoreIdx} value={scoreIdx} disabled={scoreObj.used}>
-                                        {scoreObj.score}
-                                    </option>
-                                ))}
-                            </select>
-                            <p>current score: {character.abilities[abilityName]}</p>
-
-                            <br />
-                        </React.Fragment>
-                    );
-                })
-            )}
-        </>
+                {!scoresAreInitial() && (!Object.values(abilityScoreIdxMatch).includes(-1) || abilityScoreChoices.length == 0) ? (
+                    <>
+                        <button onClick={resetComponent}>Reset Scores</button>
+                        {Object.entries(character.abilities).map(([abilityName, score]) => (
+                            <p key={abilityName}>
+                                {abilityName.charAt(0).toUpperCase() + abilityName.slice(1)}: {character.abilities[abilityName]}
+                            </p>
+                        ))}
+                    </>
+                ) : abilityScoreChoices.length == 0 ? ( //if block
+                    <>
+                        <button onClick={() => generateAbilityScoreChoices('STANDARD_ARRAY')}>Use Standard Array</button>
+                        <button onClick={() => generateAbilityScoreChoices('RANDOM_ARRAY')}>Generate Random Scores</button>
+                    </>
+                ) : (
+                    Object.entries(character.abilities).map(([abilityName, score]) => {
+                        return (
+                            <React.Fragment key={abilityName}>
+                                <select defaultValue={-1} name={abilityName} id={abilityName} onChange={assignScore}>
+                                    <option value={-1}> - </option>
+                                    {abilityScoreChoices.map((scoreObj, scoreIdx) => (
+                                        <option key={scoreIdx} value={scoreIdx} disabled={scoreObj.used}>
+                                            {scoreObj.score}
+                                        </option>
+                                    ))}
+                                </select>
+                                <label htmlFor={abilityName} style={{ fontWeight: 'bold' }}>
+                                    {abilityName.charAt(0).toUpperCase() + abilityName.slice(1)}: {character.abilities[abilityName]}
+                                </label>
+                                <br />
+                            </React.Fragment>
+                        );
+                    })
+                )}
+            </section>
+        </main>
     );
 };
 

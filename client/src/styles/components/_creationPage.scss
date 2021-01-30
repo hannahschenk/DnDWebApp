@@ -1,0 +1,47 @@
+@use '../abstracts/typography' as typography;
+@import '../abstracts/globalVariables';
+
+.creation-page {
+    display: grid;
+    background-color: $backgroundDark;
+
+    &__btns {
+        grid-column: 1 / -1;
+        text-align: end;
+
+        > button {
+            padding: 0.2rem 1rem;
+            margin: 1rem;
+            @include typography.serif(12pt, 500);
+        }
+    }
+}
+
+.time-line {
+    display: none;
+}
+
+@media screen and (min-width: 800px) {
+    .creation-page {
+        display: grid;
+        grid-template-columns: 250px 5fr;
+    }
+    .time-line {
+        display: block;
+        background-color: $backgroundLight;
+        list-style: none;
+        margin-left: 1rem;
+        padding: 1rem;
+
+        &__content {
+            @include typography.serif(15pt, 500);
+        }
+        &__item {
+            @include typography.serif(12pt, 500);
+        }
+        &__subcontent {
+            list-style: none;
+            margin-left: 2rem;
+        }
+    }
+}

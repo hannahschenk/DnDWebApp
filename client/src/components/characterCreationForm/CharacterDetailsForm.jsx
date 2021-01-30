@@ -175,7 +175,7 @@ const CharacterDetailsForm = () => {
 
     return (
         <>
-            <form>
+            <main>
                 {/* BACKGROUND====================================================================== */}
                 <section>
                     <h3>Character Name</h3>
@@ -192,7 +192,10 @@ const CharacterDetailsForm = () => {
                                 defaultChecked={backgroundContent.name == character.background.name}
                                 onClick={() => pickBackground(backgroundContent)}
                             />
-                            <label htmlFor={backgroundContent.name}>{backgroundContent.name}</label>
+                            <label htmlFor={backgroundContent.name}>
+                                {'  '}
+                                {backgroundContent.name}
+                            </label>
                             <br />
                         </React.Fragment>
                     ))}
@@ -300,13 +303,16 @@ const CharacterDetailsForm = () => {
                 {/* AGE, HEIGHT, WEIGHT ============================================================ */}
                 <section>
                     <h3>Determine your Age, Height, and Weight.</h3>
-                    <label htmlFor="age">Age: </label>
+                    <label htmlFor="age">Age:</label>
+                    <br />
                     <input type="number" placeholder="18" id="age" name="age" defaultValue={character.background.age} onChange={(e) => setStat(e, 'age')} />
                     <br />
                     <label htmlFor="height">Height: </label>
+                    <br />
                     <input type="text" id="height" name="height" defaultValue={character.background.height} onChange={(e) => setStat(e, 'height')} />
                     <br />
                     <label htmlFor="weight">Weight: </label>
+                    <br />
                     <input type="text" id="weight" name="weight" defaultValue={character.background.weight} onChange={(e) => setStat(e, 'weight')} />
                     <br />
                 </section>
@@ -330,7 +336,7 @@ const CharacterDetailsForm = () => {
                         ))
                     }
                 </section>
-            </form>
+            </main>
         </>
     );
 };

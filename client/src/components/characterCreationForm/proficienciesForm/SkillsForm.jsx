@@ -54,7 +54,7 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
     }, [character]);
 
     return (
-        <>
+        <section>
             <h3>
                 Choose {skillProficiencies.choose}
                 {field === 'skills' && ' Skill '}
@@ -82,7 +82,7 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
                     );
                 })
             }
-        </>
+        </section>
     );
 };
 

@@ -58,7 +58,7 @@ const SpellsForm = ({ availableSpells }) => {
     };
 
     return (
-        <>
+        <section>
             <h3>Select Spells</h3>
             {classSpells && numKnownSpells && (
                 <p>
@@ -88,7 +88,7 @@ const SpellsForm = ({ availableSpells }) => {
                     </React.Fragment>
                 );
             })}
-        </>
+        </section>
     );
 };
 

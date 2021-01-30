@@ -1,0 +1,72 @@
+@use '../abstracts/typography' as typography;
+@import '../abstracts/globalVariables';
+
+.form-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+
+// Styles all elements in the form
+.creation-form {
+    background-color: $backgroundLight;
+    padding: 1rem;
+    margin-left: 1rem;
+
+    &__title {
+        @include typography.serif(18pt, 500);
+        margin-bottom: 1rem;
+    }
+    > main {
+        > section {
+            h2 {
+                @include typography.serif(18pt, 500);
+                margin-bottom: 1rem;
+            }
+            h3 {
+                @include typography.serif(15pt, 500);
+                margin-bottom: 1rem;
+            }
+            h4 {
+                @include typography.sans(12pt, 500);
+                margin-bottom: 1rem;
+            }
+            p,
+            label {
+                @include typography.sans(12pt, 500);
+                margin-bottom: 1rem;
+            }
+            select {
+                @include typography.sans(12pt, 500);
+                margin: 0.5rem;
+            }
+            input {
+                margin-bottom: 0.5rem;
+            }
+            button {
+                border-radius: 5px;
+                background-color: $backgroundDark;
+                color: white;
+                padding: 0.2rem 0;
+                @include typography.sans(12pt, 500);
+                width: 300px;
+                margin: 0 0.5rem 1rem 0.5rem;
+            }
+            input[type='text'],
+            input[type='number'],
+            textarea {
+                @include typography.sans(12pt, 500);
+                padding: 0.5rem;
+            }
+            hr {
+                margin: 1rem;
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .form-container {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+    }
+}

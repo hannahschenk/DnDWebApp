@@ -92,6 +92,7 @@
 
 @media screen and (min-width: 800px) {
     .ov {
+        display: grid;
         grid-template-areas:
             'charName charName'
             'race race'
