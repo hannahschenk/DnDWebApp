@@ -4,6 +4,7 @@ import { useHistory } from 'react-router';
 import { useCharacter } from '../state/logic';
 
 import { deleteCharacter, postCharacter } from '../utils/api';
+import { useAuth0 } from "@auth0/auth0-react";
 import CONSTANTS from '../utils/constants';
 import dndApi from '../utils/dnd5eApi';
 
@@ -18,6 +19,9 @@ const CharacterOverview = () => {
     const [spellData, setSpellData] = useState([]);
     // This is necessary because the skills are stored as an array objects, not as strings
     const [proficientSkills, setProficientSkills] = useState([]);
+
+
+    const {getAccessTokenSilently, isAuthenticated} = useAuth0();
 
     const history = useHistory();
 
@@ -91,6 +95,18 @@ const CharacterOverview = () => {
             mounted = false;
         };
     }, []);
+
+    const saveCharacter = async () => {
+        try{
+            if(isAuthenticated){
+                const token = await getAccessTokenSilently();
+                postCharacter(character, token)
+            }
+            localStorage.removeItem("character");
+        } catch (e){
+            console.error(e);
+        }
+    }
 
     return raceData && classData && backgroundData && spellData ? (
         <main className="character ov">
@@ -384,7 +400,7 @@ const CharacterOverview = () => {
 
             {/* Buttons */}
             <section className="ov__buttons">
-                <button onClick={() => postCharacter(character)}>Save</button>
+                <button onClick={saveCharacter}>Save</button>
                 <button onClick={() => history.push('/')}>Edit</button>
                 <button onClick={() => deleteCharacter(character, id)}>Delete</button>
             </section>

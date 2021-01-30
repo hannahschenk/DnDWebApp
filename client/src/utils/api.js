@@ -5,11 +5,13 @@ import constants from './constants';
 * Signature: postCharacter(character)
 * Description: Sends the character state to the back end server
 */
-export const postCharacter = async (character) => {
+export const postCharacter = async (character, token) => {
   console.log("POST", character);
-  return await axios.post('/api/character/', character, {
+  return await axios.post(`${constants.BACKEND_BASE_URL}/api/character/`, 
+  JSON.stringify(character), {
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   });
 }
