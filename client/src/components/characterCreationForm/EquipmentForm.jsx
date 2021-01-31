@@ -172,43 +172,49 @@ const EquipmentForm = () => {
     };
 
     return (
-        <form>
-            <h3>Class Equipment</h3>
-            {initialEquipment.map((initialEquipmentContent, idx) => (
-                <p key={idx}> {initialEquipmentContent.equipment.name + ' x' + initialEquipmentContent.quantity} </p>
-            ))}
-            <h3>Background Equipment</h3>
-            {backgroundEquipment.map((backgroundEquipmentContent, idx) => (
-                <p key={idx}>{backgroundEquipmentContent}</p>
-            ))}
-            <p>Pick your starting equipment: </p>
-            {totalChoices.wrap.map((equipmentContent, idx) => (
-                <React.Fragment key={idx}>
-                    <label htmlFor="equipmentChoices">Pick one</label>
-                    <select
-                        name={`equipmentChoices-${idx}`}
-                        key={idx}
-                        id={idx}
-                        onChange={(e) => pickEquipment(e)}
-                        value={
-                            character.equipment.total.length >= initialEquipment.length + backgroundEquipment.length + idx + 1
-                                ? JSON.stringify(character.equipment.total[initialEquipment.length + backgroundEquipment.length + idx])
-                                : -1
-                        }
-                    >
-                        <option value={-1} disabled>
-                            no assignment
-                        </option>
-                        {equipmentContent.map((groupChoice, index) => (
-                            <option key={index} value={JSON.stringify(groupChoice)}>
-                                {groupChoice.name}
+        <main>
+            <section>
+                <h3>Class Equipment</h3>
+                {initialEquipment.map((initialEquipmentContent, idx) => (
+                    <p key={idx}> {initialEquipmentContent.equipment.name + ' x' + initialEquipmentContent.quantity} </p>
+                ))}
+            </section>
+            <section>
+                <h3>Background Equipment</h3>
+                {backgroundEquipment.map((backgroundEquipmentContent, idx) => (
+                    <p key={idx}>{backgroundEquipmentContent}</p>
+                ))}
+            </section>
+            <section>
+                <p>Pick your starting equipment: </p>
+                {totalChoices.wrap.map((equipmentContent, idx) => (
+                    <React.Fragment key={idx}>
+                        <label htmlFor="equipmentChoices">Pick one</label>
+                        <select
+                            name={`equipmentChoices-${idx}`}
+                            key={idx}
+                            id={idx}
+                            onChange={(e) => pickEquipment(e)}
+                            value={
+                                character.equipment.total.length >= initialEquipment.length + backgroundEquipment.length + idx + 1
+                                    ? JSON.stringify(character.equipment.total[initialEquipment.length + backgroundEquipment.length + idx])
+                                    : -1
+                            }
+                        >
+                            <option value={-1} disabled>
+                                no assignment
                             </option>
-                        ))}
-                    </select>
-                    <br />
-                </React.Fragment>
-            ))}
-        </form>
+                            {equipmentContent.map((groupChoice, index) => (
+                                <option key={index} value={JSON.stringify(groupChoice)}>
+                                    {groupChoice.name}
+                                </option>
+                            ))}
+                        </select>
+                        <br />
+                    </React.Fragment>
+                ))}
+            </section>
+        </main>
     );
 };
 

@@ -85,7 +85,7 @@ const ProficienciesForm = () => {
     }, [skillsFormDone, spellsFormDone]);
 
     return (
-        <>
+        <main>
             {skillProficiencies.length >= 1 && (
                 <SkillsForm skillProficiencies={skillProficiencies[0]} field="skills" skillsFormDoneState={{ skillsFormDone, setSkillsFormDone }} />
             )}
@@ -94,7 +94,7 @@ const ProficienciesForm = () => {
             )}
             {/* Render spells form only if user's class is: 'bard', 'cleric', 'druid', 'paladin', 'ranger', 'sorcerer', 'warlock', 'wizard' */}
             {spellCasting && availableSpells.length != 0 && <SpellsForm availableSpells={availableSpells} />}
-        </>
+        </main>
     );
 };
 export default ProficienciesForm;

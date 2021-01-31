@@ -193,7 +193,7 @@ const CharacterOverview = () => {
     }
 
     return raceData && classData && backgroundData && spellData ? (
-        <main className="character ov">
+        <main className="ov character" style={{ display: 'grid' }}>
             {/* Character Name */}
             <section className="character__container ov__name">
                 <h2 className="container__header">{character.background.characterName}</h2>
@@ -486,9 +486,11 @@ const CharacterOverview = () => {
             {generateButton()}
         </main>
     ) : (
-        <main className="character ov--overview character--loading">
+        <main className="character ov--overview character--loading" style={{ display: 'grid' }}>
             <section className="character__container">
-                <h2 className="container__header">Loading character sheet for {character.background.characterName}...</h2>
+                <h2 className="container__header" style={{ margin: '1rem' }}>
+                    Loading character sheet for {character.background.characterName}...
+                </h2>
             </section>
         </main>
     );
