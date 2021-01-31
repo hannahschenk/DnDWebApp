@@ -99,7 +99,7 @@ const App = () => {
                         <DashboardPage />
                     </Route>
                 </Switch>
-                <Footer />
+                {/*<Footer />*/}
             </FormControlContext.Provider>
         </CharacterContext.Provider>
     );

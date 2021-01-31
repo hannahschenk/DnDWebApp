@@ -11,9 +11,6 @@ const DashboardPage = () => {
     let userEmail = isAuthenticated ? utilFunctions.truncate(user.email, 20) : "";
 
     let [userSheets, setUserSheets] = useState([])
-    /* 
-    NOTE: truncate the user info if too long 
-    */
 
     useEffect(async () => {
         try{
@@ -65,11 +62,13 @@ const DashboardPage = () => {
             </section>
             <section className="characterCardContainer">
                 {/*this is where character sheet cards will be rendered*/}
+                <div className="card-container">
                 {   
                     userSheets.map((characterSheet, idx) => (
                         <CharacterSheetCard key={idx} characterSheet={characterSheet} sheetId={characterSheet.id}/>
                     ))
                 }
+                </div>
             </section>
 
         </main>
