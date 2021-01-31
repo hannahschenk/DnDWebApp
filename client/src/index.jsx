@@ -6,7 +6,7 @@ import constants from "./utils/constants"
 import { Auth0Provider } from "@auth0/auth0-react";
 import "./styles/index.scss";
 
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router} from 'react-router-dom';
 
 render(
     <ErrorBoundary>

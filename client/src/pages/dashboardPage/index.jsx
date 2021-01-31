@@ -4,14 +4,14 @@ import {useAuth0, withAuthenticationRequired} from "@auth0/auth0-react";
 import utilFunctions from "./../../utils/utilFunctions";
 import {getCharacters} from "./../../utils/api";
 const DashboardPage = () => {
-
     const {isAuthenticated, user, getAccessTokenSilently} = useAuth0();
-
     let userName = isAuthenticated ? utilFunctions.truncate(user.name, 20) : "";
     let userEmail = isAuthenticated ? utilFunctions.truncate(user.email, 20) : "";
-
     let [userSheets, setUserSheets] = useState([])
 
+    /*
+    * Description: get all the character sheets associated to the user
+    */
     useEffect(async () => {
         try{
             if(isAuthenticated){
@@ -23,10 +23,6 @@ const DashboardPage = () => {
             console.error(e);
         }
     }, [])
-
-    useEffect(()=> {
-        console.log(userSheets)
-    }, [userSheets])
 
     return (
         <main className="dashboardMain">

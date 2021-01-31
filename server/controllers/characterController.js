@@ -61,8 +61,14 @@ module.exports = {
             let skillCheck = await Skills.bulkCreate(makeObjArray(proficiencies.skills, newCharacter.id))
             let savingThrowCheck = await SavingThrows.bulkCreate(makeSavingThrows(proficiencies.savingThrows, newCharacter.id))
             let itemCheck = await Items.bulkCreate(makeObjArray(proficiencies.items, newCharacter.id))          
+
+            if(newCharacter && raceCheck && classCheck && abilityScoreCheck && 
+                backgroundCheck && languageCheck && equipmentCheck && spellCheck && 
+                skillCheck && savingThrowCheck && itemCheck){
+                    res.send(true)
+            }
         } catch(err) { 
-            //console.log(err)
+            console.log(err)
         }
     },
     update: async (req, res) => {
@@ -92,10 +98,15 @@ module.exports = {
                 let skillCheck = await Skills.bulkCreate(makeObjArray(proficiencies.skills, newCharacter.id))
                 let savingThrowCheck = await SavingThrows.bulkCreate(makeSavingThrows(proficiencies.savingThrows, newCharacter.id))
                 let itemCheck = await Items.bulkCreate(makeObjArray(proficiencies.items, newCharacter.id))   
+                if(newCharacter && raceCheck && classCheck && abilityScoreCheck && 
+                    backgroundCheck && languageCheck && equipmentCheck && spellCheck && 
+                    skillCheck && savingThrowCheck && itemCheck){
+                        res.send(true)
+                }
             }
 
         } catch(err) { 
-            //console.log(err)
+            console.log(err)
         }
     },
     findAll: async (req, res) => {
@@ -121,7 +132,6 @@ module.exports = {
                     class: sheet.Class.name
                 }
             })
-            console.log(formattedCharacterSheets)
             res.json(formattedCharacterSheets)
             
         } catch(err) {
@@ -205,7 +215,7 @@ module.exports = {
         CharacterSheet.destroy({
             where: { id: req.params.id },
         })
-            .then(() => res.end())
+            .then(() => res.send(true))
             .catch((err) => console.log(err));
     }
 }

@@ -1,15 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-
 import constants from './../../utils/constants';
-
 import CharacterCreationForm from './../../components/characterCreationForm';
 import Details from '../../components/characterCreationForm/Details';
-
 import FormControlContext from './../../state/formControlManager';
 
 const FormContainer = () => {
     const { formControlState, setFormControlState } = useContext(FormControlContext);
-
     const [renderDetails, setRenderDetails] = useState(true);
 
     useEffect(() => {

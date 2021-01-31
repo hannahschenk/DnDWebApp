@@ -3,11 +3,8 @@ import constants from './../../utils/constants';
 
 import FormControlContext from './../../state/formControlManager';
 const CreationTimeline = () => {
-    /*NOTE: might change later if state becomes global*/
-
     const { formControlState, setFormControlState } = useContext(FormControlContext);
-    /* END NOTE */
-
+    
     const switchSection = (newIndex) => {
         if (newIndex <= formControlState.sectionIndex + 1) {
             if (newIndex == formControlState.sectionIndex + 1) {

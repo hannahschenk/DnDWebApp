@@ -8,27 +8,22 @@ import { useAuth0 } from "@auth0/auth0-react";
 import * as ACTION from "./../state/actions";
 import CONSTANTS from '../utils/constants';
 import dndApi from '../utils/dnd5eApi';
-import constants from '../utils/constants';
 
 const CharacterOverview = () => {
-    //console.log(useLocation())
     const { character,setCharacter } = useCharacter();
-
     const [raceData, setRaceData] = useState([]);
     const [classData, setClassData] = useState([]);
     const [backgroundData, setBackgroundData] = useState();
-
-    // This is necessary to grab additional spell data from API
     const [spellData, setSpellData] = useState([]);
-    // This is necessary because the skills are stored as an array objects, not as strings
     const [proficientSkills, setProficientSkills] = useState([]);
-
-
     const {getAccessTokenSilently, isAuthenticated, isLoading} = useAuth0();
     const history = useHistory();
-
     const sheetId = useParams().id;
     const location = useLocation();
+    const newCharacterOverviewPath = "/overview";
+    const savedCharacterOverviewPath = `/overview/${sheetId}`;
+    const editCharacterOvewviewPath = `/edit-overview/${sheetId}`;
+    const [backendLoading, setBackendLoading] = useState(false);
 
     /*
      * Signature: expandSpell(event)
@@ -43,21 +38,30 @@ const CharacterOverview = () => {
         }
     };
 
-
+    /*
+    * Description: after authentication loads, check if the user is authentiate and
+    * get the character information from the backend given the sheetId if path is /overview/:id
+    */
     useEffect(async () => {
-        if(sheetId && location.pathname == `/overview/${sheetId}`){
+        if(sheetId && location.pathname == savedCharacterOverviewPath){
             if(isAuthenticated){
                 const token = await getAccessTokenSilently();
                 let savedCharacter = (await getCharacter(sheetId, token)).data
-                //console.log(savedCharacter)
                 setCharacter({ type: ACTION.SET_CHARACTER, payload: {...savedCharacter}});
+                
+                if(!savedCharacter){
+                    history.push("/404")
+                }
+            }
+            else{
+                history.push("/404")
             }
         }
     }, [isLoading])
 
     /*
      * Signature: useEffect(func, [])
-     * Description: Pull spells data to render to details screen
+     * Description: Pull spells data to render to details screen; this will change based on character sheet
      */
     useEffect(async () => {
         window.scrollTo(0, 0);
@@ -65,8 +69,6 @@ const CharacterOverview = () => {
         let mounted = true;
 
         if (mounted) {
-
-            console.log(character)
             // Format proficient skills to use in component
             setProficientSkills(Object.values(character.proficiencies.skills).map((skill) => skill.name));
 
@@ -103,7 +105,7 @@ const CharacterOverview = () => {
                 // setClassData((await dndApi.getMoreInfo(character.character_class.url)).data);
                 setBackgroundData((await dndApi.getBackground(character.background.url)).data);
             } catch (err) {
-                //console.error(err);
+                console.error(err);
             }
         }
         return () => {
@@ -115,81 +117,65 @@ const CharacterOverview = () => {
         };
     }, [character]);
 
-    //to get the character from the backend
-    const saveCharacter = async () => {
+    /*
+    * Description: decides what request to send to the back end 
+    * based on what action is
+    */
+    const sendToBackend = async (action) => {
         try{
             if(isAuthenticated){
+                setBackendLoading(true);
                 const token = await getAccessTokenSilently();
-                postCharacter(character, token)
+                let backendRes = 
+                (action == "SAVE") ? 
+                   (await postCharacter(character, token)).data : 
+                (action == "EDIT") ? 
+                    (await updateCharacter(character, sheetId, token)).data:
+                (await deleteCharacter(sheetId, token)).data
+
+
+                setCharacter({ type: ACTION.RESET_CHARACTER });
+                localStorage.removeItem("character");
+                if(backendRes){
+                    setBackendLoading(!backendRes)
+                    history.push("/dashboard");
+                }
             }
-            setCharacter({ type: ACTION.RESET_CHARACTER });
-            localStorage.removeItem("character");
-            history.push("/dashboard");
         } catch (e){
             console.error(e);
         }
     }
 
-    const saveEditCharacter = async () => {
-        try{
-            if(isAuthenticated){
-                const token = await getAccessTokenSilently();
-                updateCharacter(character, sheetId, token)
-            }
-            setCharacter({ type: ACTION.RESET_CHARACTER });
-            localStorage.removeItem("character");
-            history.push("/dashboard");
-        } catch (e){
-            console.error(e);
-        }
-    }
-
-    const destroyCharacter = async () => {
-        try{
-            if(isAuthenticated){
-                const token = await getAccessTokenSilently();
-                deleteCharacter(sheetId, token)
-            }
-            setCharacter({ type: ACTION.RESET_CHARACTER });
-            localStorage.removeItem("character");
-            history.push("/dashboard");
-        } catch (e){
-            console.error(e);
-        }
-    }
-
+   /*
+    * Description: decides what buttons to render based on the current path name
+    */
     const generateButton = () => {
-        if(location.pathname == "/overview"){
-            let cancelRedirect = (isAuthenticated) ? "/dashboard" : "/"
-            let saveCharacterButton = (isAuthenticated) ? 
-                <button onClick={saveCharacter}>Save Character</button> : 
-                <button onClick={() => window.print()}>Print Character</button>
-            return(
+        let cancelRedirect = (isAuthenticated) ? "/dashboard" : "/"
+        let saveCharacterButton = (isAuthenticated) ? 
+            <button onClick={() => sendToBackend("SAVE")}>Save Character</button> : 
+            <button onClick={() => window.print()}>Print Character</button>
+        return(
+            (location.pathname == newCharacterOverviewPath) ?
                 <section className="ov__buttons">
                     {saveCharacterButton}
                     <button onClick={() => history.push(`/create-character`)}>Edit Character</button>
                     <button onClick={() => history.push(cancelRedirect)}>Cancel</button>
-                </section>
-            )
-        }
-        else if(location.pathname == `/edit-overview/${sheetId}`){
-            return(
+                </section> : 
+
+            (location.pathname == editCharacterOvewviewPath) ? 
                 <section className="ov__buttons">
-                    <button onClick={saveEditCharacter}>Save Character Edits</button>
-                    <button onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
-                    <button onClick={destroyCharacter}>Delete</button>
                     <button onClick={() => history.push(`/dashboard`)}> Return to Dashboard</button>
+                    <button onClick={() => sendToBackend("EDIT")}>Save Character Edits</button>
+                    <button onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
+                    <button onClick={() => sendToBackend("DELETE")}>Delete</button>
+                </section> :
+
+                <section className="ov__buttons">
+                    <button onClick={() => history.push(`/dashboard`)}> Return to Dashboard</button>
+                    <button onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
+                    <button onClick={() => sendToBackend("DELETE")}>Delete</button>
                 </section>
-            )
-        }
-        return(
-            <section className="ov__buttons">
-                <button onClick={() => history.push(`/dashboard`)}> Return to Dashboard</button>
-                <button onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
-                <button onClick={destroyCharacter}>Delete</button>
-            </section>
-        )
-        
+        )      
     }
 
     return raceData && classData && backgroundData && spellData ? (
@@ -485,7 +471,15 @@ const CharacterOverview = () => {
             {/* Buttons */}
             {generateButton()}
         </main>
-    ) : (
+    ) : 
+    (backendLoading) ? 
+    (
+        <main className="backendLoading" style={{ display: 'grid' }}>
+            Saving Changes
+        </main>
+    ) : 
+    
+    (
         <main className="character ov--overview character--loading" style={{ display: 'grid' }}>
             <section className="character__container">
                 <h2 className="container__header" style={{ margin: '1rem' }}>

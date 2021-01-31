@@ -33,6 +33,7 @@ export const getCharacters = async (token) => {
 * Description: gets all characters
 */
 export const getCharacter = async (id, token) => {
+  console.log("inside getCharacter")
   return await axios.get(`${constants.BACKEND_BASE_URL}/api/character/${id}`, {
     headers: {
       "Content-Type": "application/json",
