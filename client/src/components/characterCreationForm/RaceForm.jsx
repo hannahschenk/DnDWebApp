@@ -77,7 +77,6 @@ const RaceForm = () => {
                 type: ACTION.UPDATE_RACE,
                 payload: {
                     name: chosenRace.name,
-                    // url: [chosenRace.url],
                     raceUrl: chosenRace.url,
                     size: raceInfo.size,
                     speed: raceInfo.speed,
@@ -101,7 +100,6 @@ const RaceForm = () => {
             type: ACTION.UPDATE_RACE,
             payload: {
                 subrace: chosenSubRace.name,
-                // url: [...character.race.url, chosenSubRace.url],
                 subraceUrl: chosenSubRace.url,
             },
         });

@@ -4,7 +4,12 @@ import { useAuth0 } from "@auth0/auth0-react";
 import {testBackEnd} from "./../utils/api"; 
 import constants from "./../utils/constants"
 import axios from "axios";
+import { useCharacter } from './../state/logic';
+import * as ACTION from "./../state/actions"
+
 const NavBar = () => {
+
+    const { character,setCharacter } = useCharacter();
     const {isAuthenticated, logout, loginWithRedirect, isLoading} = useAuth0();
     const [navContent, setNavContent] = useState([]);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -48,7 +53,10 @@ const NavBar = () => {
         {
             name: "Create Character",
             link: "/create-character",
-            clickHandler: () => {},
+            clickHandler: () => { //clear the state because create character = new character
+                setCharacter({ type: ACTION.RESET_CHARACTER });
+                localStorage.removeItem("character");
+            },
         },
         {
             name: "Sign Out",
