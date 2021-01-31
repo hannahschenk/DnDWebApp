@@ -6,9 +6,34 @@ import constants from './constants';
 * Description: Sends the character state to the back end server
 */
 export const postCharacter = async (character, token) => {
-  console.log("POST", character);
   return await axios.post(`${constants.BACKEND_BASE_URL}/api/character/`, 
   JSON.stringify(character), {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+/*
+* Signature: getCharacters(token)
+* Description: gets all characters
+*/
+export const getCharacters = async (token) => {
+  return await axios.get(`${constants.BACKEND_BASE_URL}/api/character/`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+/*
+* Signature: getCharacter(token)
+* Description: gets all characters
+*/
+export const getCharacter = async (id, token) => {
+  return await axios.get(`${constants.BACKEND_BASE_URL}/api/character/${id}`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -33,12 +58,13 @@ export const updateCharacter = async (character, id) => {
 * Signature: deleteCharacter(id)
 * Description: Reset character to initial state, delete from server
 */
-export const deleteCharacter = async (id) => {
-  console.log("DELETE", character);
-  const { setCharacter } = useCharacter();
-  setCharacter({ type: "CLEAR_CHARACTER" });
-
-  return await axios.delete('/api/character/' + id);
+export const deleteCharacter = async (id, token) => {
+  return await axios.delete(`${constants.BACKEND_BASE_URL}/api/character/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export const createUser = async (userObj, token) => {

@@ -6,6 +6,8 @@ import constants from "./utils/constants"
 import { Auth0Provider } from "@auth0/auth0-react";
 import "./styles/index.scss";
 
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 render(
     <ErrorBoundary>
         <Auth0Provider
@@ -16,7 +18,9 @@ render(
             scope="access:characters"
             useRefreshTokens={true}
         >
-            <App/>
+            <Router>
+                <App/>
+            </Router>
         </Auth0Provider>
     </ErrorBoundary>,
     document.getElementById('root')

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory,useParams } from 'react-router';
 
 import { useCharacter } from '../state/logic';
 
-import { deleteCharacter, postCharacter } from '../utils/api';
+import { deleteCharacter, postCharacter, getCharacter } from '../utils/api';
 import { useAuth0 } from "@auth0/auth0-react";
+import * as ACTION from "./../state/actions";
 import CONSTANTS from '../utils/constants';
 import dndApi from '../utils/dnd5eApi';
 
 const CharacterOverview = () => {
-    const { character } = useCharacter();
+    const { character,setCharacter } = useCharacter();
 
     const [raceData, setRaceData] = useState([]);
     const [classData, setClassData] = useState([]);
@@ -21,9 +22,10 @@ const CharacterOverview = () => {
     const [proficientSkills, setProficientSkills] = useState([]);
 
 
-    const {getAccessTokenSilently, isAuthenticated} = useAuth0();
-
+    const {getAccessTokenSilently, isAuthenticated, isLoading} = useAuth0();
     const history = useHistory();
+
+    const sheetId = useParams().id;
 
     /*
      * Signature: expandSpell(event)
@@ -38,6 +40,18 @@ const CharacterOverview = () => {
         }
     };
 
+
+    useEffect(async () => {
+        if(sheetId){
+            if(isAuthenticated){
+                const token = await getAccessTokenSilently();
+                let savedCharacter = (await getCharacter(sheetId, token)).data
+                //console.log(savedCharacter)
+                setCharacter({ type: ACTION.SET_CHARACTER, payload: {...savedCharacter}});
+            }
+        }
+    }, [isLoading])
+
     /*
      * Signature: useEffect(func, [])
      * Description: Pull spells data to render to details screen
@@ -48,6 +62,8 @@ const CharacterOverview = () => {
         let mounted = true;
 
         if (mounted) {
+
+            console.log(character)
             // Format proficient skills to use in component
             setProficientSkills(Object.values(character.proficiencies.skills).map((skill) => skill.name));
 
@@ -84,7 +100,7 @@ const CharacterOverview = () => {
                 // setClassData((await dndApi.getMoreInfo(character.character_class.url)).data);
                 setBackgroundData((await dndApi.getBackground(character.background.url)).data);
             } catch (err) {
-                console.error(err);
+                //console.error(err);
             }
         }
         return () => {
@@ -94,19 +110,36 @@ const CharacterOverview = () => {
             });
             mounted = false;
         };
-    }, []);
+    }, [character]);
 
+    //to get the character from the backend
     const saveCharacter = async () => {
         try{
             if(isAuthenticated){
                 const token = await getAccessTokenSilently();
                 postCharacter(character, token)
             }
+            setCharacter({ type: ACTION.RESET_CHARACTER });
             localStorage.removeItem("character");
+            history.push("/dashboard");
         } catch (e){
             console.error(e);
         }
     }
+    const destroyCharacter = async () => {
+        try{
+            if(isAuthenticated){
+                const token = await getAccessTokenSilently();
+                deleteCharacter(sheetId, token)
+            }
+            setCharacter({ type: ACTION.RESET_CHARACTER });
+            localStorage.removeItem("character");
+            history.push("/dashboard");
+        } catch (e){
+            console.error(e);
+        }
+    }
+
 
     return raceData && classData && backgroundData && spellData ? (
         <main className="character ov">
@@ -399,11 +432,19 @@ const CharacterOverview = () => {
             </section>
 
             {/* Buttons */}
-            <section className="ov__buttons">
-                <button onClick={saveCharacter}>Save</button>
-                <button onClick={() => history.push('/')}>Edit</button>
-                <button onClick={() => deleteCharacter(character, id)}>Delete</button>
-            </section>
+            {   (sheetId) ? 
+                <section className="ov__buttons">
+                    <button onClick={saveCharacter}>Save Character</button>
+                    <button onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
+                    <button onClick={destroyCharacter}>Delete</button>
+                </section> :
+
+                <section className="ov__buttons">
+                    <button onClick={saveCharacter}>Save Character</button>
+                    <button onClick={() => history.push('/create-character')}>Edit Character</button>
+                    <button onClick={() => history.push("/")}>Cancel</button>
+                </section>
+            }
         </main>
     ) : (
         <main className="character ov--overview character--loading">

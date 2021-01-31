@@ -70,8 +70,8 @@ const SpellsForm = ({ availableSpells }) => {
 
             {/* RENDER SPELLS HERE */}
             {availableSpells.map((spell, idx) => {
-                const selected = character.proficiencies.spells.map((spellObj) => spellObj.name === spell);
-
+                const selected = character.proficiencies.spells.map((spellObj) => (spellObj.name)).includes(spell)
+                
                 return (
                     <React.Fragment key={idx}>
                         <button
@@ -79,7 +79,7 @@ const SpellsForm = ({ availableSpells }) => {
                             onClick={(e) => handleSpellChoice(e)}
                             style={{
                                 width: 200,
-                                color: selected[0] ? '#dc2626' : '',
+                                color: selected ? '#dc2626' : '',
                             }}
                         >
                             {spell}

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 
-const CharacterSheetCard = ({characterSheet}) => {
+const CharacterSheetCard = ({characterSheet, sheetId}) => {
 
     /*note: subject to change, we don't know how the character sheet object will look like*/
     const characterName = characterSheet.name;
@@ -10,7 +10,7 @@ const CharacterSheetCard = ({characterSheet}) => {
     /*end note */
 
     return (
-        <Link to="#">
+        <Link to={`overview/${sheetId}`}>
             <article>
                 <h4>{characterName}</h4>
                 <p>{characterRace}</p>

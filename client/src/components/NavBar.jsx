@@ -5,20 +5,21 @@ import {testBackEnd} from "./../utils/api";
 import constants from "./../utils/constants"
 import axios from "axios";
 const NavBar = () => {
-    const {isAuthenticated, logout, loginWithRedirect} = useAuth0();
+    const {isAuthenticated, logout, loginWithRedirect, isLoading} = useAuth0();
     const [navContent, setNavContent] = useState([]);
     const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
-        (isAuthenticated) ? 
-            setNavContent(authenticatedNav) :
+        console.log("header: " + isAuthenticated);
+        if(isAuthenticated){
+            setNavContent(authenticatedNav)
+        } else{
+
             setNavContent(anonNav)
+        }
 
-    }, [isAuthenticated])
+    }, [isAuthenticated, isLoading])
 
-    useEffect(() => {
-        console.log(menuOpen)
-    }, [menuOpen])
     /* Sample and test; will refactor later*/
     const anonNav = [
         {

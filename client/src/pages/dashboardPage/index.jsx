@@ -2,37 +2,34 @@ import React, {useState, useEffect} from 'react';
 import CharacterSheetCard from "./../../components/characterSheetCard";
 import {useAuth0, withAuthenticationRequired} from "@auth0/auth0-react";
 import utilFunctions from "./../../utils/utilFunctions";
+import {getCharacters} from "./../../utils/api";
 const DashboardPage = () => {
 
-    const {isAuthenticated, user} = useAuth0();
+    const {isAuthenticated, user, getAccessTokenSilently} = useAuth0();
 
     let userName = isAuthenticated ? utilFunctions.truncate(user.name, 20) : "";
     let userEmail = isAuthenticated ? utilFunctions.truncate(user.email, 20) : "";
 
-    /* dummy character sheet data*/
-    let characterSheets = [
-        {
-            name: "name1",
-            race: "race1",
-            class: "class1"
-        },
-        {
-            name: "name2",
-            race: "race2",
-            class: "class2"
-        },
-        {
-            name: "name3",
-            race: "race3",
-            class: "class3"
-        },
-
-    ]
-    /* end dummy character sheet data*/
-
+    let [userSheets, setUserSheets] = useState([])
     /* 
     NOTE: truncate the user info if too long 
     */
+
+    useEffect(async () => {
+        try{
+            if(isAuthenticated){
+                const token = await getAccessTokenSilently();
+                let userSheets = (await getCharacters(token)).data
+                setUserSheets([...userSheets])
+            }
+        } catch (e){
+            console.error(e);
+        }
+    }, [])
+
+    useEffect(()=> {
+        console.log(userSheets)
+    }, [userSheets])
 
     return (
         <main className="dashboardMain">
@@ -60,7 +57,7 @@ const DashboardPage = () => {
                             <p id="numOfCharSheets"> 
                                 <b className="listItem--label">Number of Characters: </b>
                                 <br/>
-                                3 characters
+                                {userSheets.length} characters
                             </p>
                         </li>
                     </ul>
@@ -69,8 +66,8 @@ const DashboardPage = () => {
             <section className="characterCardContainer">
                 {/*this is where character sheet cards will be rendered*/}
                 {   
-                    characterSheets.map((characterSheet, idx) => (
-                        <CharacterSheetCard key={idx} characterSheet={characterSheet}/>
+                    userSheets.map((characterSheet, idx) => (
+                        <CharacterSheetCard key={idx} characterSheet={characterSheet} sheetId={characterSheet.id}/>
                     ))
                 }
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. 

@@ -17,15 +17,27 @@ import constants from "./utils/constants"
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import {createUser} from "./utils/api";
+import * as ACTION from "./state/actions"
+
+import { useLocation } from 'react-router';
 
 const App = () => {
     // Grab initial character state and assign the CharacterReducer to the setCharacter function
+    const location = useLocation();
+
     const [character, setCharacter] = useReducer(characterReducer, INITIAL_CHARACTER_STATE, () => {
         // Tries to get character from local storage, if one is not present, set to initial combined character state
         const localCharacter = localStorage.getItem('character');
         console.log(JSON.parse(localCharacter));
         return localCharacter ? JSON.parse(localCharacter) : INITIAL_CHARACTER_STATE;
     });
+
+    useEffect(()=> { // this is to clear the storage everytime we go somewhere different
+        if(!location.pathname.includes("character") && !location.pathname.includes("overview")){
+            setCharacter({ type: ACTION.RESET_CHARACTER });
+            localStorage.removeItem("character");
+        }
+    }, [location.pathname])
 
     const [details, setDetails] = useState({});
 
@@ -67,25 +79,27 @@ const App = () => {
     return (
         <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
             <FormControlContext.Provider value={{ formControlState, setFormControlState }}>
-                <Router>
-                    <NavBar />
-                    <Switch>
-                        <Route exact path="/">
-                            <HomePage />
-                        </Route>
-                        <Route exact path="/create-character">
-                            <CharacterCreationPage />
-                        </Route>
-                        <Route exact path="/overview">
-                            <CharacterOverview />
-                        </Route>
+                <NavBar />
+                <Switch>
+                    <Route exact path="/">
+                        <HomePage />
+                    </Route>
+                    <Route exact path="/create-character" render={() => <CharacterCreationPage />}>
+                    </Route>
+                    <Route exact path="/edit-character/:id" render={() => <CharacterCreationPage />}>
+                        <CharacterCreationPage />
+                    </Route>
+                    <Route exact path="/overview"  render={() => <CharacterOverview/>}>
+                    </Route>
 
-                        <Route exact path="/dashboard">
-                            <DashboardPage />
-                        </Route>
-                    </Switch>
-                    <Footer />
-                </Router>
+                    <Route exact path="/overview/:id" render={() => <CharacterOverview/>}>
+                    </Route>
+
+                    <Route exact path="/dashboard">
+                        <DashboardPage />
+                    </Route>
+                </Switch>
+                <Footer />
             </FormControlContext.Provider>
         </CharacterContext.Provider>
     );

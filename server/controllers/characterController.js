@@ -1,5 +1,5 @@
 const { User, CharacterSheet, Class, Race, AbilityScores, Background, 
-    Languages, Proficiencies, Spells, Skills, Equipment, SavingThrows, Items} = require('../models');
+    Languages, Spells, Skills, Equipment, SavingThrows, Items} = require('../models');
 const { op } = require('sequelize');
 const skills = require('../models/skills');
 const savingThrows = require('../models/savingThrows');
@@ -22,13 +22,26 @@ const makeSavingThrows = (objArray, id) => {
     }
     return selectedObj;
 }
+
+let attributesToExlude = ["id", "CharacterSheetId", "createdAt", "updatedAt"];
+
+const getObjectsFromTable = (table, id) => {
+    return( 
+        table.findAll({
+            where: {CharacterSheetId: id},
+            attributes:{
+                exclude: attributesToExlude
+            },
+            raw: true,
+            nest: true
+        })
+    )
+}
 //need to change the create and find all to be able to use the logged in users userid
 module.exports = {
     create: async (req, res) => {
         const { race, character_class, abilities, proficiencies, background, equipment } = req.body;
-        //const userId = {UserId: 1};
         const { languages, characterName, name, url, appearance, personality, alignment, age, height, weight } = background;
-    
         try {
             let idOfUser = (await User.findOne({ 
                 where: { 
@@ -47,9 +60,7 @@ module.exports = {
             let spellCheck = await Spells.bulkCreate(makeObjArray(proficiencies.spells, newCharacter.id))
             let skillCheck = await Skills.bulkCreate(makeObjArray(proficiencies.skills, newCharacter.id))
             let savingThrowCheck = await SavingThrows.bulkCreate(makeSavingThrows(proficiencies.savingThrows, newCharacter.id))
-            let itemCheck = await Items.bulkCreate(makeObjArray(proficiencies.items, newCharacter.id))
-            
-
+            let itemCheck = await Items.bulkCreate(makeObjArray(proficiencies.items, newCharacter.id))          
         } catch(err) { 
             //console.log(err)
         }
@@ -114,24 +125,114 @@ module.exports = {
                     console.log(err)
                 }
     },
-    findAll: (req, res) => {
-        CharacterSheet.findAll({
-            include: [Class, Race, AbilityScores, Background, Languages, Proficiencies, Spells, Equipment],
-        }, {
-            where: {UserId: 1}
-        })
-            .then((characterInfo) => res.json(characterInfo))
-            .catch((err) => console.log(err));
+    findAll: async (req, res) => {
+        try{
+            let idOfUser = (await User.findOne({ 
+                where: { 
+                    authId: req.user.sub
+                } 
+            })).dataValues.id;
+            
+            /*let characterArr = (await CharacterSheet.findAll({
+                include: [Class, Race, AbilityScores, Background, 
+                    Languages, Proficiencies, Spells, Skills, Equipment, SavingThrows, Items],
+            }, {
+                where: {UserId: idOfUser}
+            }))*/
+            let characterSheets = (await CharacterSheet.findAll({
+                where: {UserId: idOfUser},
+                include: [Class, Race, Background],
+                raw: true,
+                nest: true
+            }))
+
+            let formattedCharacterSheets = characterSheets.map((sheet) => {
+                return {
+                    id: sheet.id,
+                    name: sheet.Background.characterName,
+                    race: sheet.Race.name,
+                    class: sheet.Class.name
+                }
+            })
+            console.log(formattedCharacterSheets)
+            res.json(formattedCharacterSheets)
+            
+        } catch(err) {
+            console.log(err)
+        }
     },
-    findById: (req, res) => {
-        const id = req.params.id
+    findById: async(req, res) => {
+        try{
+            let idOfUser = (await User.findOne({ 
+                where: { 
+                    authId: req.user.sub
+                } 
+            })).dataValues.id;
+            let characterSheetInfo = (await CharacterSheet.findOne({
+                where: {
+                    id : req.params.id,
+                    userId: idOfUser // conditioning on this because if it doesn't belong to the user, they shouldn't be able to see it
+                },
+                attributes:["id"],
+                include:[
+                    {
+                        model: Class,
+                        attributes:{
+                            exclude: attributesToExlude
+                        } 
+                    },
+                    {
+                        model: Race,
+                        attributes: {
+                            exclude:attributesToExlude 
+                        }
+                    },
+                    {
+                        model: AbilityScores,
+                        attributes:{
+                            exclude: attributesToExlude
+                        }
+                    },
+                    {
+                        model: Background,
+                        attributes:{
+                            exclude: attributesToExlude
+                        }
+                    },
+                ],
+                raw: true,
+                nest: true
+            }))
 
-        CharacterSheet.findByPk(id, {
-            include: [Class, Race, AbilityScores, Background, Languages, Proficiencies, Spells, Equipment],
-        })
-            .then((characterInfo) => res.json(characterInfo))
-            .catch((err) => console.log(err));
+            let characterLanguages = (await getObjectsFromTable(Languages, characterSheetInfo.id))
+            let characterSpells = (await getObjectsFromTable(Spells, characterSheetInfo.id))
+            let characterSkills = (await getObjectsFromTable(Skills, characterSheetInfo.id))
+            let characterEquipment = (await getObjectsFromTable(Equipment, characterSheetInfo.id))
+            let characterSavingThrows = (await getObjectsFromTable(SavingThrows, characterSheetInfo.id)).map((content) => content.name)
+            let characterItems = (await getObjectsFromTable(Items, characterSheetInfo.id))
 
+            let characterToReturn = {
+                race: characterSheetInfo.Race,
+                character_class: characterSheetInfo.Class,
+                abilities: characterSheetInfo.AbilityScore,
+                background: {
+                    ...characterSheetInfo.Background,
+                    languages: characterLanguages
+                },
+                proficiencies:{
+                    spells: characterSpells,
+                    skills: characterSkills,
+                    savingThrows: characterSavingThrows,
+                    items: characterItems
+                },
+                equipment: {
+                    total: characterEquipment
+                }
+            }
+            res.json(characterToReturn)
+        } catch(e){
+            console.log(e)
+        }
     },
     delete: (req, res) => {
         CharacterSheet.destroy({

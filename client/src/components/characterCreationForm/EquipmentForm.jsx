@@ -61,12 +61,6 @@ const EquipmentForm = () => {
                 character.equipment.total.push(classEquipmentObj);
             }
 
-            character.equipment.total.push({
-                name: `${initialEquipments[i].equipment.name} (${initialEquipments[i].quantity})`,
-                url: initialEquipments[i].equipment.url,
-                type: determineEquipmentType(equipmentCat),
-            });
-
             setCharacter({ type: ACTION.UPDATE_EQUIPMENT, payload: { total: [...character.equipment.total] } });
         }
 
