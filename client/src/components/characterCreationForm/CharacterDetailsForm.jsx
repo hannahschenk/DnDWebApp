@@ -173,7 +173,6 @@ const CharacterDetailsForm = () => {
         setCharacter({
             type: ACTION.UPDATE_BACKGROUND,
             payload: {
-                ...character.background,
                 [stat]: e.target.value,
             },
         });

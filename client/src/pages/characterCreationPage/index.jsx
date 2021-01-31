@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import FormContainer from './FormContainer';
 import CreationTimeline from './CreationTimeline';
@@ -14,6 +14,8 @@ const CharacterCreationPage = () => {
     const {formControlState, setFormControlState} = useContext(FormControlContext);
     const history = useHistory();
     const location = useLocation();
+
+    const sheetId = useParams().id;
 
     const setSectionIndex = (offset) => {
         let newIndex = formControlState.sectionIndex + offset;
@@ -34,8 +36,9 @@ const CharacterCreationPage = () => {
     }
 
     const goToOverview = () => {
-        if(location.pathname.includes("edit")){
-            history.push("/edit-overview")
+        setFormControlState({...formControlState, sectionIndex: -1})
+        if(location.pathname.includes("edit") && sheetId){
+            history.push(`/edit-overview/${sheetId}`)
             return;
         }
         history.push("/overview")

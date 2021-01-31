@@ -45,7 +45,7 @@ const CharacterOverview = () => {
 
 
     useEffect(async () => {
-        if(sheetId){
+        if(sheetId && location.pathname == `/overview/${sheetId}`){
             if(isAuthenticated){
                 const token = await getAccessTokenSilently();
                 let savedCharacter = (await getCharacter(sheetId, token)).data
@@ -134,7 +134,7 @@ const CharacterOverview = () => {
         try{
             if(isAuthenticated){
                 const token = await getAccessTokenSilently();
-                updateCharacter(character, token)
+                updateCharacter(character, sheetId, token)
             }
             setCharacter({ type: ACTION.RESET_CHARACTER });
             localStorage.removeItem("character");
@@ -172,19 +172,20 @@ const CharacterOverview = () => {
                 </section>
             )
         }
-        else if(location.pathname == "/edit-overview"){
+        else if(location.pathname == `/edit-overview/${sheetId}`){
             return(
                 <section className="ov__buttons">
                     <button onClick={saveEditCharacter}>Save Character Edits</button>
-                    <button onClick={() => history.push(`/edit-character/`)}>Edit Character</button>
+                    <button onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
                     <button onClick={destroyCharacter}>Delete</button>
+                    <button onClick={() => history.push(`/dashboard`)}> Return to Dashboard</button>
                 </section>
             )
         }
         return(
             <section className="ov__buttons">
                 <button onClick={() => history.push(`/dashboard`)}> Return to Dashboard</button>
-                <button onClick={() => history.push(`/edit-character/`)}>Edit Character</button>
+                <button onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
                 <button onClick={destroyCharacter}>Delete</button>
             </section>
         )

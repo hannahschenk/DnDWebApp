@@ -190,8 +190,7 @@ const EquipmentForm = () => {
                         key={idx}
                         id={idx}
                         onChange={(e) => pickEquipment(e)}
-                        defaultValue={-1}
-                        defaultValue={
+                        value={
                             character.equipment.total.length >= initialEquipment.length + backgroundEquipment.length + idx + 1
                                 ? JSON.stringify(character.equipment.total[initialEquipment.length + backgroundEquipment.length + idx])
                                 : -1
