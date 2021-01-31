@@ -46,22 +46,38 @@ const CharacterCreationPage = () => {
         try{
             if(location.pathname.includes("edit") && sheetId){   
                 const token = await getAccessTokenSilently();
-                let savedCharacter = (getCharacter(sheetId, token)).data
+                let savedCharacter = (await getCharacter(sheetId, token))
                 if(!savedCharacter){
                     history.push("/404")
                 }
             }
         } catch (e){
+            console.log(e)
             history.push("/404")
         }
     }, [location.pathname, getAccessTokenSilently])
 
+
+    const instructionTemplate = 
+    `To navigate, please click the next and previous button. 
+    You can also use the creation timeline located on the right side to
+    jump to any sections before the current one you are currently on. 
+    When on a section, you can move one section forward using the creation timeline 
+    but won't be allowed to jump more sections ahead.`
+    const instruction = (location.pathname.includes("edit")) ? 
+        (`Welcome, you are now about to edit one of your characters. ${instructionTemplate} Please click on next to start the editing process.`) :
+        (`Welcome, you are now about to create a new character. ${instructionTemplate} Please click on next to start the creation process.`)
+
+
+    const instructionButtonContent = (location.pathname.includes("edit")) ? "Start Editing Character" : "Start Character Creation"
     return (
         <>
             {formControlState.sectionIndex == -1 ? ( //if block
-                <section>
-                    This is the guided character Creation process. Please fill out each section before clicking next.
-                    <button onClick={() => setFormControlState({ ...formControlState, sectionIndex: 0 })}>Start Character Creation</button>
+                <section className="instruction__container">
+                    <p className="instruction__content">{instruction}</p>
+                    <button className="instruction__button" onClick={() => setFormControlState({ ...formControlState, sectionIndex: 0 })}>
+                        <b>{instructionButtonContent}</b>
+                    </button>
                 </section>
             ) : (
                 //else block

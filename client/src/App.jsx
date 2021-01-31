@@ -24,7 +24,7 @@ const App = () => {
         currentFormDone: false,
     });
     //used for authorization
-    const {getAccessTokenSilently, user, isAuthenticated, withAuthenticationRequired} = useAuth0();
+    const {getAccessTokenSilently, user, isAuthenticated, isLoading} = useAuth0();
 
     /*
      * Description: returns character state and setter of state; use character in local storage
@@ -72,6 +72,10 @@ const App = () => {
             console.error(e);
         }
     }, [getAccessTokenSilently])
+
+    useEffect(()=> {
+        console.log(isAuthenticated)
+    },[isLoading])
 
     return (
         <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>

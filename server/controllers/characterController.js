@@ -68,7 +68,7 @@ module.exports = {
                     res.send(true)
             }
         } catch(err) { 
-            console.log(err)
+            res.status(500).json({err})
         }
     },
     update: async (req, res) => {
@@ -106,7 +106,7 @@ module.exports = {
             }
 
         } catch(err) { 
-            console.log(err)
+            res.status(500).json({err})
         }
     },
     findAll: async (req, res) => {
@@ -135,7 +135,7 @@ module.exports = {
             res.json(formattedCharacterSheets)
             
         } catch(err) {
-            console.log(err)
+            res.status(500).json({err})
         }
     },
     findById: async(req, res) => {
@@ -208,7 +208,7 @@ module.exports = {
             }
             res.json(characterToReturn)
         } catch(e){
-            console.log(e)
+            res.status(500).json({e})
         }
     },
     delete: (req, res) => {
@@ -216,6 +216,6 @@ module.exports = {
             where: { id: req.params.id },
         })
             .then(() => res.send(true))
-            .catch((err) => console.log(err));
+            .catch((err) => res.status(500).json({err}));
     }
 }
