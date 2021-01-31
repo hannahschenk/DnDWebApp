@@ -45,12 +45,13 @@ export const getCharacter = async (id, token) => {
 * Signature: updateCharacter(character, id)
 * Description: Sends the updated character state to the back end server
 */
-export const updateCharacter = async (character, id) => {
-  console.log("PUT", character);
-  return await axios.put('/api/character/' + id, JSON.stringify(character), {
+export const updateCharacter = async (character, id, token) => {
+  return await axios.put(`${constants.BACKEND_BASE_URL}/api/character/${id}`, 
+  JSON.stringify(character), {
     headers: {
       "Content-Type": "application/json",
-    }
+      Authorization: `Bearer ${token}`,
+    },
   });
 }
 

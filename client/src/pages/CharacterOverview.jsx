@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory,useParams } from 'react-router';
+import { useHistory, useParams, useLocation } from 'react-router';
 
 import { useCharacter } from '../state/logic';
 
-import { deleteCharacter, postCharacter, getCharacter } from '../utils/api';
+import { deleteCharacter, postCharacter, getCharacter, updateCharacter } from '../utils/api';
 import { useAuth0 } from "@auth0/auth0-react";
 import * as ACTION from "./../state/actions";
 import CONSTANTS from '../utils/constants';
 import dndApi from '../utils/dnd5eApi';
+import constants from '../utils/constants';
 
 const CharacterOverview = () => {
+    //console.log(useLocation())
     const { character,setCharacter } = useCharacter();
 
     const [raceData, setRaceData] = useState([]);
@@ -117,7 +119,11 @@ const CharacterOverview = () => {
         try{
             if(isAuthenticated){
                 const token = await getAccessTokenSilently();
-                postCharacter(character, token)
+                if(sheetId){
+                    updateCharacter(character, sheetId, token)
+                }else{
+                    postCharacter(character, token)
+                }
             }
             setCharacter({ type: ACTION.RESET_CHARACTER });
             localStorage.removeItem("character");
@@ -139,7 +145,6 @@ const CharacterOverview = () => {
             console.error(e);
         }
     }
-
 
     return raceData && classData && backgroundData && spellData ? (
         <main className="character ov">
