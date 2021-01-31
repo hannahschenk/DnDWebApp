@@ -86,15 +86,15 @@ const App = () => {
                     </Route>
                     <Route exact path="/create-character" render={() => <CharacterCreationPage />}>
                     </Route>
-                    <Route exact path="/edit-character/:id" render={() => <CharacterCreationPage />}>
+                    <Route exact path="/edit-character/" render={() => <CharacterCreationPage />}>
                         <CharacterCreationPage />
                     </Route>
                     <Route exact path="/overview"  render={() => <CharacterOverview/>}>
                     </Route>
-
                     <Route exact path="/overview/:id" render={() => <CharacterOverview/>}>
                     </Route>
-
+                    <Route exact path="/edit-overview" render={() => <CharacterOverview/>}>
+                    </Route>
                     <Route exact path="/dashboard">
                         <DashboardPage />
                     </Route>

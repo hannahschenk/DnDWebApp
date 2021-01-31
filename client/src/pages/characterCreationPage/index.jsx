@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import FormContainer from './FormContainer';
 import CreationTimeline from './CreationTimeline';
@@ -8,10 +8,12 @@ import FormControlContext from "./../../state/formControlManager";
 
 import constants from './../../utils/constants';
 
+
 const CharacterCreationPage = () => {
   
     const {formControlState, setFormControlState} = useContext(FormControlContext);
     const history = useHistory();
+    const location = useLocation();
 
     const setSectionIndex = (offset) => {
         let newIndex = formControlState.sectionIndex + offset;
@@ -29,6 +31,14 @@ const CharacterCreationPage = () => {
     const isNextDisabled = () => {
         return (formControlState.sectionIndex == constants.CREATION_SECTIONS.length - 1 ||
                 !formControlState.currentFormDone)
+    }
+
+    const goToOverview = () => {
+        if(location.pathname.includes("edit")){
+            history.push("/edit-overview")
+            return;
+        }
+        history.push("/overview")
     }
 
     return (
@@ -55,7 +65,7 @@ const CharacterCreationPage = () => {
 
                     {
                         formControlState.sectionIndex === 5 && 
-                        <button onClick={() => history.push('/overview')} disabled={!formControlState.currentFormDone}>
+                        <button onClick={goToOverview} disabled={!formControlState.currentFormDone}>
                             View Character Sheet
                         </button>
                     }

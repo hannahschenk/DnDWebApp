@@ -28,6 +28,7 @@ const CharacterOverview = () => {
     const history = useHistory();
 
     const sheetId = useParams().id;
+    const location = useLocation();
 
     /*
      * Signature: expandSpell(event)
@@ -119,11 +120,7 @@ const CharacterOverview = () => {
         try{
             if(isAuthenticated){
                 const token = await getAccessTokenSilently();
-                if(sheetId){
-                    updateCharacter(character, sheetId, token)
-                }else{
-                    postCharacter(character, token)
-                }
+                postCharacter(character, token)
             }
             setCharacter({ type: ACTION.RESET_CHARACTER });
             localStorage.removeItem("character");
@@ -132,6 +129,21 @@ const CharacterOverview = () => {
             console.error(e);
         }
     }
+
+    const saveEditCharacter = async () => {
+        try{
+            if(isAuthenticated){
+                const token = await getAccessTokenSilently();
+                updateCharacter(character, token)
+            }
+            setCharacter({ type: ACTION.RESET_CHARACTER });
+            localStorage.removeItem("character");
+            history.push("/dashboard");
+        } catch (e){
+            console.error(e);
+        }
+    }
+
     const destroyCharacter = async () => {
         try{
             if(isAuthenticated){
@@ -144,6 +156,39 @@ const CharacterOverview = () => {
         } catch (e){
             console.error(e);
         }
+    }
+
+    const generateButton = () => {
+        if(location.pathname == "/overview"){
+            let cancelRedirect = (isAuthenticated) ? "/dashboard" : "/"
+            let saveCharacterButton = (isAuthenticated) ? 
+                <button onClick={saveCharacter}>Save Character</button> : 
+                <button onClick={() => window.print()}>Print Character</button>
+            return(
+                <section className="ov__buttons">
+                    {saveCharacterButton}
+                    <button onClick={() => history.push(`/create-character`)}>Edit Character</button>
+                    <button onClick={() => history.push(cancelRedirect)}>Cancel</button>
+                </section>
+            )
+        }
+        else if(location.pathname == "/edit-overview"){
+            return(
+                <section className="ov__buttons">
+                    <button onClick={saveEditCharacter}>Save Character Edits</button>
+                    <button onClick={() => history.push(`/edit-character/`)}>Edit Character</button>
+                    <button onClick={destroyCharacter}>Delete</button>
+                </section>
+            )
+        }
+        return(
+            <section className="ov__buttons">
+                <button onClick={() => history.push(`/dashboard`)}> Return to Dashboard</button>
+                <button onClick={() => history.push(`/edit-character/`)}>Edit Character</button>
+                <button onClick={destroyCharacter}>Delete</button>
+            </section>
+        )
+        
     }
 
     return raceData && classData && backgroundData && spellData ? (
@@ -437,19 +482,7 @@ const CharacterOverview = () => {
             </section>
 
             {/* Buttons */}
-            {   (sheetId) ? 
-                <section className="ov__buttons">
-                    <button onClick={saveCharacter}>Save Character</button>
-                    <button onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
-                    <button onClick={destroyCharacter}>Delete</button>
-                </section> :
-
-                <section className="ov__buttons">
-                    <button onClick={saveCharacter}>Save Character</button>
-                    <button onClick={() => history.push('/create-character')}>Edit Character</button>
-                    <button onClick={() => history.push("/")}>Cancel</button>
-                </section>
-            }
+            {generateButton()}
         </main>
     ) : (
         <main className="character ov--overview character--loading">
