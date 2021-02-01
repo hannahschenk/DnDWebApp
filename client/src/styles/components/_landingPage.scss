@@ -3,36 +3,11 @@
 @use '../abstracts/mixins' as mixins;
 
 .landingContainer {
-<<<<<<< HEAD
-=======
 display: grid;
 padding-top: 5rem;
->>>>>>> a1bf28d31724064fed9f513ba7e67fea4d88d736
 }
 .character {
     background-color: variables.$backgroundDark;
-<<<<<<< HEAD
-
-    .character__container {
-        background-color: variables.$backgroundLight;
-
-        .container__header {
-            @include typography.serif(20pt, variables.$backgroundDark, 500);
-        }
-        .container__subheader {
-            @include typography.serif(17pt, variables.$backgroundDark, 500);
-        }
-        .container__text {
-            @include typography.sans(16pt, variables.$backgroundDark, 500);
-        }
-    }
-    .fa-d-and-d {
-        color: variables.$mainThemeDark;
-        transform: rotate(-20deg);
-        font-size: 200px;
-    }
-    &__button {
-=======
     padding: 10px;
     flex-grow: 1;
     z-index: 5;
@@ -74,34 +49,12 @@ padding-top: 5rem;
                 @include mixins.button(variables.$backgroundLight, variables.$mainTheme);
             }
         }
->>>>>>> a1bf28d31724064fed9f513ba7e67fea4d88d736
     }
 }
 
 .login {
     flex-grow: 1;
     .login__container {
-<<<<<<< HEAD
-        background-color: variables.$mainTheme;
-        .fa-dice-d20 {
-            background: rgb(144, 169, 162);
-            background: linear-gradient(0deg, rgba(144, 169, 162, 0.2) 0%, rgba(108, 130, 126, 0.7) 53%, rgba(32, 46, 50, 1) 100%);
-            -webkit-background-clip: text;
-            -moz-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 200px;
-            transform: rotate(-20deg);
-        }
-        .container__signin {
-            background-color: variables.$accentImportant;
-            .signin__google {
-                background-color: variables.$backgroundLight;
-                width: 200px;
-                .google__image {
-                }
-                .google__text {
-=======
         display: grid;
         grid-template-columns: auto 350px 600px auto;
         grid-template-rows: 490px auto;
@@ -149,7 +102,6 @@ padding-top: 5rem;
                     grid-template-columns: auto 5px auto;
                     border-radius: 7px;
                     position: relative;
->>>>>>> a1bf28d31724064fed9f513ba7e67fea4d88d736
                     color: variables.$backgroundDark;
                     //transition: 0.3s;
                     margin-top: 17px;
