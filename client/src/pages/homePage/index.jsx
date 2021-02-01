@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const homePage = () => {
 
     return(
-        <div className = "landingContainer footer-grow">
+        <div className = "landingContainer">
             <section className = "character">
                 <div className = "character__container">
                     <h2 className = "container__header">Anonymous Character Creation</h2>
