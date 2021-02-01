@@ -12,3 +12,11 @@ html,body
     padding: 0px;
     overflow-x: hidden; 
 }
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active{
+    text-decoration: none;
+}

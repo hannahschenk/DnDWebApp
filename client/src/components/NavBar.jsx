@@ -28,24 +28,36 @@ const NavBar = () => {
     /* Sample and test; will refactor later*/
     const anonNav = [
         {
-            name: "Home",
+            name: "HOME",
             link: "/", //replace with id
-            clickHandler: () => {},
-        },
-        {
-            name: "Sign In",
-            link: "#",
             clickHandler: () => {
-                let element = document.getElementById("login");
-                element.scrollIntoView();
+                let element = document.getElementById("character");
+                element.scrollIntoView({
+                    behavior: "smooth",
+                    block: "end",
+                });
             }
         },
         {
-            name: "About Us",
+            name: "SIGN IN",
+            link: "#",
+            clickHandler: () => {
+                let element = document.getElementById("login");
+                element.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+            }
+        },
+        {
+            name: "ABOUT US",
             link: "#", 
             clickHandler: () => {
                 let element = document.getElementById("about");
-                element.scrollIntoView();
+                element.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
             },
         }
     ]
