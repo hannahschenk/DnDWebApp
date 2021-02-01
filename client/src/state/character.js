@@ -3,7 +3,9 @@ const INITIAL_CHARACTER_STATE = {
     name: "",
     subrace: "",
     // First index is race url, second is subrace index
-    url: [],
+    // url: [],
+    raceUrl: "",
+    subraceUrl: "",
     speed: "",
     size: ""
   },
@@ -60,8 +62,8 @@ const INITIAL_CHARACTER_STATE = {
       //     url: ""
       //   }
     ],
-    savingThrows: [],
     // Contains the names of the abilities (not an object, an array of strings)
+    savingThrows: [],
 
   },
 

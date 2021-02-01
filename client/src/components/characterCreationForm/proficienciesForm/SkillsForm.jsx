@@ -5,7 +5,6 @@ import * as ACTION from './../../../state/actions';
 import CONSTANTS from '../../../utils/constants';
 
 const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
-  
     const { character, setCharacter } = useCharacter();
     const { skillsFormDone, setSkillsFormDone } = skillsFormDoneState;
 
@@ -29,7 +28,7 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
                     [field]: updatedSkills,
                 },
             });
-            e.target.style.backgroundColor = '';
+            e.target.style.color = '';
         }
         // Otherwise add skill
         else {
@@ -40,7 +39,7 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
                     [field]: [...character.proficiencies[field], { name: skillName, ability: abilityName, origin: 'selected', url: skillObj.url }],
                 },
             });
-            e.target.style.backgroundColor = 'red';
+            e.target.style.color = '#dc2626';
         }
     };
 
@@ -73,7 +72,7 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
                                 name={skillName}
                                 style={{
                                     width: 200,
-                                    backgroundColor: selected ? 'red' : '',
+                                    color: selected ? '#dc2626' : '',
                                 }}
                             >
                                 {skillName}
