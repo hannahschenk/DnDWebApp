@@ -1,0 +1,18 @@
+@use 'typography' as typography;
+
+@mixin button($fontColor, $backgroundColor) {
+    text-decoration: none;
+    margin: 0 auto;
+    display: inline-block;
+    padding: 5px 30px 5px 30px;
+    @include typography.sans(12pt,$fontColor, 700);
+    background-color: $backgroundColor;
+    border-color: $backgroundColor;
+    transition: 0.3s;
+    border-radius: 7px;
+    &:hover {
+        background-color: $fontColor;
+        color: $backgroundColor;
+        border-color: $backgroundColor;
+    }
+}

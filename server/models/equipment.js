@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM("armor", "weapons", "tools", "misc"),
             allowNull: false
         },
-        dnd5eEndpoint: {
+        url: {
             type: DataTypes.STRING,
         }
     },

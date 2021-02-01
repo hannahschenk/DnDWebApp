@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING, //"Acolyte", "Criminal/ Spy", "Folk Hero", "Noble", "Sage", "Soldier"
             allowNull: false
         },
-        api_endpoint: {
+        url: {
             type: DataTypes.STRING,
             allowNull: false
         },

@@ -16,7 +16,6 @@ export const CharacterContext = React.createContext(undefined);
 export const useCharacter = () => React.useContext(CharacterContext);
 
 export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) => {
-  // console.log(action);
 
   // Removes UPDATE_ or CLEAR_ from action.type
   const TYPE = action.type.match(/^(?:[A-Z]+_)(.+)/)[1]
@@ -25,12 +24,11 @@ export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) =>
   // ACTION is: UPDATE or CLEAR
   // TYPE is: the key for the character state: 'abilities', 'alignment', 'background', 'character_class', 'languages', 'proficiencies', 'race', 'spells'
   // console.log(ACTION, TYPE);
-
   switch (action.type) {
     case `UPDATE_${TYPE}`: {
       if (action.payload) {
         // cleanUp()
-        clearPropAfter(character, stat)
+        clearPropAfter(character, stat, action.payload)
         return (character = {
           ...character,
           [stat]: { ...character[stat], ...action.payload },
@@ -42,17 +40,22 @@ export const characterReducer = (character = INITIAL_CHARACTER_STATE, action) =>
         ...character,
         [stat]: INITIAL_CHARACTER_STATE[stat],
       });
-    case 'CLEAR_CHARACTER':
+    case 'SET_CHARACTER':
+      return (character = action.payload)
+    case 'RESET_CHARACTER':
       return (character = INITIAL_CHARACTER_STATE)
     default:
       return character;
   }
 };
 
-const clearPropAfter = (character, stat) => {
+const clearPropAfter = (character, stat, payload) => {
   // took out abilities because it does not affect anything
   const propOrder = ["race", "character_class", "abilities", "background", "proficiencies", "equipment"]
   if (stat == "abilities" || stat == "proficiencies") { //changes here should not affect anything
+    return;
+  }
+  if(stat == "background" && !payload.hasOwnProperty("name")){
     return;
   }
   let startIndex = propOrder.indexOf(stat)
