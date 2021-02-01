@@ -8,7 +8,7 @@
     @include typography.sans(12pt,$fontColor, 700);
     background-color: $backgroundColor;
     border-color: $backgroundColor;
-    //border-style: solid;
+    transition: 0.3s;
     border-radius: 7px;
     &:hover {
         background-color: $fontColor;

@@ -10,6 +10,7 @@ padding-top: 5rem;
     background-color: variables.$backgroundDark;
     padding: 10px;
     flex-grow: 1;
+    z-index: 5;
     &__container1 {
         width: 100%;
         display: grid;
@@ -55,49 +56,78 @@ padding-top: 5rem;
     flex-grow: 1;
     .login__container {
         display: grid;
-        grid-template-columns: auto 400px 600px auto;
+        grid-template-columns: auto 350px 600px auto;
         grid-template-rows: 490px auto;
         .filler1 {
             background-color: variables.$mainTheme;
             grid-column: 1/ span 1;
-            z-index: -2;
+            z-index: 1;
         }
         .container__container1 {
             padding-top: 5rem;
             grid-column: 2/ span 1;
             position: relative;
             background-color: variables.$mainTheme;
-            z-index: -2;
+            z-index: 1;
             .fa-dice-d20 {
                 position: absolute;
                 background: rgb(144,169,162);
-                background: linear-gradient(0deg, rgba(144,169,162,0.2) 0%, rgba(108,130,126,.7) 53%, rgba(32,46,50,1) 100%);
+                background: linear-gradient(0deg, rgba(144,169,162,0.5) 0%, rgba(108,130,126,.9) 53%, rgba(32,46,50,1) 100%);
                 -webkit-background-clip: text;
                 -moz-background-clip: text;
                 background-clip: text;
                 -webkit-text-fill-color:transparent;
-                font-size: 570px;
-                transform: rotate(-15deg) translateY(-190px) translateX(-100px);
+                font-size: 550px;
+                transform: rotate(-20deg) translateY(-140px) translateX(-80px);
                 z-index: -1;
             }
             .container1__signin {
-                z-index: 2;
+                position: absolute;
                 width: 300px;
-                height: 100px;
+                height: 150px;
                 background-color: variables.$accentImportant;
                 margin-top: 20px;
                 border-radius: 7px;
                 box-shadow: 0 0 30px black;
                 text-align: center;
+                margin-top: 70px;
                 .signin__google {
-                    background-color: variables.$backgroundLight;
+                    background-size: 200% 100%;
+                    background-image: linear-gradient(to right, variables.$backgroundLight 50%, variables.$backgroundDark 50%);
+                    transition: background-position .25s;
                     width: 200px;
                     margin: 0 auto;
-                    display: inline-block;
+                    transform: translateY(130%);
+                    display: grid;
+                    grid-template-columns: auto 5px auto;
+                    border-radius: 7px;
+                    position: relative;
+                    color: variables.$backgroundDark;
+                    //transition: 0.3s;
+                    margin-top: 17px;
+                    &:hover {
+                        background-position: -100% 0;
+                    }
+                    &:hover .google__text{
+                        color: variables.$backgroundLight;
+                    }
                     .google__image {
+                        background-color: variables.$backgroundLight;
+                        border-radius: 7px 0 0 7px;
+                        padding: 5px;
+                        .fa-google {
+                            font-size: 15pt;
+                        }
+                    }
+                    .gridColor {
+                        border-left: 2px solid variables.$backgroundDark;
+                        height: 31px;
                     }
                     .google__text {
-                        color: variables.$backgroundDark;
+                        padding: 0 10px 0 5px;
+                        text-decoration: none;
+                        margin-top: 4px;
+                        @include typography.sans(12pt, variables.$backgroundDark, 500);
                     }
                 }
             }
@@ -106,6 +136,7 @@ padding-top: 5rem;
             padding-top: 5rem;
             grid-column: 3/ span 1;
             background-color: variables.$accentBasic;
+            z-index: 3;
             .container2__textContainer {
                 margin: 20px 20px 0px 20px;
                 padding: 30px;
@@ -128,20 +159,38 @@ padding-top: 5rem;
     }
 }
 .about {
-    flex-grow: 1;
     background-color: variables.$backgroundDark;
+    padding: 10px;
+    flex-grow: 1;
+    z-index: 5;
+    padding-top: 5rem;
+    display: grid;
+    grid-template-columns: auto 600px 350px auto;
     .about__container {
         background-color: variables.$backgroundLight;
+        margin: 20px 20px 0px 20px;
+        padding: 30px;
+        max-width: 800px;
+        grid-column: 2/ span 1;
         .container__header {
-            color: variables.$backgroundDark;
+            @include typography.serif(20pt, variables.$backgroundDark, 700);
+            padding-bottom: 20px;
         }
         .container__text {
-            color: variables.$backgroundDark;
+            @include typography.sans(16pt, variables.$backgroundDark, 500);
+            padding: 0px 40px 20px 40px;
         }
     }
-    &__image1 {
-    }
-    &__image2 {
+    &__imageContainer {
+        .fa-dice {
+            color: variables.$accentImportant;
+            font-size: 200px;
+        }
+        .fa-dice-four {
+            color: variables.$accentImportant;
+            font-size: 150px;
+            transform: translateY(-30px) translateX(20px) rotate(20deg);
+        }
     }
 }
 
@@ -156,6 +205,54 @@ padding-top: 5rem;
         .fa-d-and-d {
             visibility: hidden;
             font-size: 1px;
+        }
+    }
+
+    .login {
+        .login__container {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column-reverse;
+            .filler1 {
+                display: none;
+            }
+            .container__container1 {
+                height: 200px;
+                display: flex;
+                padding: 0px;
+                justify-content: center;
+                .fa-dice-d20 {
+                    font-size: 1px;
+                    visibility: hidden;
+                }
+                .container1__signin {
+                    margin: 20px;
+                }
+            }
+            .filler2{
+                display: none;
+            }
+            .container__container2 {
+                .container2__textContainer {
+                    margin-bottom: 20px;
+                }
+            }
+        }
+    }
+    .about {
+        display: flex;
+        flex-wrap: wrap;
+        .about__container {
+        }
+        &__imageContainer {
+            .fa-dice {
+                font-size: 1px;
+                visibility: hidden;
+            }
+            .fa-dice-four {
+                font-size: 1px;
+                visibility: hidden;
+            }
         }
     }
 }
