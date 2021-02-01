@@ -35,12 +35,18 @@ const NavBar = () => {
         {
             name: "Sign In",
             link: "#",
-            clickHandler: () => loginWithRedirect()
+            clickHandler: () => {
+                let element = document.getElementById("login");
+                element.scrollIntoView();
+            }
         },
         {
             name: "About Us",
             link: "#", 
-            clickHandler: () => {},
+            clickHandler: () => {
+                let element = document.getElementById("about");
+                element.scrollIntoView();
+            },
         }
     ]
 
@@ -73,8 +79,11 @@ const NavBar = () => {
     
     return (
         <section className="navBar">
-
-            <h1 className="logo">DnD Character Creator</h1>
+            <NavLink 
+                to={"/"}
+            >
+                <h1 className="logo">D&D CC</h1>
+            </NavLink>
             
             <label className="header__navTriggerIcon" htmlFor="burgerNav">
                 <i className="fas fa-bars fa-2x"></i>
