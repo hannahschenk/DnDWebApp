@@ -79,14 +79,13 @@ const ClassForm = () => {
     };
 
     return (
-        <>
-            <form>
+        <main>
+            <section>
                 <p>Pick a Class: </p>
                 {
                     //render radio options for classes
                     classChoices.map((classObj, idx) => (
                         <React.Fragment key={idx}>
-                            <label htmlFor={classObj.name}>{classObj.name}</label>
                             <input
                                 type="radio"
                                 name="characterClass"
@@ -95,12 +94,16 @@ const ClassForm = () => {
                                 value={JSON.stringify(classObj)}
                                 onClick={() => pickClass(classObj)}
                             />
+                            <label htmlFor={classObj.name}>
+                                {'  '}
+                                {classObj.name}
+                            </label>
                             <br />
                         </React.Fragment>
                     ))
                 }
-            </form>
-        </>
+            </section>
+        </main>
     );
 };
 

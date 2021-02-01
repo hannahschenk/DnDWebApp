@@ -1,0 +1,17 @@
+@use '../abstracts/typography' as typography;
+@import '../abstracts/globalVariables';
+
+.details-wrapper {
+    padding: 1rem;
+    margin: 0 1rem;
+    background-color: $backgroundLight;
+}
+.details-container {
+    > h3 {
+        @include typography.serif(15pt, 500);
+    }
+    > p {
+        @include typography.sans(12pt, 500);
+        margin: 0.5rem 0;
+    }
+}

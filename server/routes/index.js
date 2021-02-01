@@ -1,10 +1,8 @@
 const router = require('express').Router();
-const authenticateRoutes = require("./authenticate");
 const apiRoutes = require("./api");
+const jwtCheck = require("./../config/jwtConfig");
 
-const {requiresAuth, auth} = require('express-openid-connect');
+router.use("/api", jwtCheck, apiRoutes)
 
-router.use("/authenticate", authenticateRoutes);
-router.use("/api", apiRoutes)
 
 module.exports = router; 

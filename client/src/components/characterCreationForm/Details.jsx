@@ -78,7 +78,6 @@ const Details = () => {
             if (keyMatch(key)) {
                 elements.push(<h3 key={keyGen()}>{keyFormat(key)}</h3>);
             }
-
             if (typeof value === 'object') {
                 dealObject(value);
             } else if (Array.isArray(value)) {

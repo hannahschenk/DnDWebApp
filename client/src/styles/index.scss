@@ -1,5 +1,7 @@
-@import 'components';
 @import 'abstracts';
+@import 'components';
+@import "./components/index";
+@import "./pages/index";
 
 
 html,body

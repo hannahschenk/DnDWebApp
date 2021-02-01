@@ -5,10 +5,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        tableDep: {
+        origin: {
             type: DataTypes.STRING,
         },
-        dnd5eEndpoint: {
+        url: {
             type: DataTypes.STRING,
         }
     },

@@ -53,7 +53,7 @@ const INITIAL_CHARACTER_STATE = {
     spells: [
       //   {
       //     name: "",
-      //     url: ""
+      //     url: "",
       //   }
     ],
     items: [

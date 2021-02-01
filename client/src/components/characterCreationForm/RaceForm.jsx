@@ -77,7 +77,6 @@ const RaceForm = () => {
                 type: ACTION.UPDATE_RACE,
                 payload: {
                     name: chosenRace.name,
-                    // url: [chosenRace.url],
                     raceUrl: chosenRace.url,
                     size: raceInfo.size,
                     speed: raceInfo.speed,
@@ -101,7 +100,6 @@ const RaceForm = () => {
             type: ACTION.UPDATE_RACE,
             payload: {
                 subrace: chosenSubRace.name,
-                // url: [...character.race.url, chosenSubRace.url],
                 subraceUrl: chosenSubRace.url,
             },
         });
@@ -111,14 +109,13 @@ const RaceForm = () => {
     };
 
     return (
-        <>
-            <form>
+        <main>
+            <section>
                 <p>Pick a Race: </p>
                 {
                     //render radio options for races
                     raceChoices.map((raceObj, idx) => (
                         <React.Fragment key={idx}>
-                            <label htmlFor={raceObj.name}>{raceObj.name}</label>
                             <input
                                 type="radio"
                                 name="race"
@@ -127,20 +124,23 @@ const RaceForm = () => {
                                 value={JSON.stringify(raceObj)}
                                 onClick={() => pickRace(raceObj)}
                             />
+                            <label htmlFor={raceObj.name}>
+                                {'  '}
+                                {raceObj.name}
+                            </label>
                             <br />
                         </React.Fragment>
                     ))
                 }
-            </form>
-            <hr />
-            <form>
+                <hr />
+            </section>
+            <section>
                 <p>Pick a SubRace: </p>
                 {
                     //render radio options for subraces if they exist
                     subRaceChoices.length > 0 ? ( //if block:
                         subRaceChoices.map((subRaceObj, idx) => (
                             <React.Fragment key={idx}>
-                                <label htmlFor={subRaceObj.name}>{subRaceObj.name}</label>
                                 <input
                                     type="radio"
                                     name="subrace"
@@ -149,6 +149,11 @@ const RaceForm = () => {
                                     value={JSON.stringify(subRaceObj)}
                                     onClick={() => pickSubRace(subRaceObj)}
                                 />
+                                <label htmlFor={subRaceObj.name}>
+                                    {'  '}
+                                    {subRaceObj.name}
+                                </label>
+
                                 <br />
                             </React.Fragment>
                         ))
@@ -157,8 +162,8 @@ const RaceForm = () => {
                         <p> No Subraces</p>
                     )
                 }
-            </form>
-        </>
+            </section>
+        </main>
     );
 };
 

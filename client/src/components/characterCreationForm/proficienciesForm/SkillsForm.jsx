@@ -54,7 +54,7 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
     }, [character]);
 
     return (
-        <>
+        <section>
             <h3>
                 Choose {skillProficiencies.choose}
                 {field === 'skills' && ' Skill '}
@@ -64,7 +64,8 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
                 //render buttons based on skill choices
                 skillProficiencies.from.map((skill, idx) => {
                     const skillName = skill.name.match(/\b(?!Skill:\s\b)\w+.+/);
-                    const selected = character.proficiencies.skills.map((skillObj) => skillObj.name).includes(skillName[0]);
+                    const selected = (field == "skills") ? character.proficiencies.skills.map((skillObj) => skillObj.name).includes(skillName[0]) :
+                    character.proficiencies.items.map((itemObj) => itemObj.name).includes(skillName[0])
                     return (
                         <React.Fragment key={idx}>
                             <button
@@ -82,7 +83,7 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
                     );
                 })
             }
-        </>
+        </section>
     );
 };
 

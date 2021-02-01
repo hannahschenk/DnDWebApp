@@ -1,0 +1,27 @@
+@use '../abstracts/globalVariables' as variables;
+@use '../abstracts/typography' as typography;
+
+.card-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.character-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: variables.$backgroundLight;
+    height: auto;
+    // border: 2px solid variables.$textDark;
+    border-radius: .5rem;
+    margin: .5rem 2rem .5rem 2rem;
+    color: variables.$textDark;
+}
+
+.card-link {
+    text-decoration: none;
+}
+
+

@@ -5,6 +5,8 @@ module.exports = {
     BACKGROUNDS_URL: `https://dnd-backgrounds-default-rtdb.firebaseio.com/backgrounds.json`,
     BACKGROUNDS_BASE_URL: `https://dnd-backgrounds-default-rtdb.firebaseio.com/backgrounds`,
     LANGUAGES_URL: `http://www.dnd5eapi.co/api/languages/`,
+    SELF_BASE_URL: `http://localhost:1234`,
+    BACKEND_BASE_URL: `http://localhost:8080`,
     CREATION_SECTIONS:
         [
             {
