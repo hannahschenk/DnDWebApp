@@ -69,7 +69,7 @@ const App = () => {
                     name: user.name,
                     email: user.email,
                 };
-                console.log(postBody);
+                //console.log(postBody);
                 createUser(postBody, token);
             }
         } catch (e) {

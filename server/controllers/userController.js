@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 
 module.exports = {
     create: (userObj) => {
-        console.log(userObj)
+        //console.log(userObj)
         return( 
             User.findOrCreate({
                 where: {
