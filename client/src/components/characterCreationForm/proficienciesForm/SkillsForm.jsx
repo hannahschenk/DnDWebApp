@@ -28,7 +28,7 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
                     [field]: updatedSkills,
                 },
             });
-            e.target.style.color = '';
+            e.target.style.backgroundColor = '';
         }
         // Otherwise add skill
         else {
@@ -39,7 +39,7 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
                     [field]: [...character.proficiencies[field], { name: skillName, ability: abilityName, origin: 'selected', url: skillObj.url }],
                 },
             });
-            e.target.style.color = '#dc2626';
+            e.target.style.backgroundColor = '#9b7f30';
         }
     };
 
@@ -64,8 +64,10 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
                 //render buttons based on skill choices
                 skillProficiencies.from.map((skill, idx) => {
                     const skillName = skill.name.match(/\b(?!Skill:\s\b)\w+.+/);
-                    const selected = (field == "skills") ? character.proficiencies.skills.map((skillObj) => skillObj.name).includes(skillName[0]) :
-                    character.proficiencies.items.map((itemObj) => itemObj.name).includes(skillName[0])
+                    const selected =
+                        field == 'skills'
+                            ? character.proficiencies.skills.map((skillObj) => skillObj.name).includes(skillName[0])
+                            : character.proficiencies.items.map((itemObj) => itemObj.name).includes(skillName[0]);
                     return (
                         <React.Fragment key={idx}>
                             <button
@@ -73,7 +75,7 @@ const SkillsForm = ({ skillProficiencies, skillsFormDoneState, field }) => {
                                 name={skillName}
                                 style={{
                                     width: 200,
-                                    color: selected ? '#dc2626' : '',
+                                    backgroundColor: selected ? '#9b7f30' : '',
                                 }}
                             >
                                 {skillName}

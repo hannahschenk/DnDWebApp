@@ -1,6 +1,6 @@
 .navBar{
     /*sticky*/
-    position: sticky;
+    //position: sticky;
     top: 0;
     left:0;
     /*end sticky*/
@@ -8,14 +8,20 @@
     width: 100%;
     height: 5rem;
     padding: 1%;
-
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+
+    z-index: 90;
+    position: absolute;
+    top: 0;
+    left:0;
 }
 
 .logo{
     width: 50%;
+    color: $backgroundDark;
+    font-size: 3rem;
 }
 
 .header__navTrigger{
@@ -69,6 +75,7 @@
     @media (min-width: 0){
         display: none;
         background-color: $mainThemeDark;
+        z-index: 100;
         position: absolute;
         top: 5rem;
         left: 0;

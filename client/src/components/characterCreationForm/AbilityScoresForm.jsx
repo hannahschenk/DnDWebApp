@@ -202,7 +202,7 @@ const AbilityScoresForm = ({ formDetailsState }) => {
                     Object.entries(character.abilities).map(([abilityName, score]) => {
                         return (
                             <React.Fragment key={abilityName}>
-                                <select defaultValue={-1} name={abilityName} id={abilityName} onChange={assignScore}>
+                                <select className="select-style" defaultValue={-1} name={abilityName} id={abilityName} onChange={assignScore}>
                                     <option value={-1}> - </option>
                                     {abilityScoreChoices.map((scoreObj, scoreIdx) => (
                                         <option key={scoreIdx} value={scoreIdx} disabled={scoreObj.used}>

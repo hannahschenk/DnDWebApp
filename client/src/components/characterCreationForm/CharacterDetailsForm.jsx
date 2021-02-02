@@ -54,13 +54,13 @@ const CharacterDetailsForm = () => {
                 // Stores the character's race language, used in case a new background is selected
                 const raceLanguagesData = (await dndApi.getMoreInfo(character.race.raceUrl)).data.languages;
                 raceLanguagesData.map((language) => {
-                    let languageObj =  {
+                    let languageObj = {
                         name: language.name,
                         origin: 'race',
                         url: language.url,
                     };
-                    raceLanguages.push(languageObj)
-                    if(!character.background.languages.map((lang) => lang.name).includes(languageObj.name)){
+                    raceLanguages.push(languageObj);
+                    if (!character.background.languages.map((lang) => lang.name).includes(languageObj.name)) {
                         character.background.languages.push(languageObj);
                     }
                 });
@@ -78,8 +78,6 @@ const CharacterDetailsForm = () => {
                         };
                     })
                 );
-
-
             } catch (err) {
                 console.error(err);
             }
@@ -120,7 +118,7 @@ const CharacterDetailsForm = () => {
      */
     const pickBackground = (chosenBackground) => {
         // Erase languages that !== origin: "race" by capturing only race languages in a new array of objects
-        if(character.background.name != chosenBackground.name){
+        if (character.background.name != chosenBackground.name) {
             setCharacter({
                 type: ACTION.UPDATE_BACKGROUND,
                 payload: {
@@ -241,6 +239,7 @@ const CharacterDetailsForm = () => {
                             <select
                                 // defaultValue={lang.length !== 0 && JSON.stringify(lang[idx])}
                                 name="languages"
+                                className="select-style"
                                 onChange={(e) => pickLanguage()}
                                 ref={bonusRaceLanguageRef}
                                 required
@@ -275,12 +274,14 @@ const CharacterDetailsForm = () => {
                         // Render total options for each language choice; disable languages that are already picked
                         [...Array(numLanguageChoices)].map((e, idx) => {
                             const lang = character.background.languages.filter((language) => language.origin === 'background');
-                            let selectDefault = character.background.languages.length >= raceLanguages.length + idx + 1
-                                                ? JSON.stringify(character.background.languages[raceLanguages.length + idx])
-                                                : -1
+                            let selectDefault =
+                                character.background.languages.length >= raceLanguages.length + idx + 1
+                                    ? JSON.stringify(character.background.languages[raceLanguages.length + idx])
+                                    : -1;
                             return (
                                 <React.Fragment key={idx}>
                                     <select
+                                        className="select-style"
                                         name="languages"
                                         ref={idx === 0 ? firstLanguageChoiceRef : idx === 1 ? secondLanguageChoiceRef : ''}
                                         onChange={(e) => pickLanguage()}
@@ -336,7 +337,7 @@ const CharacterDetailsForm = () => {
                                     key={idx}
                                     value={alignmentStr}
                                     onClick={(e) => setStat(e, 'alignment')}
-                                    style={{ width: 200, color: alignmentStr === character.background.alignment ? '#dc2626' : '' }}
+                                    style={{ backgroundColor: alignmentStr === character.background.alignment ? '#9b7f30' : '' }}
                                 >
                                     {alignmentStr}
                                 </button>
