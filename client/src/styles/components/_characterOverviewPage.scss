@@ -4,6 +4,7 @@
 // Mobile view
 
 .ov {
+    margin-top: 5rem;
     background-color: $backgroundDark;
 
     display: grid;
@@ -21,6 +22,9 @@
         }
         .container__subheader {
             @include typography.serif(17pt, $backgroundDark, 500);
+            &--label{
+                @include typography.serif(17pt, $textLight, 500);
+            }
         }
         .container__text {
             @include typography.sans(16pt, $backgroundDark, 500);
@@ -214,3 +218,4 @@
         }
     }
 }
+

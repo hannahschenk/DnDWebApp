@@ -150,28 +150,28 @@ const CharacterOverview = () => {
     const generateButton = () => {
         let cancelRedirect = isAuthenticated ? '/dashboard' : '/';
         let saveCharacterButton = isAuthenticated ? (
-            <button onClick={() => sendToBackend('SAVE')}>Save Character</button>
+            <button className="button-accent"  onClick={() => sendToBackend('SAVE')}>Save Character</button>
         ) : (
-            <button onClick={() => window.print()}>Print Character</button>
+            <button className="button-accent"  onClick={() => window.print()}>Print Character</button>
         );
         return location.pathname == newCharacterOverviewPath ? (
             <section className="ov__buttons">
                 {saveCharacterButton}
-                <button onClick={() => history.push(`/create-character`)}>Edit Character</button>
-                <button onClick={() => history.push(cancelRedirect)}>Cancel</button>
+                <button className="button-accent" onClick={() => history.push(`/create-character`)}>Edit Character</button>
+                <button className="button-theme" onClick={() => history.push(cancelRedirect)}>Cancel</button>
             </section>
         ) : location.pathname == editCharacterOvewviewPath ? (
             <section className="ov__buttons">
-                <button onClick={() => history.push(`/dashboard`)}> Return to Dashboard</button>
-                <button onClick={() => sendToBackend('EDIT')}>Save Character Edits</button>
-                <button onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
-                <button onClick={() => sendToBackend('DELETE')}>Delete</button>
+                <button className="button-theme" onClick={() => history.push(`/dashboard`)}> Return to Dashboard</button>
+                <button className="button-accent"  onClick={() => sendToBackend('EDIT')}>Save Character Edits</button>
+                <button className="button-accent"  onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
+                <button className="button-theme" onClick={() => sendToBackend('DELETE')}>Delete</button>
             </section>
         ) : (
             <section className="ov__buttons">
-                <button onClick={() => history.push(`/dashboard`)}> Return to Dashboard</button>
-                <button onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
-                <button onClick={() => sendToBackend('DELETE')}>Delete</button>
+                <button className="button-theme" onClick={() => history.push(`/dashboard`)}> Return to Dashboard</button>
+                <button className="button-accent" onClick={() => history.push(`/edit-character/${sheetId}`)}>Edit Character</button>
+                <button className="button-theme" onClick={() => sendToBackend('DELETE')}>Delete</button>
             </section>
         );
     };
@@ -437,7 +437,7 @@ const CharacterOverview = () => {
 
                 <input id="collapsible__background" className="toggleInfo" type="checkbox" tabIndex="0" style={{ display: 'none' }} />
                 <label htmlFor="collapsible__background" className="container__subheader label__toggle">
-                    <h4 className="container__subheader">{character.background.name}</h4>
+                    <h4 className="container__subheader container__subheader--label">{character.background.name}</h4>
                     <i className="fa fa-chevron-down"></i>
                 </label>
                 <article className="container--collapsible">
@@ -493,7 +493,7 @@ const CollapsibleData = ({ feature, data }) => {
             <>
                 <input id={`collapsible__${feature}`} className="toggleInfo" type="checkbox" tabIndex="0" style={{ display: 'none' }} />
                 <label htmlFor={`collapsible__${feature}`} className="container__subheader label__toggle">
-                    <h4 className="container__subheader">{feature}</h4>
+                    <h4 className="container__subheader container__subheader--label">{feature}</h4>
                     <i className="fa fa-chevron-down"></i>
                 </label>
                 <article className="container--collapsible">

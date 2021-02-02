@@ -280,6 +280,7 @@ const CharacterDetailsForm = () => {
                             return (
                                 <React.Fragment key={idx}>
                                     <select
+                                        className="select-style"
                                         name="languages"
                                         ref={idx === 0 ? firstLanguageChoiceRef : idx === 1 ? secondLanguageChoiceRef : ''}
                                         onChange={(e) => pickLanguage()}

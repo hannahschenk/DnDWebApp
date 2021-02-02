@@ -15,7 +15,6 @@ const NavBar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
-        console.log("header: " + isAuthenticated);
         if(isAuthenticated){
             setNavContent(authenticatedNav)
         } else{
@@ -80,7 +79,7 @@ const NavBar = () => {
     return (
         <section className="navBar">
 
-            <h1 className="logo">DnD CC</h1>
+            <h1 className="logo" onClick={() => window.location="/"}>DnD CC</h1>
             
             <label className="header__navTriggerIcon" htmlFor="burgerNav">
                 <i className="fas fa-bars fa-2x"></i>

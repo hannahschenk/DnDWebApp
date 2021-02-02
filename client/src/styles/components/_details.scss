@@ -2,16 +2,20 @@
 @import '../abstracts/globalVariables';
 
 .details-wrapper {
-    margin: 0 1rem;
-    padding: 1rem;
-    background-color: $backgroundLight;
+    padding: 0 1rem;
+    //background-color: $backgroundLight;
     overflow: scroll;
-    //max-height: 600px;
-    // visibility: hidden;
     position: absolute;
     display: flex;
+
+    width: 100%;
+    //background-color: red;
 }
 .details-container {
+    background-color: $backgroundDark;
+    color: $textLight;
+    padding-left: 2%;
+    padding-right:2%;
     max-height: 0px;
 
     > h3 {
@@ -49,8 +53,8 @@
         height: calc(100vh - 11rem);
         overflow: auto;
         grid-column-start: 2;
-
         margin: 0;
         padding: 0;
+        width: 100%;
     }
 }

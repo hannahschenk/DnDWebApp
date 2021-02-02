@@ -1,0 +1,33 @@
+@mixin buttonColorStyle($bkColor, $fgColor) {
+    width: 10rem;
+    padding: 1% 0 1% 0;
+    font-weight: bold;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: $bkColor;
+    margin: 2%;
+    color: $fgColor; 
+    &:hover{
+        background-color: $fgColor;
+        color: $bkColor; 
+    }
+}
+
+.button-accent{
+    @include buttonColorStyle($accentImportant, $textLight);
+}
+.button-theme{
+    @include buttonColorStyle($mainTheme, $textLight);
+}
+
+.button-dark{
+    @include buttonColorStyle($backgroundDark, $textLight);
+}
+
+
+.select-style{
+    width: 10rem;
+    padding: 0.5% 1% 0.5% 1%;
+    background-color: $accentBasic;
+    color: $textDark;
+}

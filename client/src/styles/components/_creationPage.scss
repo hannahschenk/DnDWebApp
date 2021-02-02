@@ -25,6 +25,7 @@
 
     .creation-nav {
         display: flex;
+        flex-wrap: wrap;
         //margin: 0 1rem;
         padding: 0.6rem;
         transition: 0.3s;
@@ -33,6 +34,8 @@
         text-align: center;
 
         li {
+            padding-left: 2%;
+            padding-right: 2%;
             flex: 1 0 auto;
             list-style: none;
             cursor: pointer;
@@ -78,6 +81,11 @@
         margin-top: 2rem;
         height: 3rem;
         margin-right: 1rem;
+        li {
+
+            padding-left: 0%;
+            padding-right: 0%;
+        }
     }
     .time-line {
         display: block;
@@ -108,4 +116,8 @@
             margin-left: 2rem;
         }
     }
+}
+
+.content{
+    margin-top: 5rem;
 }

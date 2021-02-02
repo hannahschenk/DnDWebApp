@@ -60,9 +60,9 @@ const DashboardPage = () => {
                 {/*this is where character sheet cards will be rendered*/}
                 <div className="card-container">
                 {   
-                    userSheets.map((characterSheet, idx) => (
+                    userSheets.map((characterSheet, idx) => 
                         <CharacterSheetCard key={idx} characterSheet={characterSheet} sheetId={characterSheet.id}/>
-                    ))
+                    )
                 }
                 </div>
             </section>
