@@ -6,8 +6,10 @@ const path = require('path');
 
 router.use("/api", apiRoutes)
 
-router.use(function (req, res) {
+/*router.use(function (req, res) {
   res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+});*/
+router.get('/*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../..', 'client', 'dist', 'index.html'));
 });
-console.log(__dirname)
 module.exports = router; 
