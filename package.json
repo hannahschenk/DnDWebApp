@@ -11,7 +11,7 @@
     "server": "cd server && npm start",
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "concurrently \"npm run server\" \"npm run client\"",
-    "start:prod": "node server/app.js"
+    "start:prod": "node server/server.js"
   },
   "keywords": [
     "heroku"
