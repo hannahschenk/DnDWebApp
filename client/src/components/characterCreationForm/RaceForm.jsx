@@ -71,7 +71,7 @@ const RaceForm = () => {
 
             // Clear race and subrace before selecting a new race
             if (chosenRace.name != character.race.name) {
-                //setCharacter({ type: ACTION.CLEAR_RACE });
+                setCharacter({ type: ACTION.CLEAR_RACE });
                 setCharacter({
                     type: ACTION.UPDATE_RACE,
                     payload: {
