@@ -8,9 +8,11 @@
         flex-direction: column-reverse;
         flex-wrap: wrap;
         background-color: $accentBasic;
+        justify-content: space-between;
 
         &__btns {
             text-align: center;
+
             > button {
                 padding: 0.2rem 1rem;
                 margin: 1rem !important;
@@ -83,7 +85,6 @@
         height: 3rem;
         margin-right: 1rem;
         li {
-
             padding-left: 0%;
             padding-right: 0%;
         }
@@ -118,4 +119,3 @@
         }
     }
 }
-

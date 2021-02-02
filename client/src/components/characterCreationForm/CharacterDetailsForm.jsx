@@ -68,6 +68,8 @@ const CharacterDetailsForm = () => {
                 setRaceLanguagesDesc((await dndApi.getMoreInfo(character.race.raceUrl)).data.language_desc);
                 setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [...character.background.languages] } });
 
+                // setBonusRaceLanguage(character.background.languages.filter((language) => language.origin === 'bonusRace')[0]);
+
                 // Stores all possible languages, formats data to have name, origin, and url fields
                 setLanguageChoices(
                     (await dndApi.getLanguages()).data.results.map((lang) => {
@@ -119,6 +121,16 @@ const CharacterDetailsForm = () => {
     const pickBackground = (chosenBackground) => {
         // Erase languages that !== origin: "race" by capturing only race languages in a new array of objects
         if (character.background.name != chosenBackground.name) {
+            // if (bonusRaceLanguageRef.current) {
+            //     setCharacter({
+            //         type: ACTION.UPDATE_BACKGROUND,
+            //         payload: {
+            //             languages: [...raceLanguages, bonusRaceLanguageRef.current.value],
+            //             name: chosenBackground.name,
+            //             url: `/${chosenBackground.id}.json`,
+            //         },
+            //     });
+            // } else {
             setCharacter({
                 type: ACTION.UPDATE_BACKGROUND,
                 payload: {
@@ -128,10 +140,12 @@ const CharacterDetailsForm = () => {
                 },
             });
         }
+
         setDetails(chosenBackground);
 
         setNumLanguageChoices(chosenBackground['language-choices']);
         // Reset languages if background is changed
+        // console.log(bonusRaceLanguageRef, firstLanguageChoiceRef, secondLanguageChoiceRef);
         if (bonusRaceLanguageRef.current) bonusRaceLanguageRef.current.value = 'Choose a language';
         if (firstLanguageChoiceRef.current) firstLanguageChoiceRef.current.value = 'Choose a language';
         if (secondLanguageChoiceRef.current) secondLanguageChoiceRef.current.value = 'Choose a language';
@@ -146,7 +160,9 @@ const CharacterDetailsForm = () => {
         let newLanguages = [];
 
         if (bonusRaceLanguageRef.current && bonusRaceLanguageRef.current.value !== 'Choose a language') {
-            newLanguages.push(JSON.parse(bonusRaceLanguageRef.current.value));
+            let newBonusRaceLanguage = JSON.parse(bonusRaceLanguageRef.current.value);
+            newBonusRaceLanguage.origin = 'bonusRace';
+            newLanguages.push(newBonusRaceLanguage);
         }
         if (firstLanguageChoiceRef.current && firstLanguageChoiceRef.current.value !== 'Choose a language') {
             newLanguages.push(JSON.parse(firstLanguageChoiceRef.current.value));
@@ -233,34 +249,41 @@ const CharacterDetailsForm = () => {
                     <h3>Select your Languages:</h3>
                     <p>{raceLanguagesDesc}</p>
 
-                    {(character.race.name === 'Human' || character.race.name === 'Half-Elf') && (
-                        <>
-                            <p>Pick one bonus language granted by your race.</p>
-                            <select
-                                // defaultValue={lang.length !== 0 && JSON.stringify(lang[idx])}
-                                name="languages"
-                                className="select-style"
-                                onChange={(e) => pickLanguage()}
-                                ref={bonusRaceLanguageRef}
-                                required
-                            >
-                                <option value="Choose a language">Choose a language</option>
-                                {languageChoices &&
-                                    languageChoices.map((language, idx) => (
-                                        <option
-                                            key={idx}
-                                            value={JSON.stringify(language)}
-                                            disabled={character.background.languages
-                                                .map((lang) => (lang.hasOwnProperty('name') ? lang.name : ''))
-                                                .includes(language.name)}
-                                        >
-                                            {language.name}
-                                        </option>
-                                    ))}
-                            </select>
-                            <br />
-                        </>
-                    )}
+                    {(character.race.name === 'Human' || character.race.name === 'Half-Elf') &&
+                        [...Array(1)].map((e, idx) => {
+                            const lang = character.background.languages.filter((language) => language.origin === 'bonusRace');
+                            return (
+                                <React.Fragment key={idx}>
+                                    <p>Pick one bonus language granted by your race.</p>
+
+                                    <select
+                                        className="select-style"
+                                        name="bonus-language"
+                                        ref={bonusRaceLanguageRef}
+                                        onChange={(e) => pickLanguage()}
+                                        value={JSON.stringify(lang[0])}
+                                        required
+                                    >
+                                        <option value="Choose a language">Choose a language</option>
+                                        {languageChoices &&
+                                            languageChoices.map((language, idx) => {
+                                                return (
+                                                    <option
+                                                        key={idx}
+                                                        value={JSON.stringify({ ...language, origin: 'bonusRace' })}
+                                                        disabled={character.background.languages
+                                                            .map((lang) => (lang.hasOwnProperty('name') ? lang.name : ''))
+                                                            .includes(language.name)}
+                                                    >
+                                                        {language.name}
+                                                    </option>
+                                                );
+                                            })}
+                                    </select>
+                                    <br />
+                                </React.Fragment>
+                            );
+                        })}
                     {numLanguageChoices !== 0 && (
                         <>
                             <p>
@@ -274,14 +297,6 @@ const CharacterDetailsForm = () => {
                         // Render total options for each language choice; disable languages that are already picked
                         [...Array(numLanguageChoices)].map((e, idx) => {
                             const lang = character.background.languages.filter((language) => language.origin === 'background');
-                            let idxOffset = idx;
-                            if(character.race.name === 'Human' || character.race.name === 'Half-Elf'){
-                                idxOffset = idxOffset + 1;
-                            }
-                            let selectDefault =
-                                character.background.languages.length >= raceLanguages.length + idxOffset + 1
-                                    ? JSON.stringify(character.background.languages[raceLanguages.length + idxOffset])
-                                    : -1;
                             return (
                                 <React.Fragment key={idx}>
                                     <select
@@ -289,24 +304,24 @@ const CharacterDetailsForm = () => {
                                         name="languages"
                                         ref={idx === 0 ? firstLanguageChoiceRef : idx === 1 ? secondLanguageChoiceRef : ''}
                                         onChange={(e) => pickLanguage()}
-                                        value={selectDefault}
+                                        value={JSON.stringify(lang[idx])}
                                         required
                                     >
-                                        <option key={idx + 1} value={-1}>
-                                            Choose a language
-                                        </option>
+                                        <option value="Choose a language">Choose a language</option>
                                         {languageChoices &&
-                                            languageChoices.map((language, idxx) => (
-                                                <option
-                                                    key={idxx}
-                                                    value={JSON.stringify(language)}
-                                                    disabled={character.background.languages
-                                                        .map((lang) => (lang.hasOwnProperty('name') ? lang.name : ''))
-                                                        .includes(language.name)}
-                                                >
-                                                    {language.name}
-                                                </option>
-                                            ))}
+                                            languageChoices.map((language, idxx) => {
+                                                return (
+                                                    <option
+                                                        key={idxx}
+                                                        value={JSON.stringify(language)}
+                                                        disabled={character.background.languages
+                                                            .map((lang) => (lang.hasOwnProperty('name') ? lang.name : ''))
+                                                            .includes(language.name)}
+                                                    >
+                                                        {language.name}
+                                                    </option>
+                                                );
+                                            })}
                                     </select>
                                     <br />
                                 </React.Fragment>
