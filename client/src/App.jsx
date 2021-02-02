@@ -1,18 +1,23 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { useLocation } from 'react-router';
+
+import * as ACTION from './state/actions';
 import INITIAL_CHARACTER_STATE from './state/character';
 import { CharacterContext, characterReducer } from './state/logic';
-import CharacterCreationPage from './pages/characterCreationPage';
+
 import FormControlContext from './state/formControlManager';
+import CharacterCreationPage from './pages/characterCreationPage';
 import CharacterOverview from './pages/characterOverview';
 import HomePage from './pages/homePage';
 import DashboardPage from './pages/dashboardPage';
 import NavBar from './components/NavBar';
-import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
-import {createUser} from "./utils/api";
-import * as ACTION from "./state/actions"
-import NotFound from "./pages/NotFound";
-import { useLocation } from 'react-router';
+import Footer from './components/Footer';
+
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
+import { createUser } from './utils/api';
+import NotFound from './pages/NotFound';
+
 const App = () => {
     //used to decide if local storage should be cleared
     const location = useLocation();
@@ -24,7 +29,7 @@ const App = () => {
         currentFormDone: false,
     });
     //used for authorization
-    const {getAccessTokenSilently, user, isAuthenticated, isLoading} = useAuth0();
+    const { getAccessTokenSilently, user, isAuthenticated, isLoading } = useAuth0();
 
     /*
      * Description: returns character state and setter of state; use character in local storage
@@ -36,15 +41,15 @@ const App = () => {
     });
 
     /*
-     * Description: if the user is not creating a character or viewing a character, clear local 
+     * Description: if the user is not creating a character or viewing a character, clear local
      * storage; unsaved character gets lost if they navigate away but persists through a refresh
      */
-    useEffect(()=> { 
-        if(!location.pathname.includes("character") && !location.pathname.includes("overview")){
+    useEffect(() => {
+        if (!location.pathname.includes('character') && !location.pathname.includes('overview')) {
             setCharacter({ type: ACTION.RESET_CHARACTER });
-            localStorage.removeItem("character");
+            localStorage.removeItem('character');
         }
-    }, [location.pathname])
+    }, [location.pathname]);
 
     /*
      * Description: if the character state changes, save the changes in local storage
@@ -53,29 +58,28 @@ const App = () => {
         localStorage.setItem('character', JSON.stringify(character));
     }, [character]);
 
-
     /*
      * Description: everytime the user signs in, check the db to find/create the user
      */
     useEffect(async () => {
-        try{
-            if(isAuthenticated){
+        try {
+            if (isAuthenticated) {
                 const token = await getAccessTokenSilently();
                 let postBody = {
-                    name : user.name,
-                    email: user.email
-                }
-                console.log(postBody)
-                createUser(postBody, token)
+                    name: user.name,
+                    email: user.email,
+                };
+                console.log(postBody);
+                createUser(postBody, token);
             }
-        } catch (e){
+        } catch (e) {
             console.error(e);
         }
-    }, [getAccessTokenSilently])
+    }, [getAccessTokenSilently]);
 
-    useEffect(()=> {
-        console.log(isAuthenticated)
-    },[isLoading])
+    useEffect(() => {
+        console.log(isAuthenticated);
+    }, [isLoading]);
 
     return (
         <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
@@ -85,24 +89,19 @@ const App = () => {
                     <Route exact path="/">
                         <HomePage />
                     </Route>
-                    <Route exact path="/create-character" render={() => <CharacterCreationPage />}>
-                    </Route>
-                    <Route exact path="/edit-character/:id" render={() => <CharacterCreationPage />}>
-                    </Route>
-                    <Route exact path="/overview"  render={() => <CharacterOverview/>}>
-                    </Route>
-                    <Route exact path="/overview/:id" render={() => <CharacterOverview/>}>
-                    </Route>
-                    <Route exact path="/edit-overview/:id" render={() => <CharacterOverview/>}>
-                    </Route>
+                    <Route exact path="/create-character" render={() => <CharacterCreationPage />}></Route>
+                    <Route exact path="/edit-character/:id" render={() => <CharacterCreationPage />}></Route>
+                    <Route exact path="/overview" render={() => <CharacterOverview />}></Route>
+                    <Route exact path="/overview/:id" render={() => <CharacterOverview />}></Route>
+                    <Route exact path="/edit-overview/:id" render={() => <CharacterOverview />}></Route>
                     <Route exact path="/dashboard">
                         <DashboardPage />
                     </Route>
                     <Route>
-                        <NotFound/>
+                        <NotFound />
                     </Route>
                 </Switch>
-                {/*<Footer />*/}
+                <Footer />
             </FormControlContext.Provider>
         </CharacterContext.Provider>
     );

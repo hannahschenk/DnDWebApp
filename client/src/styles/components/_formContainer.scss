@@ -1,61 +1,81 @@
 @use '../abstracts/typography' as typography;
+@use '../abstracts/mixins' as mixins;
 @import '../abstracts/globalVariables';
 
 .form-container {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    position: relative;
+    overflow: scroll;
+    margin-bottom: 1rem;
+    margin-top: 20px;
+    max-height: 600px;
+    grid-column: 2 / -1;
+    // grid-template-rows: auto auto;
+    // height: calc(100vh - 15rem);
 }
-
-// Styles all elements in the form
 .creation-form {
     background-color: $backgroundLight;
     padding: 1rem;
     margin-left: 1rem;
+    margin-right: 1rem;
+    height: 100%;
+}
+
+// Styles all elements in the form
+.creation-form {
+    display: flex;
+    //flex-wrap: wrap;
+    flex-direction: column;
+    max-height: 600px;
+    overflow: scroll;
 
     &__title {
-        @include typography.serif(18pt, 500);
+        @include typography.serif(18pt, $textDark, 500);
+        //margin-top: 4rem;
         margin-bottom: 1rem;
     }
     > main {
         > section {
             h2 {
-                @include typography.serif(18pt, 500);
+                @include typography.serif(18pt, $accentBasic, 500);
                 margin-bottom: 1rem;
             }
             h3 {
-                @include typography.serif(15pt, 500);
+                @include typography.serif(15pt, $accentBasic, 500);
                 margin-bottom: 1rem;
             }
-            h4 {
-                @include typography.sans(12pt, 500);
+            h4,
+            p {
+                @include typography.sans(12pt, $textDark, 500);
                 margin-bottom: 1rem;
             }
-            p,
             label {
-                @include typography.sans(12pt, 500);
+                @include typography.sans(12pt, $textDark, 500);
                 margin-bottom: 1rem;
+                cursor: pointer;
             }
             select {
-                @include typography.sans(12pt, 500);
+                @include typography.sans(12pt, $textDark, 500);
                 margin: 0.5rem;
+                min-width: 150px;
+                cursor: pointer;
             }
             input {
-                margin-bottom: 0.5rem;
+                margin-bottom: 1rem;
+                cursor: pointer;
             }
             button {
-                border-radius: 5px;
-                background-color: $backgroundDark;
-                color: white;
-                padding: 0.2rem 0;
-                @include typography.sans(12pt, 500);
-                width: 300px;
+                @include mixins.button($backgroundLight, $backgroundDark);
+                cursor: pointer;
+                width: 90%;
                 margin: 0 0.5rem 1rem 0.5rem;
             }
             input[type='text'],
             input[type='number'],
             textarea {
-                @include typography.sans(12pt, 500);
+                @include typography.sans(12pt, $textDark, 500);
                 padding: 0.5rem;
+                cursor: text;
             }
             hr {
                 margin: 1rem;
@@ -66,7 +86,19 @@
 
 @media screen and (min-width: 800px) {
     .form-container {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
+        grid-template-columns: 3fr 7fr;
+        border: 2px solid $backgroundDark;
+        padding: 1rem;
+        margin-right: 1rem;
+    }
+    .creation-form {
+        //height: calc(100vh - 11rem);
+        overflow: auto;
+        margin: 0;
+        padding: 0;
+
+        &__title {
+            display: none;
+        }
     }
 }

@@ -1,14 +1,30 @@
+@use '../abstracts/typography' as typography;
 @import '../abstracts/globalVariables';
-@import '../abstracts/typography';
 
 // Mobile view
 
 .ov {
+    background-color: $backgroundDark;
+
     display: grid;
 
     & > section {
         margin: 1rem 1rem 0 1rem;
         padding: 1rem;
+    }
+
+    .ov__container {
+        background-color: $backgroundLight;
+
+        .container__header {
+            @include typography.serif(20pt, $backgroundDark, 500);
+        }
+        .container__subheader {
+            @include typography.serif(17pt, $backgroundDark, 500);
+        }
+        .container__text {
+            @include typography.sans(16pt, $backgroundDark, 500);
+        }
     }
 }
 
@@ -35,6 +51,7 @@
 .ov {
     &--overview {
         display: grid;
+        height: auto;
     }
     &--abilityNames {
         display: grid;
@@ -70,6 +87,11 @@
     }
 }
 
+.collapsible {
+    &__text {
+        @include typography.serif(17pt, $backgroundDark, 500);
+    }
+}
 .label__toggle {
     display: flex;
     justify-content: space-between;
@@ -162,33 +184,32 @@
     }
 }
 
-.backendLoading{
+.backendLoading {
     position: absolute;
     width: 100%;
     height: 100%;
     left: 0;
-    top: 0; 
-    background-color: rgba(0,0,0,0.7);
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.7);
     text-align: center;
 }
 
-
-.instruction{
-    &__container{
+.instruction {
+    &__container {
         padding: 10%;
         text-align: center;
     }
-    &__content{
+    &__content {
         font-size: 1.5rem;
         margin: 2%;
     }
-    &__button{
+    &__button {
         padding: 2%;
         background-color: $backgroundDark;
         color: $textLight;
         border: none;
         border-radius: 1rem;
-        &:hover{
+        &:hover {
             background-color: $accentBasic;
         }
     }
