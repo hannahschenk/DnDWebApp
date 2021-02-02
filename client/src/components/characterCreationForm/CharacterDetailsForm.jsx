@@ -274,9 +274,13 @@ const CharacterDetailsForm = () => {
                         // Render total options for each language choice; disable languages that are already picked
                         [...Array(numLanguageChoices)].map((e, idx) => {
                             const lang = character.background.languages.filter((language) => language.origin === 'background');
+                            let idxOffset = idx;
+                            if(character.race.name === 'Human' || character.race.name === 'Half-Elf'){
+                                idxOffset = idxOffset + 1;
+                            }
                             let selectDefault =
-                                character.background.languages.length >= raceLanguages.length + idx + 1
-                                    ? JSON.stringify(character.background.languages[raceLanguages.length + idx])
+                                character.background.languages.length >= raceLanguages.length + idxOffset + 1
+                                    ? JSON.stringify(character.background.languages[raceLanguages.length + idxOffset])
                                     : -1;
                             return (
                                 <React.Fragment key={idx}>
