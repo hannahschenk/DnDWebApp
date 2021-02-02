@@ -49,6 +49,11 @@ const App = () => {
             setCharacter({ type: ACTION.RESET_CHARACTER });
             localStorage.removeItem('character');
         }
+        //reset this:
+        setFormControlState({
+            sectionIndex: -1,
+            currentFormDone: false,
+        })
     }, [location.pathname]);
 
     /*
@@ -76,10 +81,6 @@ const App = () => {
             console.error(e);
         }
     }, [getAccessTokenSilently]);
-
-    useEffect(() => {
-        console.log(isAuthenticated);
-    }, [isLoading]);
 
     return (
         <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
