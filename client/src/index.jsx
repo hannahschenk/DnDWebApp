@@ -8,7 +8,7 @@ import "./styles/index.scss";
 
 import { BrowserRouter as Router} from 'react-router-dom';
 
-/*render(
+render(
     <ErrorBoundary>
         <Auth0Provider
             domain="dnd-capstone.us.auth0.com"
@@ -24,4 +24,4 @@ import { BrowserRouter as Router} from 'react-router-dom';
         </Auth0Provider>
     </ErrorBoundary>,
     document.getElementById('root')
-);*/
+);
