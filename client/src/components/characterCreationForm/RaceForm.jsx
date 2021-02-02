@@ -71,17 +71,18 @@ const RaceForm = () => {
 
             // Clear race and subrace before selecting a new race
             if (chosenRace.name != character.race.name) {
-                setCharacter({ type: ACTION.CLEAR_RACE });
+                //setCharacter({ type: ACTION.CLEAR_RACE });
+                setCharacter({
+                    type: ACTION.UPDATE_RACE,
+                    payload: {
+                        name: chosenRace.name,
+                        raceUrl: chosenRace.url,
+                        size: raceInfo.size,
+                        speed: raceInfo.speed,
+                    },
+                });
             }
-            setCharacter({
-                type: ACTION.UPDATE_RACE,
-                payload: {
-                    name: chosenRace.name,
-                    raceUrl: chosenRace.url,
-                    size: raceInfo.size,
-                    speed: raceInfo.speed,
-                },
-            });
+            
 
             setDetails(raceInfo);
         } catch (err) {
@@ -96,13 +97,16 @@ const RaceForm = () => {
      *               chosen subrace
      */
     const pickSubRace = async (chosenSubRace) => {
-        setCharacter({
-            type: ACTION.UPDATE_RACE,
-            payload: {
-                subrace: chosenSubRace.name,
-                subraceUrl: chosenSubRace.url,
-            },
-        });
+
+        if (chosenSubRace.name != character.race.subrace) {
+            setCharacter({
+                type: ACTION.UPDATE_RACE,
+                payload: {
+                    subrace: chosenSubRace.name,
+                    subraceUrl: chosenSubRace.url,
+                },
+            });
+        }
 
         const chosenSubRaceInfo = (await dndApi.getMoreInfo(chosenSubRace.url)).data;
         setDetails(chosenSubRaceInfo);

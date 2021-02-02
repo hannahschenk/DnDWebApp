@@ -52,11 +52,11 @@ const CharacterOverview = () => {
                 if (!savedCharacter) {
                     history.push('/404');
                 }
-            } else {
+            } /*else {
                 history.push('/404');
-            }
+            }*/
         }
-    }, [isLoading]);
+    }, [isLoading, getAccessTokenSilently]);
 
     /*
      * Signature: useEffect(func, [])
