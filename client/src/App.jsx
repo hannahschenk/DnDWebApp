@@ -49,11 +49,6 @@ const App = () => {
             setCharacter({ type: ACTION.RESET_CHARACTER });
             localStorage.removeItem('character');
         }
-        //reset this:
-        setFormControlState({
-            sectionIndex: -1,
-            currentFormDone: false,
-        })
     }, [location.pathname]);
 
     /*
