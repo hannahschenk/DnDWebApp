@@ -1,4 +1,5 @@
-const router = require('express').Router();
+const router = require('express');
+const app2 = express();
 const characterController = require('../controllers/characterController.js')
 
 const jwtCheck = require("./../config/jwtConfig");
@@ -7,18 +8,20 @@ var jwt = require('express-jwt');
 const userController = require("./../controllers/userController");
 
 
+
+app2.use(jwtCheck);
 //comment these out if you want to use authentication.
-router.route("/character")
+app2.route("/character")
     .get(characterController.findAll)
     .post(characterController.create);
 
-router.route("/character/:id")
+app2.route("/character/:id")
     .put(characterController.update)
     .get(characterController.findById)
     .delete(characterController.delete);
 
 
-router.post("/user", (req, res) => {
+app2.post("/user", (req, res) => {
     let userObj = {
         sub: req.user.sub,
         name: req.body.name, 
@@ -30,4 +33,4 @@ router.post("/user", (req, res) => {
   });
   
 
-module.exports = router; 
+module.exports = app2;
