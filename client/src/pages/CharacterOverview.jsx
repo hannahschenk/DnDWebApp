@@ -474,9 +474,9 @@ const CharacterOverview = () => {
             Saving Changes
         </main>
     ) : (
-        <main className="character ov--overview character--loading" style={{ display: 'grid' }}>
+        <main className="character ov ov--overview character--loading" style={{ display: 'grid' }}>
             <section className="ov__container">
-                <h2 className="container__header" style={{ margin: '1rem' }}>
+                <h2 className="container__subheader" style={{ margin: '1rem' }}>
                     Loading character sheet for {character.background.characterName}...
                 </h2>
             </section>
