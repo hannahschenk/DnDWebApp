@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.use(jwtCheck);
+//app.use(jwtCheck);
 //end auth0
 
 
