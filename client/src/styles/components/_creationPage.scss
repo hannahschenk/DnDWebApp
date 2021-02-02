@@ -15,7 +15,8 @@
                 padding: 0.2rem 1rem;
                 margin: 1rem !important;
                 @include mixins.button($backgroundLight, $mainTheme);
-                border: none;
+                border: 2px solid $mainTheme;
+                cursor: pointer;
             }
             > button:disabled {
                 opacity: 0.5;
