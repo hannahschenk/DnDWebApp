@@ -334,7 +334,7 @@ const CharacterOverview = () => {
                             return (
                                 <article key={idx}>
                                     <input id={`collapsible--${idx}`} className="toggleInfo" type="checkbox" tabIndex="0" style={{ display: 'none' }} />
-                                    <label htmlFor={`collapsible--${idx}`} className="container__subheader label__toggle">
+                                    <label htmlFor={`collapsible--${idx}`} className="container__subheader--label label__toggle">
                                         {spell.name}
                                         <i className="fa fa-chevron-down"></i>
                                     </label>
