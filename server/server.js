@@ -33,11 +33,15 @@ app.use(express.urlencoded({ extended: true }));
   app.use(express.static('../client/dist'));
 }*/
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../..', 'client', 'dist', 'index.html'));
-});
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/dist'));
+}
 
-//app.use("/", routeManager);
+/*app.get('/*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../..', 'client', 'dist', 'index.html'));
+});*/
+
+app.use("/", routeManager);
 
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
