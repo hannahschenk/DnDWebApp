@@ -1,6 +1,6 @@
 .navBar{
     /*sticky*/
-    position: sticky;
+    //position: sticky;
     top: 0;
     left:0;
     /*end sticky*/
@@ -16,6 +16,8 @@
 
 .logo{
     width: 50%;
+    color: $backgroundDark;
+    font-size: 3rem;
 }
 
 .header__navTrigger{

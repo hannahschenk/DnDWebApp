@@ -52,7 +52,7 @@ const App = () => {
     }, [location.pathname]);
 
     /*
-     * Description: if the character state changes, save the changes in local storage
+     * Description: if the character state changes, save the changes in local storageå
      */
     useEffect(() => {
         localStorage.setItem('character', JSON.stringify(character));
@@ -84,24 +84,31 @@ const App = () => {
     return (
         <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
             <FormControlContext.Provider value={{ formControlState, setFormControlState }}>
-                <NavBar />
-                <Switch>
-                    <Route exact path="/">
-                        <HomePage />
-                    </Route>
-                    <Route exact path="/create-character" render={() => <CharacterCreationPage />}></Route>
-                    <Route exact path="/edit-character/:id" render={() => <CharacterCreationPage />}></Route>
-                    <Route exact path="/overview" render={() => <CharacterOverview />}></Route>
-                    <Route exact path="/overview/:id" render={() => <CharacterOverview />}></Route>
-                    <Route exact path="/edit-overview/:id" render={() => <CharacterOverview />}></Route>
-                    <Route exact path="/dashboard">
-                        <DashboardPage />
-                    </Route>
-                    <Route>
-                        <NotFound />
-                    </Route>
-                </Switch>
-                <Footer />
+                <div className="pageWrap">
+                    <NavBar />
+                    <Switch>
+                        <Route exact path="/">
+                            <HomePage />
+                        </Route>
+                        <Route exact path="/create-character" render={() => <CharacterCreationPage />}>
+                        </Route>
+                        <Route exact path="/edit-character/:id" render={() => <CharacterCreationPage />}>
+                        </Route>
+                        <Route exact path="/overview"  render={() => <CharacterOverview/>}>
+                        </Route>
+                        <Route exact path="/overview/:id" render={() => <CharacterOverview/>}>
+                        </Route>
+                        <Route exact path="/edit-overview/:id" render={() => <CharacterOverview/>}>
+                        </Route>
+                        <Route exact path="/dashboard">
+                            <DashboardPage />
+                        </Route>
+                        <Route>
+                            <NotFound/>
+                        </Route>
+                    </Switch>
+                    <Footer />
+                </div>
             </FormControlContext.Provider>
         </CharacterContext.Provider>
     );

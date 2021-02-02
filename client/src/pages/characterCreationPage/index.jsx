@@ -69,7 +69,7 @@ const CharacterCreationPage = () => {
 
     const instructionButtonContent = location.pathname.includes('edit') ? 'Start Editing Character' : 'Start Character Creation';
     return (
-        <>
+        <div className="content">
             {formControlState.sectionIndex == -1 ? ( //if block
                 <section className="instruction__container">
                     <p className="instruction__content">{instruction}</p>
@@ -100,7 +100,7 @@ const CharacterCreationPage = () => {
                     <FormContainer />
                 </section>
             )}
-        </>
+        </div>
     );
 };
 

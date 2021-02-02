@@ -1,7 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+
+import { useAuth0 } from "@auth0/auth0-react";
+
 const homePage = () => {
+    const {isAuthenticated, logout, loginWithRedirect, isLoading} = useAuth0();
+    const signInHandler = () => {
+        loginWithRedirect()
+    }
     return (
         <>
             <div className="landingContainer">
@@ -26,13 +33,13 @@ const homePage = () => {
                         </div>
                     </div>
                 </section>
-                <section className="login">
+                <section className="login" id="login">
                     <div className="login__container">
                         <div className="filler1"></div>
                         <div className="container__container1">
                             <i className="fas fa-dice-d20"></i>
                             <div className="container1__signin">
-                                <div className="signin__google">
+                                <div className="signin__google" onClick={signInHandler}>
                                     <div className="google__image">
                                         <i className="fab fa-google"></i>
                                     </div>
@@ -56,7 +63,7 @@ const homePage = () => {
                         <div className="filler2"></div>
                     </div>
                 </section>
-                <section className="about">
+                <section className="about" id="about">
                     <div className="about__container">
                         <h2 className="container__header">About us</h2>
                         <p className="container__text">
