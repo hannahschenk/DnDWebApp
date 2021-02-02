@@ -1,0 +1,121 @@
+@use '../abstracts/typography' as typography;
+@use '../abstracts/mixins' as mixins;
+@import '../abstracts/globalVariables';
+
+@media screen and (min-width: 10px) {
+    .creation-page {
+        display: flex;
+        flex-direction: column-reverse;
+        flex-wrap: wrap;
+        background-color: $accentBasic;
+
+        &__btns {
+            text-align: center;
+            > button {
+                padding: 0.2rem 1rem;
+                margin: 1rem !important;
+                @include mixins.button($backgroundLight, $mainTheme);
+                border: 2px solid $mainTheme;
+                cursor: pointer;
+            }
+            > button:disabled {
+                opacity: 0.5;
+            }
+        }
+    }
+
+    .creation-nav {
+        display: flex;
+        flex-wrap: wrap;
+        //margin: 0 1rem;
+        padding: 0.6rem;
+        transition: 0.3s;
+        background-color: $mainTheme;
+        width: 100%;
+        text-align: center;
+
+        li {
+            padding-left: 2%;
+            padding-right: 2%;
+            flex: 1 0 auto;
+            list-style: none;
+            cursor: pointer;
+            @include typography.sans(12pt, $mainThemeLight, 500);
+
+            &:hover {
+                color: $textLight;
+                //background-color: transparent !important;
+            }
+        }
+    }
+    .nav-active {
+        color: white !important;
+        font-weight: bold !important;
+
+        &--timeline {
+            color: $backgroundLight !important;
+            background-color: $backgroundDark;
+        }
+    }
+
+    .time-line {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .creation-page {
+        display: grid;
+        grid-template-columns: 260px 2fr 3fr;
+        grid-template-rows: auto auto auto;
+        height: calc(100vh - 7rem);
+        background-color: $backgroundLight;
+
+        &__btns {
+            grid-column-start: 3;
+            grid-row-start: 3;
+        }
+    }
+    .creation-nav {
+        width: auto;
+        grid-column: 2 / -1;
+        margin-top: 2rem;
+        height: 3rem;
+        margin-right: 1rem;
+        li {
+
+            padding-left: 0%;
+            padding-right: 0%;
+        }
+    }
+    .time-line {
+        display: block;
+        background-color: $backgroundLight;
+        list-style: none;
+        margin: 1rem;
+        padding: 1rem;
+        overflow: auto;
+
+        grid-row: 1 / -1;
+
+        &__content {
+            @include typography.serif(15pt, 500);
+        }
+        &__item {
+            @include typography.sans(12pt, 500);
+
+            padding: 0.5rem;
+
+            > p {
+                cursor: pointer;
+                transition: 0.3s;
+                background-color: '';
+            }
+        }
+        &__subcontent {
+            list-style: none;
+            margin-left: 2rem;
+        }
+    }
+}
+

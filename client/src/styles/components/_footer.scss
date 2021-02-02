@@ -1,0 +1,27 @@
+@use '../abstracts/globalVariables' as variables;
+@use '../abstracts/typography' as typography;
+
+.pageWrap {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
+.footer {
+    background-color: variables.$darkContrast;
+    width: 100%;
+    display:flex;
+    justify-content: flex-end;
+    align-items: center;
+    justify-self: flex-end;
+    height: 2rem;
+}
+
+.copyright {
+    @include typography.sans(14pt, variables.$textLight);
+    margin-right: 2rem;
+}

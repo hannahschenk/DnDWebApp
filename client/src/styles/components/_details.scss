@@ -1,0 +1,60 @@
+@use '../abstracts/typography' as typography;
+@import '../abstracts/globalVariables';
+
+.details-wrapper {
+    padding: 0 1rem;
+    //background-color: $backgroundLight;
+    overflow: scroll;
+    position: absolute;
+    display: flex;
+
+    width: 100%;
+    //background-color: red;
+}
+.details-container {
+    background-color: $backgroundDark;
+    color: $textLight;
+    padding-left: 2%;
+    padding-right:2%;
+    max-height: 0px;
+
+    > h3 {
+        @include typography.serif(15pt, $accentImportant, 500);
+    }
+    > p {
+        @include typography.sans(12pt, 500);
+        margin: 0.5rem 0;
+    }
+
+    //transition: max-height 0.15s ease-in-out;
+    // transition: max-height 0.15s ease-in;
+}
+
+.label__toggle {
+    flex: 1;
+    background-color: $backgroundDark !important;
+    padding-bottom: 10px;
+    .collapsible__text {
+        color: $backgroundLight;
+    }
+    .fa-chevron-down {
+        color: $backgroundLight;
+    }
+}
+
+.toggleInfo:checked + .label_toggle + .details-container {
+    //transition: max-height 0.5s ease-in-out;
+    max-height: 100%;
+    padding-top: 10px;
+}
+
+@media screen and (min-width: 800px) {
+    .details-wrapper {
+        height: calc(100vh - 11rem);
+        overflow: auto;
+        grid-column-start: 2;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+}
