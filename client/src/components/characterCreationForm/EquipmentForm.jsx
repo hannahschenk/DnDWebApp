@@ -191,6 +191,7 @@ const EquipmentForm = () => {
                     <React.Fragment key={idx}>
                         <label htmlFor="equipmentChoices">Pick one</label>
                         <select
+                            className="select-style"
                             name={`equipmentChoices-${idx}`}
                             key={idx}
                             id={idx}

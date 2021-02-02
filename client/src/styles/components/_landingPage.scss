@@ -3,8 +3,8 @@
 @use '../abstracts/mixins' as mixins;
 
 .landingContainer {
-display: grid;
-//padding-top: 5rem;
+    display: grid;
+    //margin-top: 5%;
 }
 .character {
     background-color: variables.$backgroundDark;
@@ -19,7 +19,7 @@ display: grid;
         padding-bottom: 20px;
         .container1__container {
             grid-column: 2/ 4;
-            grid-row: 1/span 2;
+            grid-row: 1 / span 2;
             background-color: variables.$backgroundLight;
             margin: 20px 20px 0px 20px;
             padding: 30px;
@@ -35,15 +35,15 @@ display: grid;
         }
         .fa-d-and-d {
             grid-column: 3/ 4;
-            grid-row: 1/span 1;
+            grid-row: 1 / span 1;
             color: variables.$mainThemeDark;
             z-index: 10;
             font-size: 540px;
             transform: rotate(-20deg) translateY(-20px) translateX(2px);
         }
         .container1__buttonContainer {
-            grid-column: 4/span 2;
-            grid-row: 2/ span 1;
+            grid-column: 4 / span 2;
+            grid-row: 2 / span 1;
             z-index: 20;
             .button {
                 @include mixins.button(variables.$backgroundLight, variables.$mainTheme);
@@ -60,23 +60,23 @@ display: grid;
         grid-template-rows: 490px auto;
         .filler1 {
             background-color: variables.$mainTheme;
-            grid-column: 1/ span 1;
+            grid-column: 1 / span 1;
             z-index: 1;
         }
         .container__container1 {
             padding-top: 5rem;
-            grid-column: 2/ span 1;
+            grid-column: 2 / span 1;
             position: relative;
             background-color: variables.$mainTheme;
             z-index: 1;
             .fa-dice-d20 {
                 position: absolute;
-                background: rgb(144,169,162);
-                background: linear-gradient(0deg, rgba(144,169,162,0.5) 0%, rgba(108,130,126,.9) 53%, rgba(32,46,50,1) 100%);
+                background: rgb(144, 169, 162);
+                background: linear-gradient(0deg, rgba(144, 169, 162, 0.5) 0%, rgba(108, 130, 126, 0.9) 53%, rgba(32, 46, 50, 1) 100%);
                 -webkit-background-clip: text;
                 -moz-background-clip: text;
                 background-clip: text;
-                -webkit-text-fill-color:transparent;
+                -webkit-text-fill-color: transparent;
                 font-size: 550px;
                 transform: rotate(-20deg) translateY(-140px) translateX(-80px);
                 z-index: -1;
@@ -94,7 +94,7 @@ display: grid;
                 .signin__google {
                     background-size: 200% 100%;
                     background-image: linear-gradient(to right, variables.$backgroundLight 50%, variables.$backgroundDark 50%);
-                    transition: background-position .25s;
+                    transition: background-position 0.25s;
                     width: 200px;
                     margin: 0 auto;
                     transform: translateY(130%);
@@ -108,7 +108,7 @@ display: grid;
                     &:hover {
                         background-position: -100% 0;
                     }
-                    &:hover .google__text{
+                    &:hover .google__text {
                         color: variables.$backgroundLight;
                     }
                     .google__image {
@@ -134,7 +134,7 @@ display: grid;
         }
         .container__container2 {
             padding-top: 5rem;
-            grid-column: 3/ span 1;
+            grid-column: 3 / span 1;
             background-color: variables.$accentBasic;
             z-index: 3;
             .container2__textContainer {
@@ -152,9 +152,9 @@ display: grid;
                 }
             }
         }
-        .filler2{
+        .filler2 {
             background-color: variables.$accentBasic;
-            grid-column: 4/ span 1;
+            grid-column: 4 / span 1;
         }
     }
 }
@@ -172,7 +172,7 @@ display: grid;
         margin: 20px 20px 0px 20px;
         padding: 30px;
         max-width: 800px;
-        grid-column: 2/ span 1;
+        grid-column: 2 / span 1;
         .container__header {
             @include typography.serif(20pt, variables.$backgroundDark, 700);
             padding-bottom: 20px;
@@ -230,7 +230,7 @@ display: grid;
                     margin: 20px;
                 }
             }
-            .filler2{
+            .filler2 {
                 display: none;
             }
             .container__container2 {

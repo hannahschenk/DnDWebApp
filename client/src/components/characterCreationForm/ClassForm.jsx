@@ -63,14 +63,17 @@ const ClassForm = () => {
         try {
             const classInfo = (await dndApi.getMoreInfo(chosenClass.url)).data;
 
-            setCharacter({
-                type: ACTION.UPDATE_CHARACTER_CLASS,
-                payload: {
-                    name: chosenClass.name,
-                    url: chosenClass.url,
-                    hitDie: classInfo.hit_die,
-                },
-            });
+            
+            if (chosenClass.name != character.character_class.name) {
+                setCharacter({
+                    type: ACTION.UPDATE_CHARACTER_CLASS,
+                    payload: {
+                        name: chosenClass.name,
+                        url: chosenClass.url,
+                        hitDie: classInfo.hit_die,
+                    },
+                });
+            }
 
             setDetails(classInfo);
         } catch (err) {

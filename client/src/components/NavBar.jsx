@@ -15,7 +15,6 @@ const NavBar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
-        console.log("header: " + isAuthenticated);
         if(isAuthenticated){
             setNavContent(authenticatedNav)
         } else{

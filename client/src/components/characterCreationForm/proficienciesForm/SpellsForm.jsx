@@ -46,14 +46,14 @@ const SpellsForm = ({ availableSpells }) => {
         // Remove spell from character if button is clicked twice
         if (character.proficiencies.spells.length > updatedSpells.length) {
             setCharacter({ type: ACTION.UPDATE_PROFICIENCIES, payload: { spells: updatedSpells } });
-            e.target.style.color = '';
+            e.target.style.backgroundColor = '';
         }
         // Otherwise add spell
         else {
             if (character.proficiencies.spells.length == numKnownSpells) return;
 
             setCharacter({ type: ACTION.UPDATE_PROFICIENCIES, payload: { spells: [...character.proficiencies.spells, { name: spell, url: spellUrl }] } });
-            e.target.style.color = '#dc2626';
+            e.target.style.backgroundColor = '#9b7f30';
         }
     };
 
@@ -70,8 +70,8 @@ const SpellsForm = ({ availableSpells }) => {
 
             {/* RENDER SPELLS HERE */}
             {availableSpells.map((spell, idx) => {
-                const selected = character.proficiencies.spells.map((spellObj) => (spellObj.name)).includes(spell)
-                
+                const selected = character.proficiencies.spells.map((spellObj) => spellObj.name).includes(spell);
+
                 return (
                     <React.Fragment key={idx}>
                         <button
@@ -79,7 +79,7 @@ const SpellsForm = ({ availableSpells }) => {
                             onClick={(e) => handleSpellChoice(e)}
                             style={{
                                 width: 200,
-                                color: selected ? '#dc2626' : '',
+                                backgroundColor: selected ? '#9b7f30' : '',
                             }}
                         >
                             {spell}
