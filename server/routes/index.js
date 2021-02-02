@@ -1,11 +1,12 @@
 const router = require('express').Router();
 const apiRoutes = require("./api");
+
+const path = require('path'); 
 //const jwtCheck = require("./../config/jwtConfig");
 
-router.use("/", apiRoutes)
+router.use("/api", apiRoutes)
 
-/*outer.use("/*", function (req, res) {
+router.use(function (req, res) {
   res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
-});*/
-
+});
 module.exports = router; 

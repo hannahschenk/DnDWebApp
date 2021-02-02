@@ -12,7 +12,7 @@ const jwtCheck = require("./config/jwtConfig");
 const {sequelize} = require("./models")
 const routeManager = require("./routes/");
 
-
+const path = require('path'); 
 const apiRoutes = "./routes/api.js"
 
 const PORT = process.env.PORT || 8080;
@@ -32,15 +32,16 @@ app.use(express.urlencoded({ extended: true }));
 
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('../client/dist'));
+  app.use(express.static('client/dist'));
 }
 
 //app.use(express.static('client/dist'));
 
-app.use("/api", routeManager);
+/*app.use("/api", routeManager);
 app.use(function (req, res) {
   res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
+});*/
+app.use("/", routeManager)
 
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
