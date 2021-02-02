@@ -1,4 +1,4 @@
-const router = require('express');
+const express = require('express');
 const app2 = express();
 const characterController = require('../controllers/characterController.js')
 
