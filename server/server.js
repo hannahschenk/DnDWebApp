@@ -31,9 +31,9 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-/*if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
   app.use(express.static('../client/dist'));
-}*/
+}
 
 //app.use(express.static('client/dist'));
 
