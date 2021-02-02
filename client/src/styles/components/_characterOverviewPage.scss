@@ -1,4 +1,5 @@
 @use '../abstracts/typography' as typography;
+@use '../abstracts/mixins' as mixins;
 @import '../abstracts/globalVariables';
 
 // Mobile view
@@ -202,20 +203,16 @@
     &__container {
         padding: 10%;
         text-align: center;
+        background-color: $backgroundLight;
+        height: calc(100vh - 110px);
     }
     &__content {
-        font-size: 1.5rem;
-        margin: 2%;
+        @include typography.sans(16pt, $backgroundDark, 500);
+        padding-bottom: 20px;
     }
     &__button {
         padding: 2%;
-        background-color: $backgroundDark;
-        color: $textLight;
-        border: none;
-        border-radius: 1rem;
-        &:hover {
-            background-color: $accentBasic;
-        }
+        @include mixins.button($backgroundLight, $backgroundDark);
     }
 }
 

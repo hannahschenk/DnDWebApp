@@ -63,12 +63,12 @@ const NavBar = () => {
 
     const authenticatedNav = [
         {
-            name: "Dashboard",
+            name: "DASHBOARD",
             link: "/dashboard", 
             clickHandler: () => {},
         },
         {
-            name: "Create Character",
+            name: "CREATE CHARACTER",
             link: "/create-character",
             clickHandler: () => { //clear the state because create character = new character
                 setCharacter({ type: ACTION.RESET_CHARACTER });
@@ -76,7 +76,7 @@ const NavBar = () => {
             },
         },
         {
-            name: "Sign Out",
+            name: "SIGN OUT",
             link: "#",
             clickHandler: () => logout()
         }

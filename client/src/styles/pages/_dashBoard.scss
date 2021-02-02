@@ -1,8 +1,10 @@
+@use '../abstracts/typography' as typography;
+
 .dashboardMain{
-    margin-top: 5rem;
+    //margin-top: 5rem;
     background-color: $backgroundLight;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 110px);
     display: flex;
     flex-direction: column;
     @media (min-width: 0px){
@@ -39,7 +41,7 @@
     padding: 0% 4% 2% 4%;
     border-radius: 2rem;
     background-color: $backgroundDark;
-    color: $textLight;
+    @include typography.sans(12pt, $backgroundLight, 500);
     @media (min-width: 0){
         width: 100%;
     }
@@ -53,6 +55,7 @@
 
 .profile__details__title{
     padding: 3%;
+    @include typography.serif(20pt, $backgroundLight, 500);
 }
 
 // the container of user details
@@ -72,7 +75,7 @@
     width: 100%;
     padding: 0 0 2% 0;
     &--label{
-        color: $mainThemeLight;
+        @include typography.sans(16pt, $mainThemeLight, 500);
     }
     @media (min-width: 0){
         text-align:center;
