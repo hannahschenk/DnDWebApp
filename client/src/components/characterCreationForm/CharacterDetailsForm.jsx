@@ -239,6 +239,7 @@ const CharacterDetailsForm = () => {
                             <select
                                 // defaultValue={lang.length !== 0 && JSON.stringify(lang[idx])}
                                 name="languages"
+                                className="select-style"
                                 onChange={(e) => pickLanguage()}
                                 ref={bonusRaceLanguageRef}
                                 required
