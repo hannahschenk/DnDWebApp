@@ -31,11 +31,11 @@ app.use(express.urlencoded({ extended: true }));
   app.use(express.static('../client/dist'));
 }*/
 
-if (process.env.NODE_ENV === 'production') {
+/*if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/dist'));
-}
+}*/
 
-app.use("/", routeManager);
+app.use(routeManager);
 
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
