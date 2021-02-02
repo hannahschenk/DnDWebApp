@@ -38,8 +38,8 @@ app.use(express.urlencoded({ extended: true }));
 //app.use(express.static('client/dist'));
 
 app.use("/api", routeManager);
-app.get('/*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'client', 'dist', 'index.html'));
+app.use(function (req, res) {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 sequelize.sync().then(() => {
