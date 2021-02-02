@@ -11,6 +11,10 @@ const jwksRsa = require('jwks-rsa');
 const jwtCheck = require("./config/jwtConfig");
 const {sequelize} = require("./models")
 const routeManager = require("./routes/");
+
+
+const apiRoutes = "./routes/api.js"
+
 const PORT = process.env.PORT || 8080;
 
 const corsOptions = {
@@ -31,9 +35,12 @@ app.use(express.urlencoded({ extended: true }));
   app.use(express.static('../client/dist'));
 }*/
 
-app.use(express.static('client/dist'));
+//app.use(express.static('client/dist'));
 
-app.use(routeManager);
+app.use("/api", routeManager);
+app.get('/*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '..', 'client', 'dist', 'index.html'));
+});
 
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
