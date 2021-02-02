@@ -4,7 +4,7 @@
 
 .landingContainer {
     display: grid;
-    margin-top: 5%;
+    //margin-top: 5%;
 }
 .character {
     background-color: variables.$backgroundDark;
@@ -166,6 +166,7 @@
     padding-top: 5rem;
     display: grid;
     grid-template-columns: auto 600px 350px auto;
+    padding-bottom: 110px;
     .about__container {
         background-color: variables.$backgroundLight;
         margin: 20px 20px 0px 20px;

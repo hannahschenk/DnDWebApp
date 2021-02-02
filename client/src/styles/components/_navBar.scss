@@ -1,8 +1,11 @@
+@use '../abstracts/typography' as typography;
+
 .navBar{
     /*sticky*/
-    //position: sticky;
+    position: sticky;
     top: 0;
     left:0;
+    z-index: 100;
     /*end sticky*/
     background-color: $mainTheme;
     width: 100%;
@@ -11,17 +14,12 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-
-    z-index: 90;
-    position: absolute;
-    top: 0;
-    left:0;
+    box-shadow: 0 0 60px black;
 }
 
 .logo{
-    width: 50%;
-    color: $backgroundDark;
-    font-size: 3rem;
+    text-decoration: none!important;
+    @include typography.serif(20pt, $backgroundLight, 700);
 }
 
 .header__navTrigger{
@@ -34,6 +32,7 @@
         justify-self: end;   
         padding: 0 5% 0 5%;
         height: 100%;
+        color: $backgroundLight;
         @media (min-width: 0){
             display:flex;
             justify-content: flex-end;
@@ -57,10 +56,10 @@
         }
     }
     &__listItem{ // list item
+        padding-left: 20px;
         list-style-type: none;
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: rgba($backgroundLight, 0.6); 
+        transition-duration: .3s;
+        @include typography.sans(15pt, $mainThemeLight, 700);
         @media (min-width: 0){
             width: 100vw;
             text-align: center;
@@ -68,6 +67,9 @@
         @media (min-width: $mobileBreakPoint){
             width: auto;
             text-align: initial;
+        }
+        &:hover {
+            color: $backgroundLight;
         }
     }
 

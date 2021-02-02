@@ -12,7 +12,7 @@ const homePage = () => {
     return (
         <>
             <div className="landingContainer">
-                <section className="character">
+                <section className="character" id = "character">
                     <div className="character__container1">
                         <div className="container1__container">
                             <h2 className="container__header">Anonymous Character Creation</h2>
