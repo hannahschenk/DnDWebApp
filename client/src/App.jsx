@@ -8,7 +8,7 @@ import { CharacterContext, characterReducer } from './state/logic';
 
 import FormControlContext from './state/formControlManager';
 import CharacterCreationPage from './pages/characterCreationPage';
-import CharacterOverview from './pages/characterOverview';
+import CharacterOverview from './pages/CharacterOverview';
 import HomePage from './pages/homePage';
 import DashboardPage from './pages/dashboardPage';
 import NavBar from './components/NavBar';
