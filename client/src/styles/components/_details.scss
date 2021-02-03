@@ -50,11 +50,12 @@
 
 @media screen and (min-width: 800px) {
     .details-wrapper {
-        height: calc(100vh - 11rem);
+        //height: calc(100vh - 11rem);
         overflow: auto;
         grid-column-start: 2;
         margin: 0;
         padding: 0;
         width: 100%;
+        //height: 600px;
     }
 }
