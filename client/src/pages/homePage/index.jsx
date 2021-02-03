@@ -20,7 +20,7 @@ const homePage = () => {
                                 Creating a character has never been easier with the help of D&D CC. This character creation tool has been simplified to a
                                 process where we walk you through each step. <br></br>
                                 <br></br>This sheet will take you through the race, classes, ability scores, character details, proficiencies, and equipment for
-                                the character you want tp create.<br></br>
+                                the character you want too create.<br></br>
                                 <br></br> By creating your character anonymously, you will not be able to save your character sheet for later use, but you can
                                 still use it immediately after creation.
                             </p>
