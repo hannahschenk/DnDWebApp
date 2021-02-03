@@ -4,7 +4,7 @@ module.exports = {
     CLASSES_URL: `https://www.dnd5eapi.co/api/classes`,
     BACKGROUNDS_URL: `https://dnd-backgrounds-default-rtdb.firebaseio.com/backgrounds.json`,
     BACKGROUNDS_BASE_URL: `https://dnd-backgrounds-default-rtdb.firebaseio.com/backgrounds`,
-    LANGUAGES_URL: `http://www.dnd5eapi.co/api/languages/`,
+    LANGUAGES_URL: `https://www.dnd5eapi.co/api/languages/`,
     SELF_BASE_URL: `https://tt-dd-cc.herokuapp.com`,
     BACKEND_BASE_URL: `https://tt-dd-cc.herokuapp.com`,
     CREATION_SECTIONS:
