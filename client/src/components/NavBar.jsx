@@ -30,7 +30,7 @@ const NavBar = () => {
     /* Sample and test; will refactor later*/
     const anonNav = [
         {
-            name: "HOME",
+            name: "Home",
             link: "/", //replace with id
             clickHandler: () => {
                 let element = document.getElementById("character");
@@ -41,7 +41,7 @@ const NavBar = () => {
             }
         },
         {
-            name: "SIGN IN",
+            name: "Sign In",
             link: "#",
             clickHandler: () => {
                 let element = document.getElementById("login");
@@ -52,7 +52,7 @@ const NavBar = () => {
             }
         },
         {
-            name: "ABOUT US",
+            name: "About Us",
             link: "#", 
             clickHandler: () => {
                 let element = document.getElementById("about");
