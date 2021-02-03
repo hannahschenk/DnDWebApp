@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import CharacterSheetCard from "./../../components/characterSheetCard";
+import CharacterSheetCard from "./../../components/CharacterSheetCard";
 import {useAuth0, withAuthenticationRequired} from "@auth0/auth0-react";
 import utilFunctions from "./../../utils/utilFunctions";
 import {getCharacters} from "./../../utils/api";
