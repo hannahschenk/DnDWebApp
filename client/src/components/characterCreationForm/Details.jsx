@@ -79,7 +79,9 @@ const Details = () => {
                 elements.push(<h3 key={keyGen()}>{keyFormat(key)}</h3>);
             }
             if (typeof value === 'object') {
-                dealObject(value);
+                if(keyMatch(key)){
+                    dealObject(value);
+                }
             } else if (Array.isArray(value)) {
                 dealArray(value);
             } else {
