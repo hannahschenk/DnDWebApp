@@ -19,7 +19,7 @@
     // border: 2px solid variables.$textDark;
     border-radius: .5rem;
     margin: .5rem 2rem .5rem 2rem;
-    color: variables.$textDark;
+    @include typography.sans(16pt, variables.$backgroundDark, 500);
     *{
         padding: 0 2%;
         width: 30%;

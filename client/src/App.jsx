@@ -77,10 +77,6 @@ const App = () => {
         }
     }, [getAccessTokenSilently]);
 
-    useEffect(() => {
-        console.log(isAuthenticated);
-    }, [isLoading]);
-
     return (
         <CharacterContext.Provider value={{ character, setCharacter, details, setDetails }}>
             <FormControlContext.Provider value={{ formControlState, setFormControlState }}>

@@ -1,7 +1,6 @@
 @use '../abstracts/typography' as typography;
 
 .dashboardMain{
-    //margin-top: 5rem;
     background-color: $backgroundLight;
     width: 100vw;
     height: calc(100vh - 110px);

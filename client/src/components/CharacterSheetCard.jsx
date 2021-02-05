@@ -10,9 +10,9 @@ const CharacterSheetCard = ({characterSheet, sheetId}) => {
     return (
         <Link to={`overview/${sheetId}`} className="card-link">
             <article className="character-card card-link">
-                <p><b>name:</b> {characterName}</p>
-                <p><b>race:</b> {characterRace}</p>
-                <p><b>class:</b> {characterClass}</p>
+                <p><b>Name:</b> {characterName}</p>
+                <p><b>Race:</b> {characterRace}</p>
+                <p><b>Class:</b> {characterClass}</p>
             </article>
         </Link>
     );

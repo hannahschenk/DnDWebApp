@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {NavLink, useHistory} from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import {testBackEnd} from "./../utils/api"; 
@@ -7,7 +7,10 @@ import axios from "axios";
 import { useCharacter } from './../state/logic';
 import * as ACTION from "./../state/actions"
 
+import FormControlContext from './../state/formControlManager';
 const NavBar = () => {
+
+    const { formControlState, setFormControlState } = useContext(FormControlContext);
 
     const { character,setCharacter } = useCharacter();
     const {isAuthenticated, logout, loginWithRedirect, isLoading} = useAuth0();
@@ -71,6 +74,7 @@ const NavBar = () => {
             name: "CREATE CHARACTER",
             link: "/create-character",
             clickHandler: () => { //clear the state because create character = new character
+                setFormControlState({ sectionIndex: -1, currentFormDone: false});
                 setCharacter({ type: ACTION.RESET_CHARACTER });
                 localStorage.removeItem("character");
             },

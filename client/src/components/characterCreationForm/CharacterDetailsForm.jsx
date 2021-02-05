@@ -24,6 +24,10 @@ const CharacterDetailsForm = () => {
     const secondLanguageChoiceRef = useRef(null);
     const bonusRaceLanguageRef = useRef(null);
 
+    const [firstLanguage, setFirstLanguage] = useState("Choose a language")
+    const [secondLanguage, setSecondLanguage] = useState("Choose a language")
+    const [bonusLanguage, setBonusLanguage] = useState("Choose a language")
+
     /*
      * Signature: useEffect(func, [])
      * Description: populates the background choices that users can
@@ -78,6 +82,21 @@ const CharacterDetailsForm = () => {
                         };
                     })
                 );
+
+            if((character.race.name === 'Human' || character.race.name === 'Half-Elf') &&
+                (character.background.languages.length >= (raceLanguages.length + 1))){
+                setBonusLanguage(character.background.languages[raceLanguages.length]);
+            }
+
+            let offset = (character.race.name === 'Human' || character.race.name === 'Half-Elf') ? 1 : 0;
+
+            if(character.background.languages.length >= raceLanguages.length + offset + 1){
+                setFirstLanguage(character.background.languages[raceLanguages.length + offset]);
+            }
+            if(character.background.languages.length >= raceLanguages.length + offset + 2){
+                setSecondLanguage(character.background.languages[raceLanguages.length + offset + 1]);
+            }
+
             } catch (err) {
                 console.error(err);
             }
@@ -146,13 +165,16 @@ const CharacterDetailsForm = () => {
         let newLanguages = [];
 
         if (bonusRaceLanguageRef.current && bonusRaceLanguageRef.current.value !== 'Choose a language') {
+            setBonusLanguage(JSON.parse(bonusRaceLanguageRef.current.value))
             newLanguages.push(JSON.parse(bonusRaceLanguageRef.current.value));
         }
         if (firstLanguageChoiceRef.current && firstLanguageChoiceRef.current.value !== 'Choose a language') {
+            setFirstLanguage(JSON.parse(firstLanguageChoiceRef.current.value))
             newLanguages.push(JSON.parse(firstLanguageChoiceRef.current.value));
         }
         if (secondLanguageChoiceRef.current && secondLanguageChoiceRef.current.value !== 'Choose a language') {
             newLanguages.push(JSON.parse(secondLanguageChoiceRef.current.value));
+            setSecondLanguage(JSON.parse(secondLanguageChoiceRef.current.value))
         }
 
         setCharacter({ type: ACTION.UPDATE_BACKGROUND, payload: { languages: [...raceLanguages, ...newLanguages] } });
@@ -237,7 +259,7 @@ const CharacterDetailsForm = () => {
                         <>
                             <p>Pick one bonus language granted by your race.</p>
                             <select
-                                // defaultValue={lang.length !== 0 && JSON.stringify(lang[idx])}
+                                value={JSON.stringify(bonusLanguage)}
                                 name="languages"
                                 className="select-style"
                                 onChange={(e) => pickLanguage()}
@@ -274,10 +296,8 @@ const CharacterDetailsForm = () => {
                         // Render total options for each language choice; disable languages that are already picked
                         [...Array(numLanguageChoices)].map((e, idx) => {
                             const lang = character.background.languages.filter((language) => language.origin === 'background');
-                            let selectDefault =
-                                character.background.languages.length >= raceLanguages.length + idx + 1
-                                    ? JSON.stringify(character.background.languages[raceLanguages.length + idx])
-                                    : -1;
+                            let value = (idx === 0) ? JSON.stringify(firstLanguage) : 
+                                    idx === 1 ? JSON.stringify(secondLanguage) : 'Choose a language'
                             return (
                                 <React.Fragment key={idx}>
                                     <select
@@ -285,7 +305,7 @@ const CharacterDetailsForm = () => {
                                         name="languages"
                                         ref={idx === 0 ? firstLanguageChoiceRef : idx === 1 ? secondLanguageChoiceRef : ''}
                                         onChange={(e) => pickLanguage()}
-                                        value={selectDefault}
+                                        value={value}
                                         required
                                     >
                                         <option key={idx + 1} value={-1}>
